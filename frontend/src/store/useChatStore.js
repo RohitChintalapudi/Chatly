@@ -15,9 +15,11 @@ export const useChatStore = create((set, get) => ({
     set({ isUsersLoading: true });
     try {
       const res = await axiosInstance.get("/messages/users");
-      set({ users: res.data });
+      set({ users: Array.isArray(res.data) ? res.data : [] });
     } catch (error) {
-      toast.error(error.response.data.message);
+      const msg = error.response?.data?.message || "Failed to load users";
+      toast.error(msg);
+      set({ users: [] });
     } finally {
       set({ isUsersLoading: false });
     }
@@ -27,9 +29,11 @@ export const useChatStore = create((set, get) => ({
     set({ isMessagesLoading: true });
     try {
       const res = await axiosInstance.get(`/messages/${userId}`);
-      set({ messages: res.data });
+      set({ messages: Array.isArray(res.data) ? res.data : [] });
     } catch (error) {
-      toast.error(error.response.data.message);
+      const msg = error.response?.data?.message || "Failed to load messages";
+      toast.error(msg);
+      set({ messages: [] });
     } finally {
       set({ isMessagesLoading: false });
     }
@@ -38,9 +42,10 @@ export const useChatStore = create((set, get) => ({
     const { selectedUser, messages } = get();
     try {
       const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
-      set({ messages: [...messages, res.data] });
+      set({ messages: [...(messages || []), res.data] });
     } catch (error) {
-      toast.error(error.response.data.message);
+      const msg = error.response?.data?.message || "Failed to send message";
+      toast.error(msg);
     }
   },
 
@@ -54,7 +59,7 @@ export const useChatStore = create((set, get) => ({
       const isFromSelected = selectedUser && newMessage.senderId === selectedUser._id;
 
       if (isFromSelected) {
-        set({ messages: [...get().messages, newMessage] });
+        set({ messages: [...(get().messages || []), newMessage] });
       } else {
         const senderId = newMessage.senderId;
         const current = unreadCounts[senderId] || 0;

@@ -40,7 +40,7 @@ const ChatContainer = () => {
     <div className="flex-1 flex flex-col bg-[var(--surface)]">
       <ChatHeader />
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 chat-scroll" style={{ willChange: "scroll-position" }}>
-        {messages.map((message) => (
+        {(Array.isArray(messages) ? messages : []).map((message) => (
           <div key={message._id} className={`flex ${message.senderId === authUser._id ? "justify-end" : "justify-start"}`}>
             <div className={`flex gap-2 max-w-[75%] ${message.senderId === authUser._id ? "flex-row-reverse" : ""}`}>
               <img

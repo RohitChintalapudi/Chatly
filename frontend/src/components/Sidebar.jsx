@@ -15,9 +15,11 @@ const Sidebar = () => {
     return () => unsubscribeFromMessages();
   }, [getUsers, subscribeToMessages, unsubscribeFromMessages]);
 
-  const filteredUsers = showOnlineOnly
-    ? users.filter((user) => onlineUsers.includes(user._id))
-    : users;
+  const filteredUsers = Array.isArray(users)
+    ? showOnlineOnly
+      ? users.filter((user) => onlineUsers.includes(user._id))
+      : users
+    : [];
 
   if (isUsersLoading) return <SidebarSkeleton />;
 

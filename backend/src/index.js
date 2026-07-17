@@ -21,7 +21,9 @@ app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.NODE_ENV === "production"
+      ? process.env.RENDER_EXTERNAL_URL || true
+      : "http://localhost:5173",
     credentials: true,
   })
 );
@@ -31,12 +33,17 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/contact", contactRoutes);
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  const frontendDist = path.join(__dirname, "../frontend/dist");
+  app.use(express.static(frontendDist));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+    res.sendFile(path.join(frontendDist, "index.html"));
   });
 }
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 
 server.listen(PORT, () => {
   console.log("server is running on PORT:" + PORT);
