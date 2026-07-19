@@ -43,7 +43,7 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/contact", contactRoutes);
 
 if (process.env.NODE_ENV === "production") {
-  const frontendDist = path.join(__dirname, "../../frontend/dist");
+  const frontendDist = path.join(__dirname, "../frontend/dist");
   app.use(express.static(frontendDist));
 
   app.get("*", (req, res) => {
