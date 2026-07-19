@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 import path from "path";
+import { fileURLToPath } from "url";
 
 import { connectDB } from "./lib/db.js";
 
@@ -15,7 +16,12 @@ import { app, server } from "./lib/socket.js";
 dotenv.config();
 
 const PORT = process.env.PORT;
-const __dirname = path.resolve();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
 
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
@@ -28,22 +34,22 @@ app.use(
   })
 );
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/contact", contactRoutes);
 
 if (process.env.NODE_ENV === "production") {
-  const frontendDist = path.join(__dirname, "../frontend/dist");
+  const frontendDist = path.join(__dirname, "../../frontend/dist");
   app.use(express.static(frontendDist));
 
   app.get("*", (req, res) => {
     res.sendFile(path.join(frontendDist, "index.html"));
   });
 }
-
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
-});
 
 server.listen(PORT, () => {
   console.log("server is running on PORT:" + PORT);

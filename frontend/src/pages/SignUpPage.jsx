@@ -28,9 +28,10 @@ const SignUpPage = () => {
     e.preventDefault();
     const success = validateForm();
     if (success === true) {
-      await signup(formData);
-      if (useAuthStore.getState().authUser) {
+      const registered = await signup(formData);
+      if (registered) {
         navigate("/");
+        useAuthStore.getState().connectSocket();
       }
     }
   };
@@ -69,6 +70,7 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type="text"
+                  autoComplete="name"
                   className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-medium placeholder:text-[var(--secondary-text)] focus:outline-none focus:border-[var(--accent)] transition-colors"
                   placeholder="John Doe"
                   value={formData.fullName}
@@ -85,6 +87,7 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type="email"
+                  autoComplete="email"
                   className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-medium placeholder:text-[var(--secondary-text)] focus:outline-none focus:border-[var(--accent)] transition-colors"
                   placeholder="you@example.com"
                   value={formData.email}
@@ -101,6 +104,7 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
                   className="w-full pl-11 pr-12 py-3 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-medium placeholder:text-[var(--secondary-text)] focus:outline-none focus:border-[var(--accent)] transition-colors"
                   placeholder="••••••••"
                   value={formData.password}

@@ -14,9 +14,10 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(formData);
-    if (useAuthStore.getState().authUser) {
+    const success = await login(formData);
+    if (success) {
       navigate("/");
+      useAuthStore.getState().connectSocket();
     }
   };
 
@@ -55,6 +56,7 @@ const LoginPage = () => {
                 </div>
                 <input
                   type="email"
+                  autoComplete="email"
                   className="w-full pl-11 pr-4 py-3 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-medium placeholder:text-[var(--secondary-text)] focus:outline-none focus:border-[var(--accent)] transition-colors"
                   placeholder="you@example.com"
                   value={formData.email}
@@ -71,6 +73,7 @@ const LoginPage = () => {
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
                   className="w-full pl-11 pr-12 py-3 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-medium placeholder:text-[var(--secondary-text)] focus:outline-none focus:border-[var(--accent)] transition-colors"
                   placeholder="••••••••"
                   value={formData.password}

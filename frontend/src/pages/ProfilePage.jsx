@@ -125,6 +125,7 @@ const ProfilePage = () => {
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
                     placeholder="Enter current password"
+                    autoComplete="current-password"
                     className="w-full px-3 py-2 pr-10 bg-[var(--surface)] rounded-xl border-2 border-[var(--line)] text-[var(--primary-text)] font-medium text-sm focus:outline-none focus:border-[var(--accent)] transition-colors placeholder:text-[var(--secondary-text)]/50"
                   />
                   <button type="button" onClick={() => setShowOld(!showOld)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--secondary-text)] hover:text-[var(--primary-text)] transition-colors cursor-pointer">
@@ -143,6 +144,7 @@ const ProfilePage = () => {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter new password"
+                    autoComplete="new-password"
                     className="w-full px-3 py-2 pr-10 bg-[var(--surface)] rounded-xl border-2 border-[var(--line)] text-[var(--primary-text)] font-medium text-sm focus:outline-none focus:border-[var(--accent)] transition-colors placeholder:text-[var(--secondary-text)]/50"
                   />
                   <button type="button" onClick={() => setShowNew(!showNew)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--secondary-text)] hover:text-[var(--primary-text)] transition-colors cursor-pointer">
@@ -161,6 +163,7 @@ const ProfilePage = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm new password"
+                    autoComplete="new-password"
                     className={`w-full px-3 py-2 pr-10 bg-[var(--surface)] rounded-xl border-2 text-[var(--primary-text)] font-medium text-sm focus:outline-none transition-colors placeholder:text-[var(--secondary-text)]/50 ${
                       passwordsMatch
                         ? "border-green-500 focus:border-green-500"

@@ -6,12 +6,15 @@ const app = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
+  path: "/socket.io",
   cors: {
     origin: process.env.NODE_ENV === "production"
       ? process.env.RENDER_EXTERNAL_URL || true
       : ["http://localhost:5173"],
     methods: ["GET", "POST"],
+    credentials: true,
   },
+  transports: ["websocket", "polling"],
 });
 
 export function getReceiverSocketId(userId) {
