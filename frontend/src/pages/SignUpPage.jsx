@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User, ArrowRight } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const SignUpPage = () => {
@@ -13,7 +13,6 @@ const SignUpPage = () => {
   });
 
   const { signup, isSigningUp } = useAuthStore();
-  const navigate = useNavigate();
 
   const validateForm = () => {
     if (!formData.fullName.trim()) return toast.error("Full name is required");
@@ -30,8 +29,7 @@ const SignUpPage = () => {
     if (success === true) {
       const registered = await signup(formData);
       if (registered) {
-        navigate("/");
-        useAuthStore.getState().connectSocket();
+        window.location.href = "/";
       }
     }
   };
