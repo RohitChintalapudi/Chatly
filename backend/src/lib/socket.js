@@ -9,7 +9,7 @@ const io = new Server(server, {
   path: "/socket.io",
   cors: {
     origin: process.env.NODE_ENV === "production"
-      ? process.env.RENDER_EXTERNAL_URL || true
+      ? (process.env.RENDER_EXTERNAL_URL ? process.env.RENDER_EXTERNAL_URL.replace(/\/$/, "") : true)
       : ["http://localhost:5173"],
     methods: ["GET", "POST"],
     credentials: true,

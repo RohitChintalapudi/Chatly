@@ -29,7 +29,7 @@ export const signup = async (req, res) => {
 
     if (newUser) {
       // generate jwt token here
-      generateToken(newUser._id, res);
+      generateToken(newUser._id, req, res);
       await newUser.save();
 
       res.status(201).json({
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    generateToken(user._id, res);
+    generateToken(user._id, req, res);
 
     res.status(200).json({
       _id: user._id,

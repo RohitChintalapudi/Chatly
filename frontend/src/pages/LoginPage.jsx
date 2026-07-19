@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, ArrowRight } from "lucide-react";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -15,7 +16,7 @@ const LoginPage = () => {
     e.preventDefault();
     const success = await login(formData);
     if (success) {
-      window.location.href = "/";
+      navigate("/");
     }
   };
 
