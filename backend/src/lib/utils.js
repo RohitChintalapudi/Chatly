@@ -5,14 +5,12 @@ export const generateToken = (userId, req, res) => {
     expiresIn: "7d",
   });
 
-  const isSecure = process.env.NODE_ENV === "production" 
-    ? (req.secure || req.headers["x-forwarded-proto"] === "https") 
-    : false;
+  const isSecure = req.secure || req.headers["x-forwarded-proto"] === "https";
 
   res.cookie("jwt", token, {
     maxAge: 7 * 24 * 60 * 60 * 1000, // MS
     httpOnly: true, // prevent XSS attacks cross-site scripting attacks
-    sameSite: "lax", // CSRF attacks cross-site request forgery attacks
+    sameSite: isSecure ? "none" : "lax", // CSRF attacks cross-site request forgery attacks
     secure: isSecure,
     path: "/",
   });

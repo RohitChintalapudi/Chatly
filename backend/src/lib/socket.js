@@ -8,9 +8,10 @@ const server = http.createServer(app);
 const io = new Server(server, {
   path: "/socket.io",
   cors: {
-    origin: process.env.NODE_ENV === "production"
-      ? (process.env.RENDER_EXTERNAL_URL ? process.env.RENDER_EXTERNAL_URL.replace(/\/$/, "") : true)
-      : ["http://localhost:5173"],
+    origin: (origin, callback) => {
+      // Allow all origins dynamically to prevent CORS block issues in production/development
+      callback(null, true);
+    },
     methods: ["GET", "POST"],
     credentials: true,
   },

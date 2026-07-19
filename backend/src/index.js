@@ -27,9 +27,10 @@ app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.NODE_ENV === "production"
-      ? process.env.RENDER_EXTERNAL_URL || true
-      : "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Allow all origins dynamically to prevent CORS block issues in production/development
+      callback(null, true);
+    },
     credentials: true,
   })
 );
