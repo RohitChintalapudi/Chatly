@@ -45,7 +45,37 @@ const App = () => {
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
         </Routes>
-        <Toaster />
+        <Toaster
+          position="top-center"
+          gutter={12}
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: "var(--surface)",
+              color: "var(--primary-text)",
+              border: "2px solid var(--line)",
+              borderRadius: "16px",
+              padding: "12px 16px",
+              fontWeight: 700,
+              fontSize: "13px",
+              boxShadow: "4px 4px 0px 0px var(--line)",
+              maxWidth: "380px",
+            },
+            success: {
+              iconTheme: {
+                primary: "#22c55e",
+                secondary: "var(--surface)",
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: "#ef4444",
+                secondary: "var(--surface)",
+              },
+            },
+            className: "toast-enter",
+          }}
+        />
       </div>
     </div>
   );

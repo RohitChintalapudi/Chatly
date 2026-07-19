@@ -34,12 +34,18 @@ const Sidebar = () => {
         </div>
         <div className="mt-3 hidden lg:flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={showOnlineOnly}
-              onChange={(e) => setShowOnlineOnly(e.target.checked)}
-              className="w-4 h-4 accent-[var(--accent)] cursor-pointer"
-            />
+            <div className="relative">
+              <input
+                type="checkbox"
+                checked={showOnlineOnly}
+                onChange={(e) => setShowOnlineOnly(e.target.checked)}
+                className="peer sr-only cursor-pointer"
+              />
+              <div className="w-4 h-4 rounded border-2 border-[var(--line)] bg-[var(--surface)] peer-checked:bg-[var(--accent)] peer-checked:border-[var(--line)] transition-colors" />
+              <svg className="absolute top-0 left-0 w-4 h-4 pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l3 3 7-7" stroke="var(--primary-text)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
             <span className="text-sm font-semibold text-[var(--primary-text)]">Show online only</span>
           </label>
           <span className="text-xs text-[var(--secondary-text)] font-medium">({onlineUsers.length - 1} online)</span>

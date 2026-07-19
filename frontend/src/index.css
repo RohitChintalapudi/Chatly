@@ -141,6 +141,37 @@
   -webkit-overflow-scrolling: touch;
 }
 
+/* Toast animations */
+@keyframes toast-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-slide-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.88);
+  }
+}
+
+.toast-enter {
+  animation: toast-slide-in 0.4s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+}
+
+.toast-exit {
+  animation: toast-slide-out 0.3s cubic-bezier(0.06, 0.71, 0.55, 1) forwards;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
