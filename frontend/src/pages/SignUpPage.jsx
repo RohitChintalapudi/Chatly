@@ -16,8 +16,6 @@ const SignUpPage = () => {
   const navigate = useNavigate();
 
   const validateForm = () => {
-
-  const validateForm = () => {
     if (!formData.fullName.trim()) return toast.error("Full name is required");
     if (!formData.email.trim()) return toast.error("Email is required");
     if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
