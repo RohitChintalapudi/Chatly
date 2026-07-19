@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, ArrowRight } from "lucide-react";
 
 const LoginPage = () => {
@@ -10,10 +10,14 @@ const LoginPage = () => {
     password: "",
   });
   const { login, isLoggingIn } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData);
+    await login(formData);
+    if (useAuthStore.getState().authUser) {
+      navigate("/");
+    }
   };
 
   return (
