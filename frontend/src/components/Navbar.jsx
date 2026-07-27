@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { useThemeStore } from "../store/useThemeStore";
-import { LogOut, MessageSquare, Settings, User, Menu, X, Sun, Moon, Phone } from "lucide-react";
+import { LogOut, MessageSquare, Settings, User, Menu, X, Sun, Moon, Phone, Radio } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const landingLinks = [
@@ -13,7 +13,7 @@ const landingLinks = [
 
 const appSections = [
   { label: "Chat", href: "/", icon: MessageSquare },
-  // Future: { label: "Voice", href: "/voice", icon: Phone },
+  { label: "Audio Rooms", href: "/audio-rooms", icon: Radio },
 ];
 
 const LogoutModal = ({ isOpen, onClose, onConfirm }) => {
@@ -116,10 +116,10 @@ const Navbar = () => {
                     <Link
                       key={section.label}
                       to={section.href}
-                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border-2 transition-all duration-200 ${
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold border-2 transition-colors duration-200 ${
                         isActive
-                          ? "bg-[var(--accent)] text-black border-[var(--line)] shadow-[3px_3px_0px_0px_var(--line)]"
-                          : "text-[var(--primary-text)] border-transparent hover:border-[var(--line)] hover:bg-[var(--accent)]/10"
+                          ? "bg-[var(--accent)] text-black border-[var(--line)] font-extrabold"
+                          : "text-[var(--primary-text)] border-[var(--line)] bg-[var(--surface)] hover:bg-[var(--accent)]/10"
                       }`}
                     >
                       <Icon className="w-4 h-4" />

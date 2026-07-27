@@ -128,12 +128,17 @@
   pointer-events: none;
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+/* Global Scrollbar Hiding - Retains 100% Scroll Functionality Everywhere */
+::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+
+html, body, * {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
 .chat-scroll {
