@@ -395,7 +395,8 @@ Building Chatly from scratch taught me the full cycle of shipping a production-g
 
 | Feature | Description | Status |
 |---|---|---|
-| **Voice Messages** | Record and send voice notes with playback controls | Planned |
+| **Voice Messages** | Record and send voice notes with playback controls & waveform visualizer | Completed |
+| **Dedicated Audio Rooms** | Clubhouse/Discord style P2P WebRTC audio channels with host controls | Completed |
 | **Group Chats** | Create group conversations with multiple participants | Planned |
 | **Message Reactions** | React to messages with emojis | Planned |
 | **Message Search** | Search through conversation history | Planned |
@@ -406,7 +407,6 @@ Building Chatly from scratch taught me the full cycle of shipping a production-g
 | **User Status** | Custom status messages (Available, Busy, Away, etc.) | Planned |
 | **File Sharing** | Send PDFs, documents, and other file types | Planned |
 | **Chat Encryption** | End-to-end encryption for private conversations | Planned |
-| **Video / Voice Calls** | WebRTC-based real-time audio and video calling | Planned |
 
 ---
 
