@@ -37,7 +37,7 @@ export const getMessages = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
   try {
-    const { text, image } = req.body;
+    const { text, image, audio } = req.body;
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
@@ -48,11 +48,25 @@ export const sendMessage = async (req, res) => {
       imageUrl = uploadResponse.secure_url;
     }
 
+    let audioUrl;
+    if (audio) {
+      try {
+        const uploadResponse = await cloudinary.uploader.upload(audio, {
+          resource_type: "auto",
+        });
+        audioUrl = uploadResponse.secure_url;
+      } catch (err) {
+        console.error("Cloudinary audio upload notice (fallback to Data URL):", err.message);
+        audioUrl = audio;
+      }
+    }
+
     const newMessage = new Message({
       senderId,
       receiverId,
       text,
       image: imageUrl,
+      audio: audioUrl,
     });
 
     await newMessage.save();

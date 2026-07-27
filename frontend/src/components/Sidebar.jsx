@@ -48,7 +48,7 @@ const Sidebar = () => {
             </div>
             <span className="text-sm font-semibold text-[var(--primary-text)]">Show online only</span>
           </label>
-          <span className="text-xs text-[var(--secondary-text)] font-medium">({onlineUsers.length - 1} online)</span>
+          <span className="text-xs text-[var(--secondary-text)] font-medium">({Math.max(0, onlineUsers.length - 1)} online)</span>
         </div>
       </div>
 
@@ -68,7 +68,7 @@ const Sidebar = () => {
             <div className="relative mx-auto lg:mx-0">
               <img
                 src={user.profilePic || "/avatar.png"}
-                alt={user.name}
+                alt={user.fullName}
                 className="size-12 object-cover rounded-full border-2 border-white shadow-sm"
               />
               {onlineUsers.includes(user._id) && (
@@ -81,15 +81,15 @@ const Sidebar = () => {
               )}
             </div>
             <div className="hidden lg:block text-left min-w-0">
-              <div className="font-bold text-[var(--primary-text)] truncate">{user.fullName}</div>
-              <div className="text-sm text-[var(--secondary-text)] font-medium">
+              <div className="font-bold text-[var(--primary-text)] truncate text-sm">{user.fullName}</div>
+              <div className="text-xs text-[var(--secondary-text)] font-semibold">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
               </div>
             </div>
           </button>
         ))}
         {filteredUsers.length === 0 && (
-          <div className="text-center text-[var(--secondary-text)] py-4 font-semibold text-sm">No online users</div>
+          <div className="text-center text-[var(--secondary-text)] py-6 font-semibold text-xs">No online users</div>
         )}
       </div>
     </aside>

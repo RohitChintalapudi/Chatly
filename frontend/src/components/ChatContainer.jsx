@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
+import AudioMessageBubble from "./AudioMessageBubble";
 import { useAuthStore } from "../store/useAuthStore";
 import { useThemeStore } from "../store/useThemeStore";
 import { formatMessageTime } from "../lib/utils";
@@ -60,7 +61,13 @@ const ChatContainer = () => {
                   {message.image && (
                     <img src={message.image} alt="Attachment" className="sm:max-w-[200px] rounded-lg mb-2 border border-[var(--line)]/20" />
                   )}
-                  {message.text && <p>{message.text}</p>}
+                  {message.audio && (
+                    <AudioMessageBubble
+                      audioUrl={message.audio}
+                      isSender={message.senderId === authUser._id}
+                    />
+                  )}
+                  {message.text && <p className={message.audio || message.image ? "mt-2" : ""}>{message.text}</p>}
                 </div>
               </div>
             </div>
