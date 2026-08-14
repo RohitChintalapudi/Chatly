@@ -15,7 +15,7 @@ import { useAuthStore } from "./store/useAuthStore";
 import { useThemeStore, getAccentByKey } from "./store/useThemeStore";
 import { useEffect, useMemo } from "react";
 
-import { Loader } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {
@@ -29,8 +29,30 @@ const App = () => {
 
   if (isCheckingAuth && !authUser)
     return (
-      <div className="flex items-center justify-center h-screen bg-[var(--surface)]">
-        <Loader className="size-10 animate-spin text-[var(--accent)]" />
+      <div
+        className={isDark ? "dark" : ""}
+        style={{ "--accent": accent.accent, "--accent-hover": accent.hover }}
+      >
+        <div className="flex flex-col items-center justify-center gap-4 h-screen bg-[var(--surface)] transition-colors">
+          <div className="relative flex items-center justify-center">
+            {/* Glowing pulsating rings */}
+            <span className="absolute -inset-3.5 rounded-2xl bg-[var(--accent)] opacity-20 animate-ping duration-1000" />
+            <span className="absolute -inset-1 rounded-2xl bg-[var(--accent)] opacity-10 animate-pulse" />
+            
+            <div className="size-16 rounded-2xl bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center shadow-[4px_4px_0px_0px_var(--line)] transition-all">
+              <MessageSquare className="w-8 h-8 text-black animate-bounce" strokeWidth={2.5} />
+            </div>
+          </div>
+          
+          <div className="flex flex-col items-center mt-3 select-none">
+            <span className="text-sm font-black text-[var(--primary-text)] tracking-wider uppercase">
+              Chatly
+            </span>
+            <span className="text-[10px] font-extrabold text-[var(--secondary-text)] tracking-widest uppercase mt-1 animate-pulse">
+              Loading...
+            </span>
+          </div>
+        </div>
       </div>
     );
 
