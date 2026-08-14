@@ -69,9 +69,11 @@ export interface FileTypeUIInfo {
   label: string;
 }
 
-export const getFileTypeInfo = (mimeType: string, filename: string): FileTypeUIInfo => {
-  const extension = filename.split(".").pop()?.toLowerCase() || "";
-  const mime = mimeType.toLowerCase();
+export const getFileTypeInfo = (mimeType: string | undefined | null, filename: string | undefined | null): FileTypeUIInfo => {
+  const safeFilename = filename || "unnamed_file";
+  const safeMimeType = (mimeType || "application/octet-stream").toLowerCase();
+  const extension = safeFilename.split(".").pop()?.toLowerCase() || "";
+  const mime = safeMimeType;
 
   // Images
   if (mime.startsWith("image/") || ["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp"].includes(extension)) {
