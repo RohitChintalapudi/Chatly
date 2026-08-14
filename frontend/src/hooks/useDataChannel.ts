@@ -19,6 +19,7 @@ export class WebRTCManager {
   private callbacks: WebRTCManagerCallbacks | null = null;
   private peerId: string | null = null;
   private transferId: string | null = null;
+  private candidateQueue: RTCIceCandidateInit[] = [];
 
   constructor() {}
 
@@ -123,6 +124,7 @@ export class WebRTCManager {
     this.peerId = targetPeerId;
     this.transferId = transferId;
     this.callbacks = callbacks;
+    this.candidateQueue = [];
 
     console.log("WebRTCManager: Initializing RTCPeerConnection for", targetPeerId);
     const pc = new RTCPeerConnection(STUN_SERVERS);
@@ -197,6 +199,7 @@ export class WebRTCManager {
       };
 
       await pc.setRemoteDescription(new RTCSessionDescription(offerSdp));
+      await this.drainCandidates();
 
       const answer = await pc.createAnswer();
       await pc.setLocalDescription(answer);
@@ -220,6 +223,7 @@ export class WebRTCManager {
       if (this.pc) {
         console.log("WebRTCManager: Setting remote description (SDP Answer)");
         await this.pc.setRemoteDescription(new RTCSessionDescription(answerSdp));
+        await this.drainCandidates();
       }
     } catch (error) {
       console.error("WebRTCManager: Error setting SDP answer:", error);
@@ -232,12 +236,31 @@ export class WebRTCManager {
    */
   public async handleCandidate(candidateInit: RTCIceCandidateInit) {
     try {
-      if (this.pc) {
-        console.log("WebRTCManager: Adding remote ICE Candidate");
-        await this.pc.addIceCandidate(new RTCIceCandidate(candidateInit));
+      if (!this.pc || !this.pc.remoteDescription) {
+        console.log("WebRTCManager: Remote description not set. Queuing ICE candidate.");
+        this.candidateQueue.push(candidateInit);
+        return;
       }
+      console.log("WebRTCManager: Adding remote ICE Candidate");
+      await this.pc.addIceCandidate(new RTCIceCandidate(candidateInit));
     } catch (error) {
       console.error("WebRTCManager: Error adding ICE candidate:", error);
     }
+  }
+
+  /**
+   * Drains any queued ICE candidates.
+   */
+  private async drainCandidates() {
+    if (!this.pc) return;
+    console.log(`WebRTCManager: Draining ${this.candidateQueue.length} queued ICE candidates...`);
+    for (const candidate of this.candidateQueue) {
+      try {
+        await this.pc.addIceCandidate(new RTCIceCandidate(candidate));
+      } catch (e) {
+        console.error("WebRTCManager: Error adding queued candidate:", e);
+      }
+    }
+    this.candidateQueue = [];
   }
 }
