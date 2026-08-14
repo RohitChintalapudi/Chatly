@@ -224,50 +224,57 @@ io.on("connection", (socket) => {
   });
 
   // WebRTC Peer-to-Peer File Transfer Signaling Relay
-  socket.on("file-transfer-signal", ({ receiverId, signal }) => {
-    if (receiverId) {
-      const receiverSocketId = getReceiverSocketId(receiverId);
-      if (receiverSocketId) {
-        io.to(receiverSocketId).emit("file-transfer-signal", {
-          senderId: userId,
-          signal,
-        });
-      }
+  socket.on("file-transfer-signal", ({ receiverId, targetSocketId, signal }) => {
+    const destSocketId = targetSocketId || getReceiverSocketId(receiverId);
+    if (destSocketId) {
+      io.to(destSocketId).emit("file-transfer-signal", {
+        senderId: userId,
+        senderSocketId: socket.id,
+        signal,
+      });
     }
   });
 
   // Share Code Handshake Registry
-  socket.on("register-share-code", ({ code, transferId, metadata }) => {
+  socket.on("register-share-code", ({ code, transferId, metadata, senderName, senderAvatar }) => {
     if (code && transferId && metadata) {
       shareCodesMap[code] = {
         senderId: userId,
         socketId: socket.id,
         transferId,
         metadata,
+        senderName,
+        senderAvatar,
       };
-      console.log(`P2P Registry: Registered code [${code}] for user [${userId}]`);
+      console.log(`P2P Registry: Registered code [${code}] for user [${senderName || userId}]`);
     }
   });
 
-  socket.on("resolve-share-code", ({ code }) => {
+  socket.on("resolve-share-code", ({ code, receiverName, receiverAvatar }) => {
     const entry = shareCodesMap[code];
     if (!entry) {
       socket.emit("share-code-error", { message: "Share code is invalid or has expired." });
       return;
     }
 
-    console.log(`P2P Registry: Resolved code [${code}]. Connecting receiver [${userId}] to sender [${entry.senderId}]`);
+    console.log(`P2P Registry: Resolved code [${code}]. Connecting receiver [${receiverName || userId}] to sender [${entry.senderName || entry.senderId}]`);
 
     // Notify sender that a receiver matched the code
     io.to(entry.socketId).emit("share-code-matched", {
       receiverId: userId,
+      receiverSocketId: socket.id,
+      receiverName,
+      receiverAvatar,
     });
 
     // Notify receiver with the file metadata and sender info
     socket.emit("share-code-resolved", {
       senderId: entry.senderId,
+      senderSocketId: entry.socketId,
       transferId: entry.transferId,
       metadata: entry.metadata,
+      senderName: entry.senderName,
+      senderAvatar: entry.senderAvatar,
     });
 
     // Remove the code since it is successfully matched (single-use for security)

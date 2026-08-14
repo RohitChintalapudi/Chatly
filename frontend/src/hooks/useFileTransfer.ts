@@ -40,6 +40,7 @@ interface FileTransferStore {
   file: File | null;
   metadata: FileMetadata | null;
   peerId: string | null;
+  peerSocketId: string | null;
   peerName: string | null;
   peerAvatar: string | null;
   error: string | null;
@@ -58,7 +59,7 @@ interface FileTransferStore {
   resumeTransfer: () => void;
   cancelTransfer: () => void;
   resetTransfer: () => void;
-  handleIncomingSignal: (senderId: string, signal: SignalingPayload) => void;
+  handleIncomingSignal: (senderId: string, senderSocketId: string | null, signal: SignalingPayload) => void;
 }
 
 export const useFileTransferStore = create<FileTransferStore>((set, get) => {
@@ -310,13 +311,26 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
     },
     
     onChannelStateChange: (state: RTCDataChannelState) => {
-      const { role, transferId, status } = get();
+      const { role, transferId, status, metadata } = get();
       console.log(`Connection Recovery: DataChannel status is [${state}]`);
 
       if (state === "open") {
         if (status === "CONNECTING") {
-          // Transition to active transferring
-          set({ status: "TRANSFERRING" });
+          // Initialize stats
+          const total = totalChunksCount;
+          const size = metadata?.size || 0;
+          set({
+            status: "TRANSFERRING",
+            stats: {
+              speed: 0,
+              progress: 0,
+              transferredBytes: 0,
+              remainingBytes: size,
+              eta: 0,
+              currentChunk: 0,
+              totalChunks: total,
+            },
+          });
           toast.success("Connection established! Starting transfer...", { id: "transfer-status" });
 
           if (role === "sender") {
@@ -372,6 +386,7 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
     file: null,
     metadata: null,
     peerId: null,
+    peerSocketId: null,
     peerName: null,
     peerAvatar: null,
     error: null,
@@ -389,21 +404,37 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
         socketSignalUnsubscribe();
       }
 
-      const signalHandler = ({ senderId, signal }: { senderId: string; signal: SignalingPayload }) => {
-        get().handleIncomingSignal(senderId, signal);
+      const signalHandler = ({
+        senderId,
+        senderSocketId,
+        signal,
+      }: {
+        senderId: string;
+        senderSocketId?: string;
+        signal: SignalingPayload;
+      }) => {
+        get().handleIncomingSignal(senderId, senderSocketId || null, signal);
       };
 
-      const matchedHandler = ({ receiverId }: { receiverId: string }) => {
+      const matchedHandler = ({
+        receiverId,
+        receiverSocketId,
+        receiverName,
+        receiverAvatar,
+      }: {
+        receiverId: string;
+        receiverSocketId?: string;
+        receiverName?: string;
+        receiverAvatar?: string;
+      }) => {
         const { file, transferId } = get();
         if (!file || !transferId) return;
 
-        const users = useChatStore.getState().users;
-        const receiverInfo = users.find((u: any) => u._id === receiverId);
-
         set({
           peerId: receiverId,
-          peerName: receiverInfo?.fullName || receiverInfo?.name || "Receiver",
-          peerAvatar: receiverInfo?.profilePic || "/avatar.png",
+          peerSocketId: receiverSocketId || null,
+          peerName: receiverName || "Receiver",
+          peerAvatar: receiverAvatar || "/avatar.png",
           status: "CONNECTING",
         });
 
@@ -413,16 +444,19 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
 
       const resolvedHandler = ({
         senderId,
+        senderSocketId,
         transferId: incomingTransferId,
         metadata: incomingMetadata,
+        senderName,
+        senderAvatar,
       }: {
         senderId: string;
+        senderSocketId?: string;
         transferId: string;
         metadata: FileMetadata;
+        senderName?: string;
+        senderAvatar?: string;
       }) => {
-        const users = useChatStore.getState().users;
-        const senderInfo = users.find((u: any) => u._id === senderId);
-
         // Configure receiver state variables
         currentChunkIndex = 0;
         totalChunksCount = Math.ceil((incomingMetadata?.size || 0) / CHUNK_SIZE);
@@ -435,8 +469,9 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
           status: "CONNECTING",
           metadata: incomingMetadata || null,
           peerId: senderId,
-          peerName: senderInfo?.fullName || senderInfo?.name || "Sender",
-          peerAvatar: senderInfo?.profilePic || "/avatar.png",
+          peerSocketId: senderSocketId || null,
+          peerName: senderName || "Sender",
+          peerAvatar: senderAvatar || "/avatar.png",
           error: null,
           stats: null,
           downloadUrl: null,
@@ -548,6 +583,7 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
         file: null,
         metadata: null,
         peerId: null,
+        peerSocketId: null,
         peerName: null,
         peerAvatar: null,
         stats: null,
@@ -717,6 +753,7 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
         file: null,
         metadata: null,
         peerId: null,
+        peerSocketId: null,
         peerName: null,
         peerAvatar: null,
         error: null,
@@ -725,14 +762,22 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
       });
     },
 
-    /**
-     * Handles signaling packets arriving via WebSockets.
-     */
-    handleIncomingSignal: async (senderId: string, signal: SignalingPayload) => {
+    handleIncomingSignal: async (
+      senderId: string,
+      senderSocketId: string | null,
+      signal: SignalingPayload
+    ) => {
       const { type, transferId: signalTransferId, metadata, sdp, candidate } = signal;
-      const { transferId, status, role } = get();
+      const { transferId, status, role, peerSocketId } = get();
 
       console.log(`Socket signal received: [${type}]`, signal);
+
+      // Learn socket ID if not already saved
+      if (senderSocketId && !peerSocketId) {
+        set({ peerSocketId: senderSocketId });
+      }
+
+      const activeSocketId = senderSocketId || peerSocketId || get().peerSocketId;
 
       switch (type) {
         case "request":
@@ -741,6 +786,7 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
             const socket = useAuthStore.getState().socket;
             socket?.emit("file-transfer-signal", {
               receiverId: senderId,
+              targetSocketId: activeSocketId || undefined,
               signal: { type: "reject", transferId: signalTransferId, error: "Peer is busy with another transfer." },
             });
             return;
@@ -762,6 +808,7 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
             status: "REQUESTED",
             metadata: metadata || null,
             peerId: senderId,
+            peerSocketId: activeSocketId,
             peerName: senderInfo?.fullName || senderInfo?.name || "Someone",
             peerAvatar: senderInfo?.profilePic || "/avatar.png",
             error: null,
@@ -775,7 +822,7 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
           set({ status: "CONNECTING" });
           toast.loading("Receiver accepted! Creating connection...", { id: "transfer-status" });
           // Start the WebRTC Connection
-          await webRTC.startConnection(senderId, transferId, rtcCallbacks);
+          await webRTC.startConnection(senderId, transferId, rtcCallbacks, activeSocketId);
           break;
 
         case "reject":
@@ -787,7 +834,7 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
         case "offer":
           if (signalTransferId !== transferId || !sdp) return;
           console.log("Receiver: Handling WebRTC SDP offer...");
-          await webRTC.handleOffer(senderId, transferId, sdp, rtcCallbacks);
+          await webRTC.handleOffer(senderId, transferId, sdp, rtcCallbacks, activeSocketId);
           break;
 
         case "answer":

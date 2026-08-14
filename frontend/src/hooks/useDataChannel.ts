@@ -19,6 +19,7 @@ export class WebRTCManager {
   private callbacks: WebRTCManagerCallbacks | null = null;
   private peerId: string | null = null;
   private transferId: string | null = null;
+  private peerSocketId: string | null = null;
   private candidateQueue: RTCIceCandidateInit[] = [];
 
   constructor() {}
@@ -38,6 +39,7 @@ export class WebRTCManager {
     }
     socket.emit("file-transfer-signal", {
       receiverId,
+      targetSocketId: this.peerSocketId,
       signal,
     });
   }
@@ -111,19 +113,18 @@ export class WebRTCManager {
     };
   }
 
-  /**
-   * Initialize RTCPeerConnection.
-   */
   private initPeerConnection(
     targetPeerId: string,
     transferId: string,
-    callbacks: WebRTCManagerCallbacks
+    callbacks: WebRTCManagerCallbacks,
+    peerSocketId?: string | null
   ): RTCPeerConnection {
     this.closeConnection();
 
     this.peerId = targetPeerId;
     this.transferId = transferId;
     this.callbacks = callbacks;
+    this.peerSocketId = peerSocketId || null;
     this.candidateQueue = [];
 
     console.log("WebRTCManager: Initializing RTCPeerConnection for", targetPeerId);
@@ -148,16 +149,14 @@ export class WebRTCManager {
     return pc;
   }
 
-  /**
-   * Action: Start WebRTC Peer Connection (as Caller / Sender)
-   */
   public async startConnection(
     targetPeerId: string,
     transferId: string,
-    callbacks: WebRTCManagerCallbacks
+    callbacks: WebRTCManagerCallbacks,
+    peerSocketId?: string | null
   ) {
     try {
-      const pc = this.initPeerConnection(targetPeerId, transferId, callbacks);
+      const pc = this.initPeerConnection(targetPeerId, transferId, callbacks, peerSocketId);
 
       console.log("WebRTCManager: Creating DataChannel: chatly-file-transfer");
       const channel = pc.createDataChannel("chatly-file-transfer", {
@@ -179,17 +178,15 @@ export class WebRTCManager {
     }
   }
 
-  /**
-   * Action: Handle incoming SDP offer and reply with SDP answer (as Callee / Receiver)
-   */
   public async handleOffer(
     senderId: string,
     transferId: string,
     offerSdp: RTCSessionDescriptionInit,
-    callbacks: WebRTCManagerCallbacks
+    callbacks: WebRTCManagerCallbacks,
+    peerSocketId?: string | null
   ) {
     try {
-      const pc = this.initPeerConnection(senderId, transferId, callbacks);
+      const pc = this.initPeerConnection(senderId, transferId, callbacks, peerSocketId);
 
       pc.ondatachannel = (event) => {
         if (event.channel.label === "chatly-file-transfer") {
