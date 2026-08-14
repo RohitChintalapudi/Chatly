@@ -254,14 +254,15 @@ const LandingPage = () => {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16 animate-fade-in-up">
             <h2 className="text-3xl lg:text-4xl font-extrabold text-[var(--primary-text)] mb-4">
-              Why you&apos;ll{" "}
+              Core{" "}
               <span className="relative inline-block">
-                <span className="relative z-10">love it</span>
+                <span className="relative z-10">Features</span>
                 <span className="absolute bottom-1 left-0 w-full h-3 bg-[var(--accent)] -z-0 rounded-sm" />
-              </span>
+              </span>{" "}
+              of the App
             </h2>
             <p className="text-[var(--secondary-text)] text-lg max-w-2xl mx-auto font-medium">
-              Everything you need for seamless, enjoyable conversations
+              Everything you need for seamless, secure, and modern real-time communication.
             </p>
           </div>
 
