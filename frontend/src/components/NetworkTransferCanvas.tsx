@@ -26,6 +26,26 @@ interface Pulse {
   color: string;
 }
 
+// Convert Hex to RGBA safely for canvas rendering colors
+const hexToRgba = (hex: string, alpha: number): string => {
+  let c = hex.trim();
+  if (c.startsWith("var")) return hex;
+  
+  if (c.startsWith("#")) {
+    c = c.substring(1);
+    if (c.length === 3) {
+      c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+    }
+    const num = parseInt(c, 16);
+    if (isNaN(num)) return hex;
+    const r = (num >> 16) & 255;
+    const g = (num >> 8) & 255;
+    const b = num & 255;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+  return hex;
+};
+
 export const NetworkTransferCanvas: React.FC<NetworkTransferCanvasProps> = React.memo(({
   senderAvatar,
   receiverAvatar,
@@ -114,7 +134,7 @@ export const NetworkTransferCanvas: React.FC<NetworkTransferCanvasProps> = React
       ctx.quadraticCurveTo(controlPos.x, controlPos.y, receiverPos.x, receiverPos.y);
       const pathwayGradient = ctx.createLinearGradient(senderPos.x, senderPos.y, receiverPos.x, receiverPos.y);
       pathwayGradient.addColorStop(0, accentColor);
-      pathwayGradient.addColorStop(1, `${accentColor}33`);
+      pathwayGradient.addColorStop(1, hexToRgba(accentColor, 0.2));
       ctx.strokeStyle = pathwayGradient;
       ctx.lineWidth = 2.5;
       ctx.stroke();
