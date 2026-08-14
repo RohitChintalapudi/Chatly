@@ -156,16 +156,16 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
 
       const transferred = receivedChunks.reduce((acc, chunk) => acc + (chunk ? chunk.byteLength : 0), 0);
       const currentSpeed = speedCalc.update(transferred);
-      const eta = calculateETA(metadata.size - transferred, currentSpeed);
+      const eta = calculateETA(metadata!.size - transferred, currentSpeed);
 
       const now = performance.now();
       if (now - lastStateUpdate > 150 || packet.chunkIndex === packet.totalChunks - 1) {
         set({
           stats: {
             speed: currentSpeed,
-            progress: Math.floor((transferred / metadata.size) * 100),
+            progress: Math.floor((transferred / metadata!.size) * 100),
             transferredBytes: transferred,
-            remainingBytes: metadata.size - transferred,
+            remainingBytes: metadata!.size - transferred,
             eta,
             currentChunk: packet.chunkIndex + 1,
             totalChunks: packet.totalChunks,
@@ -184,7 +184,7 @@ export const useFileTransferStore = create<FileTransferStore>((set, get) => {
       if (totalReceived === packet.totalChunks) {
         console.log("Receiver: All chunks received. Reconstructing file...");
         
-        const blob = mergeChunks(receivedChunks, packet.totalChunks, metadata.size, metadata.type);
+        const blob = mergeChunks(receivedChunks, packet.totalChunks, metadata!.size, metadata!.type);
         const url = URL.createObjectURL(blob);
 
         set({
