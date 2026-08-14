@@ -14,6 +14,7 @@ import {
   Globe,
   Smartphone,
   Loader2,
+  Share2,
 } from "lucide-react";
 import SectionDivider from "../components/SectionDivider";
 import { axiosInstance } from "../lib/axios";
@@ -187,8 +188,7 @@ const LandingPage = () => {
               </h1>
 
               <p className="text-lg text-[var(--secondary-text)] max-w-lg leading-relaxed font-medium">
-                A modern chat experience that&apos;s fast, fun, and effortlessly
-                simple. Connect with friends in real-time.
+                Chatly is not just a chatting application. It is a complete real-time collaboration hub featuring direct peer-to-peer file sharing, instant audio rooms, and beautiful connections that feel alive.
               </p>
 
               <div className="flex flex-wrap gap-4">
@@ -300,9 +300,9 @@ const LandingPage = () => {
               delay="0.5s"
             />
             <FeatureCard
-              icon={Send}
-              title="Instant Delivery"
-              description="Ultra-low latency message delivery powered by modern WebSocket infrastructure."
+              icon={Share2}
+              title="P2P File Transfer"
+              description="Transfer any file format up to 1GB directly browser-to-browser via WebRTC. Speed limits are set only by your network."
               delay="0.7s"
             />
           </div>
