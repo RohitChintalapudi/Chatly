@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { useThemeStore } from "../store/useThemeStore";
-import { LogOut, MessageSquare, Settings, User, Menu, X, Sun, Moon, Phone, Radio } from "lucide-react";
+import { LogOut, MessageSquare, Settings, User, Menu, X, Sun, Moon, Phone, Radio, Share2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const landingLinks = [
@@ -14,6 +14,7 @@ const landingLinks = [
 const appSections = [
   { label: "Chat", href: "/", icon: MessageSquare },
   { label: "Audio Rooms", href: "/audio-rooms", icon: Radio },
+  { label: "File Transfer", href: "/test-p2p", icon: Share2 },
 ];
 
 const LogoutModal = ({ isOpen, onClose, onConfirm }) => {

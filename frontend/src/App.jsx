@@ -8,6 +8,7 @@ import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import AudioRoomPage from "./pages/AudioRoomPage";
 import AudioRoomsDashboardPage from "./pages/AudioRoomsDashboardPage";
+import P2PTestPage from "./pages/P2PTestPage";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "./store/useAuthStore";
@@ -48,6 +49,7 @@ const App = () => {
           <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
           <Route path="/audio-rooms" element={authUser ? <AudioRoomsDashboardPage /> : <Navigate to="/login" />} />
           <Route path="/room/:roomId" element={<AudioRoomPage />} />
+          <Route path="/test-p2p" element={<P2PTestPage />} />
         </Routes>
         <Toaster
           position="top-center"
