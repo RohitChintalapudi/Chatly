@@ -22,6 +22,14 @@ import toast from "react-hot-toast";
 export const P2PTestPage: React.FC = () => {
   const store = useFileTransferStore();
   const socket = useAuthStore((s) => s.socket);
+  const initializeSocketListeners = useFileTransferStore((s) => s.initializeSocketListeners);
+
+  // Initialize socket listeners on page mount/load
+  useEffect(() => {
+    if (socket) {
+      initializeSocketListeners();
+    }
+  }, [socket, initializeSocketListeners]);
 
   // Local component states
   const [activeTab, setActiveTab] = useState<"send" | "receive">("send");
@@ -40,7 +48,6 @@ export const P2PTestPage: React.FC = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Generate 6-digit random code
   const handleGenerateCode = () => {
     if (!store.file || !store.transferId || !store.metadata) return;
     
@@ -49,10 +56,13 @@ export const P2PTestPage: React.FC = () => {
     
     // Register this code with backend socket
     if (socket) {
+      const authUser = useAuthStore.getState().authUser;
       socket.emit("register-share-code", {
         code,
         transferId: store.transferId,
         metadata: store.metadata,
+        senderName: authUser?.fullName || authUser?.name || "Sender",
+        senderAvatar: authUser?.profilePic || "/avatar.png",
       });
       // Set state to REQUESTING (meaning code is generated and awaiting match)
       useFileTransferStore.setState({ status: "REQUESTING" });
@@ -62,7 +72,6 @@ export const P2PTestPage: React.FC = () => {
     }
   };
 
-  // Handle code resolution (receiver)
   const handleResolveCode = (e: React.FormEvent) => {
     e.preventDefault();
     if (!enteredCode || enteredCode.length !== 6) {
@@ -72,7 +81,12 @@ export const P2PTestPage: React.FC = () => {
 
     if (socket) {
       toast.loading("Connecting code...", { id: "p2p-status" });
-      socket.emit("resolve-share-code", { code: enteredCode });
+      const authUser = useAuthStore.getState().authUser;
+      socket.emit("resolve-share-code", {
+        code: enteredCode,
+        receiverName: authUser?.fullName || authUser?.name || "Receiver",
+        receiverAvatar: authUser?.profilePic || "/avatar.png",
+      });
     } else {
       toast.error("Socket disconnected. Unable to resolve share code.");
     }
