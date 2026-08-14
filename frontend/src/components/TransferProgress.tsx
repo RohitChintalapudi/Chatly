@@ -39,8 +39,9 @@ export const TransferProgress: React.FC<TransferProgressProps> = ({
   // Generate ASCII progress bar e.g. █████████░░
   const getAsciiBar = (pct: number): string => {
     const totalBars = 12;
-    const filledBars = Math.round((pct / 100) * totalBars);
-    const emptyBars = totalBars - filledBars;
+    const clampedPct = Math.max(0, Math.min(100, pct || 0));
+    const filledBars = Math.round((clampedPct / 100) * totalBars);
+    const emptyBars = Math.max(0, totalBars - filledBars);
     return "█".repeat(filledBars) + "░".repeat(emptyBars);
   };
 
