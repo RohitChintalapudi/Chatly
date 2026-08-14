@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { useChatStore } from "../store/useChatStore";
-import { Image, Send, X, Mic, Trash2 } from "lucide-react";
+import { useFileTransferStore } from "../hooks/useFileTransfer";
+import { Image, Send, X, Mic, Trash2, Paperclip } from "lucide-react";
 import toast from "react-hot-toast";
 import { formatDuration } from "../lib/utils";
 
@@ -11,12 +12,14 @@ const MessageInput = () => {
   const [recordingTime, setRecordingTime] = useState(0);
 
   const fileInputRef = useRef(null);
+  const p2pFileRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const audioStreamRef = useRef(null);
   const audioChunksRef = useRef([]);
   const timerRef = useRef(null);
 
-  const { sendMessage } = useChatStore();
+  const { sendMessage, selectedUser } = useChatStore();
+  const selectFile = useFileTransferStore((s) => s.selectFile);
 
   useEffect(() => {
     return () => {
@@ -37,6 +40,22 @@ const MessageInput = () => {
     const reader = new FileReader();
     reader.onloadend = () => setImagePreview(reader.result);
     reader.readAsDataURL(file);
+  };
+
+  const handleP2PFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!selectedUser) {
+      toast.error("Please select a user to share the file with.");
+      return;
+    }
+    selectFile(
+      file,
+      selectedUser._id,
+      selectedUser.fullName || selectedUser.name || "User",
+      selectedUser.profilePic || "/avatar.png"
+    );
+    e.target.value = "";
   };
 
   const removeImage = () => {
@@ -219,6 +238,12 @@ const MessageInput = () => {
               ref={fileInputRef}
               onChange={handleImageChange}
             />
+            <input
+              type="file"
+              className="hidden"
+              ref={p2pFileRef}
+              onChange={handleP2PFileChange}
+            />
             <button
               type="button"
               className={`w-10 h-10 rounded-xl border-2 border-[var(--line)] flex items-center justify-center transition-all cursor-pointer ${
@@ -230,6 +255,16 @@ const MessageInput = () => {
               title="Attach Image"
             >
               <Image size={18} />
+            </button>
+
+            {/* P2P File Share Button */}
+            <button
+              type="button"
+              className="w-10 h-10 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--secondary-text)] hover:text-[var(--accent)] hover:border-[var(--accent)] hover:bg-[var(--accent)]/10 transition-all cursor-pointer flex items-center justify-center"
+              onClick={() => p2pFileRef.current?.click()}
+              title="Share File Peer-to-Peer"
+            >
+              <Paperclip size={18} />
             </button>
 
             {/* Mic Record Button */}

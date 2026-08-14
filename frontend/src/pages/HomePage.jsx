@@ -1,10 +1,22 @@
+import { useEffect } from "react";
 import { useChatStore } from "../store/useChatStore";
+import { useAuthStore } from "../store/useAuthStore";
+import { useFileTransferStore } from "../hooks/useFileTransfer";
 import Sidebar from "../components/Sidebar";
 import ChatDashboard from "../components/ChatDashboard";
 import ChatContainer from "../components/ChatContainer";
+import { FileTransferModal } from "../components/FileTransferModal";
 
 const HomePage = () => {
   const { selectedUser } = useChatStore();
+  const socket = useAuthStore((s) => s.socket);
+  const initializeSocketListeners = useFileTransferStore((s) => s.initializeSocketListeners);
+
+  useEffect(() => {
+    if (socket) {
+      initializeSocketListeners();
+    }
+  }, [socket, initializeSocketListeners]);
 
   return (
     <div className="h-screen bg-[var(--surface)] relative overflow-hidden transition-colors">
@@ -24,6 +36,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+      <FileTransferModal />
     </div>
   );
 };

@@ -25,6 +25,8 @@ export function getReceiverSocketId(userId) {
 const userSocketMap = {}; // {userId: socketId}
 // used to store active live audio rooms
 const roomsMap = {}; // { roomId: { roomId, title, hostId, createdAt, participants: { [socketId]: { socketId, userId, name, avatar, isMuted } } } }
+// used to store active P2P share codes
+const shareCodesMap = {}; // { code: { senderId, socketId, transferId, metadata } }
 
 function getActiveRoomsList() {
   return Object.values(roomsMap).map((room) => ({
@@ -221,10 +223,69 @@ io.on("connection", (socket) => {
     }
   });
 
+  // WebRTC Peer-to-Peer File Transfer Signaling Relay
+  socket.on("file-transfer-signal", ({ receiverId, signal }) => {
+    if (receiverId) {
+      const receiverSocketId = getReceiverSocketId(receiverId);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("file-transfer-signal", {
+          senderId: userId,
+          signal,
+        });
+      }
+    }
+  });
+
+  // Share Code Handshake Registry
+  socket.on("register-share-code", ({ code, transferId, metadata }) => {
+    if (code && transferId && metadata) {
+      shareCodesMap[code] = {
+        senderId: userId,
+        socketId: socket.id,
+        transferId,
+        metadata,
+      };
+      console.log(`P2P Registry: Registered code [${code}] for user [${userId}]`);
+    }
+  });
+
+  socket.on("resolve-share-code", ({ code }) => {
+    const entry = shareCodesMap[code];
+    if (!entry) {
+      socket.emit("share-code-error", { message: "Share code is invalid or has expired." });
+      return;
+    }
+
+    console.log(`P2P Registry: Resolved code [${code}]. Connecting receiver [${userId}] to sender [${entry.senderId}]`);
+
+    // Notify sender that a receiver matched the code
+    io.to(entry.socketId).emit("share-code-matched", {
+      receiverId: userId,
+    });
+
+    // Notify receiver with the file metadata and sender info
+    socket.emit("share-code-resolved", {
+      senderId: entry.senderId,
+      transferId: entry.transferId,
+      metadata: entry.metadata,
+    });
+
+    // Remove the code since it is successfully matched (single-use for security)
+    delete shareCodesMap[code];
+  });
+
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);
     delete userSocketMap[userId];
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+    // Clean up active share codes associated with this socket
+    Object.keys(shareCodesMap).forEach((code) => {
+      if (shareCodesMap[code].socketId === socket.id) {
+        console.log(`P2P Registry: Cleaned up orphaned code [${code}]`);
+        delete shareCodesMap[code];
+      }
+    });
 
     // Cleanup audio rooms
     Object.keys(roomsMap).forEach((roomId) => {
