@@ -86,9 +86,9 @@ The backend acts as both an HTTP REST API server and a real-time signaling coord
 
 ```mermaid
 flowchart TD
-    classDef client fill:#e0f2fe,stroke:#0284c7,stroke-width:2px;
-    classDef backend fill:#f0fdf4,stroke:#16a34a,stroke-width:2px;
-    classDef external fill:#fff7ed,stroke:#ea580c,stroke-width:2px;
+    classDef client fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#000,font-weight:bold;
+    classDef backend fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#000,font-weight:bold;
+    classDef external fill:#fff7ed,stroke:#ea580c,stroke-width:2px,color:#000,font-weight:bold;
 
     Client[Client Browser / React UI]:::client
     
