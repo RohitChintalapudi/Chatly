@@ -1,0 +1,23 @@
+# Tasks
+
+- [x] Install `framer-motion` in the frontend directory
+- [x] Update backend signaling in `backend/src/lib/socket.js`
+- [x] Implement core types and utilities:
+  - [x] Type definitions: `types/fileTransfer.ts`
+  - [x] Validators: `utils/fileValidators.ts`
+  - [x] Calculators: `utils/speedCalculator.ts` and `utils/etaCalculator.ts`
+  - [x] Chunking & merging: `utils/chunkFile.ts` and `utils/mergeChunks.ts`
+  - [x] Protocol definitions: `utils/protocol.ts`
+- [x] Implement hooks:
+  - [x] WebRTC connection hook: `hooks/useDataChannel.ts`
+  - [x] Orchestration hook/store: `hooks/useFileTransfer.ts`
+- [x] Implement UI components:
+  - [x] Network Transfer Canvas: `components/NetworkTransferCanvas.tsx`
+  - [x] Request Card: `components/TransferRequestCard.tsx`
+  - [x] Progress Card: `components/TransferProgress.tsx`
+  - [x] Complete Card: `components/CompletedTransferCard.tsx`
+  - [x] Parent Modal: `components/FileTransferModal.tsx`
+- [x] Integrate into existing chat page and inputs:
+  - [x] Modify `components/MessageInput.jsx`
+  - [x] Modify `pages/HomePage.jsx`
+- [/] Verify everything compiles and run tests
