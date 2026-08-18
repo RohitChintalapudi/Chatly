@@ -66,7 +66,7 @@ const AudioRoomsDashboardPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--surface)] pt-28 lg:pt-20 px-4 pb-12 transition-colors overflow-y-auto no-scrollbar">
+    <div className="min-h-screen bg-[var(--surface)] pt-28 xl:pt-20 px-4 pb-12 transition-colors overflow-y-auto no-scrollbar">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header Hero Title */}
         <div className="text-center space-y-2 max-w-2xl mx-auto pt-4">
