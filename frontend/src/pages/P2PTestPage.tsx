@@ -119,7 +119,7 @@ export const P2PTestPage: React.FC = () => {
   // If a transfer is active (connecting/transferring), show the dynamic screen directly
   if (isTransferring && store.metadata) {
     return (
-      <div className="pt-24 px-6 pb-6 max-w-xl mx-auto min-h-[calc(100vh-6rem)] flex flex-col justify-start">
+      <div className="pt-32 xl:pt-24 px-6 pb-6 max-w-xl mx-auto min-h-[calc(100vh-6rem)] flex flex-col justify-start">
         <div className="mb-6 text-center">
           <h2 className="text-lg font-black text-[var(--primary-text)]">Active P2P Sharing</h2>
           <p className="text-xs text-[var(--secondary-text)] font-semibold mt-1">
@@ -151,7 +151,7 @@ export const P2PTestPage: React.FC = () => {
   // If completed, render completion details
   if (store.status === "COMPLETED" && store.metadata) {
     return (
-      <div className="pt-28 px-6 pb-6 max-w-md mx-auto min-h-[calc(100vh-6rem)]">
+      <div className="pt-32 xl:pt-28 px-6 pb-6 max-w-md mx-auto min-h-[calc(100vh-6rem)]">
         <CompletedTransferCard
           metadata={store.metadata}
           role={store.role || "sender"}
@@ -169,7 +169,7 @@ export const P2PTestPage: React.FC = () => {
   // If failed, render error details
   if (store.status === "FAILED") {
     return (
-      <div className="pt-28 px-6 pb-6 max-w-sm mx-auto min-h-[calc(100vh-6rem)]">
+      <div className="pt-32 xl:pt-28 px-6 pb-6 max-w-sm mx-auto min-h-[calc(100vh-6rem)]">
         <div className="p-6 bg-[var(--surface)] border-2 border-[var(--line)] rounded-2xl shadow-[4px_4px_0px_0px_var(--line)] text-center">
           <div className="w-12 h-12 rounded-full bg-red-500/10 border-2 border-red-500/30 text-red-500 flex items-center justify-center mx-auto mb-4">
             <AlertCircle size={24} />
@@ -196,7 +196,7 @@ export const P2PTestPage: React.FC = () => {
 
   // Standard File Sharing Tabs View
   return (
-    <div className="pt-24 px-6 pb-6 max-w-lg mx-auto min-h-[calc(100vh-6rem)] flex flex-col justify-start">
+    <div className="pt-32 xl:pt-24 px-6 pb-6 max-w-lg mx-auto min-h-[calc(100vh-6rem)] flex flex-col justify-start">
       {/* Page Header */}
       <div className="text-center mb-8">
         <h1 className="text-2xl font-black text-[var(--primary-text)] tracking-tight">

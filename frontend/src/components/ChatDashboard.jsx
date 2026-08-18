@@ -41,7 +41,7 @@ const features = [
 
 const ChatDashboard = () => {
   return (
-    <div className="w-full flex flex-1 flex-col items-center justify-center p-8 md:p-12 bg-[var(--surface-muted)] overflow-y-auto transition-colors">
+    <div className="w-full hidden lg:flex flex-1 flex-col items-center justify-center p-8 md:p-12 bg-[var(--surface-muted)] overflow-y-auto transition-colors">
       <div className="max-w-2xl w-full text-center space-y-6">
         <div className="flex justify-center mb-2">
           <div className="relative">
