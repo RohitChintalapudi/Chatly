@@ -24,15 +24,15 @@ const Sidebar = () => {
   if (isUsersLoading) return <SidebarSkeleton />;
 
   return (
-    <aside className="h-full w-20 lg:w-72 border-r-2 border-[var(--line)] bg-[var(--surface)] flex flex-col transition-all duration-200">
+    <aside className={`h-full ${selectedUser ? "hidden lg:flex" : "flex"} w-full lg:w-72 lg:border-r-2 border-[var(--line)] bg-[var(--surface)] flex-col transition-all duration-200`}>
       <div className="border-b-2 border-[var(--line)] w-full p-5">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center transition-colors">
             <Users className="w-4 h-4 text-[var(--primary-text)]" strokeWidth={2.5} />
           </div>
-          <span className="font-extrabold hidden lg:block text-[var(--primary-text)]">Contacts</span>
+          <span className="font-extrabold text-[var(--primary-text)]">Contacts</span>
         </div>
-        <div className="mt-3 hidden lg:flex items-center gap-2">
+        <div className="mt-3 flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
             <div className="relative">
               <input
@@ -65,7 +65,7 @@ const Sidebar = () => {
                   : ""
             }`}
           >
-            <div className="relative mx-auto lg:mx-0">
+            <div className="relative">
               <img
                 src={user.profilePic || "/avatar.png"}
                 alt={user.fullName}
@@ -80,7 +80,7 @@ const Sidebar = () => {
                 </span>
               )}
             </div>
-            <div className="hidden lg:block text-left min-w-0">
+            <div className="text-left min-w-0">
               <div className="font-bold text-[var(--primary-text)] truncate text-sm">{user.fullName}</div>
               <div className="text-xs text-[var(--secondary-text)] font-semibold">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}

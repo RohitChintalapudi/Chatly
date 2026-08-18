@@ -46,7 +46,7 @@ const ProfilePage = () => {
   const passwordsMismatch = confirmPassword && newPassword !== confirmPassword;
 
   return (
-    <div className="min-h-screen bg-[var(--surface)] flex items-start justify-center px-4 pt-24 pb-10 transition-colors relative overflow-y-auto">
+    <div className="min-h-screen bg-[var(--surface)] flex items-start justify-center px-4 pt-28 lg:pt-24 pb-10 transition-colors relative overflow-y-auto">
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[15%] left-[10%] w-72 h-72 bg-[var(--accent)] rounded-full filter blur-3xl opacity-15 animate-float" />
         <div className="absolute bottom-[20%] right-[10%] w-80 h-80 bg-[var(--accent)] rounded-full filter blur-3xl opacity-10 animate-float-slow" />
