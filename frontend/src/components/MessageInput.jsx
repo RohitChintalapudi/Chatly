@@ -164,7 +164,7 @@ const MessageInput = () => {
   };
 
   return (
-    <div className="p-4 w-full border-t-2 border-[var(--line)] bg-[var(--surface)] transition-colors">
+    <div className="p-3 sm:p-4 w-full border-t-2 border-[var(--line)] bg-[var(--surface)] transition-colors">
       {imagePreview && !isRecording && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
@@ -222,11 +222,11 @@ const MessageInput = () => {
         </div>
       ) : (
         /* Standard Chat Input Form */
-        <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-          <div className="flex-1 flex gap-2">
+        <form onSubmit={handleSendMessage} className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex-1 flex gap-1.5 sm:gap-2 min-w-0">
             <input
               type="text"
-              className="w-full px-4 py-2.5 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-medium placeholder:text-[var(--secondary-text)] focus:outline-none focus:border-[var(--accent)] transition-colors text-sm"
+              className="w-full min-w-0 px-3.5 sm:px-4 py-2.5 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-medium placeholder:text-[var(--secondary-text)] focus:outline-none focus:border-[var(--accent)] transition-colors text-sm"
               placeholder="Type a message..."
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -246,7 +246,7 @@ const MessageInput = () => {
             />
             <button
               type="button"
-              className={`w-10 h-10 rounded-xl border-2 border-[var(--line)] flex items-center justify-center transition-all cursor-pointer ${
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl border-2 border-[var(--line)] flex items-center justify-center transition-all cursor-pointer ${
                 imagePreview
                   ? "bg-[var(--accent)] text-[var(--primary-text)]"
                   : "bg-[var(--surface)] text-[var(--secondary-text)] hover:bg-[var(--accent)]/10"
@@ -260,7 +260,7 @@ const MessageInput = () => {
             {/* P2P File Share Button */}
             <button
               type="button"
-              className="w-10 h-10 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--secondary-text)] hover:text-[var(--accent)] hover:border-[var(--accent)] hover:bg-[var(--accent)]/10 transition-all cursor-pointer flex items-center justify-center"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--secondary-text)] hover:text-[var(--accent)] hover:border-[var(--accent)] hover:bg-[var(--accent)]/10 transition-all cursor-pointer flex items-center justify-center"
               onClick={() => p2pFileRef.current?.click()}
               title="Share File Peer-to-Peer"
             >
@@ -271,7 +271,7 @@ const MessageInput = () => {
             <button
               type="button"
               onClick={startRecording}
-              className="w-10 h-10 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--secondary-text)] hover:text-red-500 hover:border-red-400 hover:bg-red-500/10 transition-all cursor-pointer flex items-center justify-center"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--secondary-text)] hover:text-red-500 hover:border-red-400 hover:bg-red-500/10 transition-all cursor-pointer flex items-center justify-center"
               title="Record Voice Note"
             >
               <Mic size={18} />
@@ -280,7 +280,7 @@ const MessageInput = () => {
 
           <button
             type="submit"
-            className="w-10 h-10 rounded-xl border-2 border-[var(--line)] bg-[var(--accent)] flex items-center justify-center hover:bg-[var(--accent-hover)] hover:shadow-[2px_2px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border-2 border-[var(--line)] bg-[var(--accent)] flex items-center justify-center hover:bg-[var(--accent-hover)] hover:shadow-[2px_2px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             disabled={!text.trim() && !imagePreview}
           >
             <Send size={18} className="text-[var(--primary-text)]" />
