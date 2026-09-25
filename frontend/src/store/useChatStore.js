@@ -77,8 +77,10 @@ export const useChatStore = create((set, get) => ({
     if (!socket) return;
 
     socket.off("newMessage");
-    socket.on("newMessage", (newMessage) => {
-      const { selectedUser, unreadCounts } = get();
+    socket.off("newContactAdded");
+
+    socket.on("newMessage", async (newMessage) => {
+      const { selectedUser, unreadCounts, users } = get();
       const isFromSelected = selectedUser && newMessage.senderId === selectedUser._id;
 
       if (isFromSelected) {
@@ -89,13 +91,54 @@ export const useChatStore = create((set, get) => ({
         set({
           unreadCounts: { ...unreadCounts, [senderId]: current + 1 },
         });
+
+        // Ensure the sender is in the contacts list in real time
+        const senderExists = (users || []).some((u) => u._id === senderId);
+        if (!senderExists) {
+          if (newMessage.sender) {
+            set({ users: [newMessage.sender, ...get().users] });
+          } else {
+            await get().getUsers();
+          }
+        }
+
+        // Show friendly notification toast
+        const senderUser = (get().users || []).find((u) => u._id === senderId) || newMessage.sender;
+        const senderName = senderUser?.fullName || "Contact";
+        const preview = newMessage.text
+          ? newMessage.text
+          : newMessage.image
+            ? "Sent an image"
+            : newMessage.audio
+              ? "Sent a voice message"
+              : "Sent you a message";
+
+        toast(`${senderName}: ${preview}`, {
+          icon: "💬",
+          id: `msg-${newMessage._id || Date.now()}`,
+          duration: 4000,
+        });
+      }
+    });
+
+    socket.on("newContactAdded", (data) => {
+      if (data?.user) {
+        const { users } = get();
+        const exists = (users || []).some((u) => u._id === data.user._id);
+        if (!exists) {
+          set({ users: [data.user, ...users] });
+        }
+        toast.success(`${data.user.fullName} connected with you!`);
       }
     });
   },
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
-    if (socket) socket.off("newMessage");
+    if (socket) {
+      socket.off("newMessage");
+      socket.off("newContactAdded");
+    }
   },
 
   setSelectedUser: (selectedUser) => {

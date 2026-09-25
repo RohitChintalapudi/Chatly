@@ -68,6 +68,15 @@ export const addContactByCode = async (req, res) => {
       $addToSet: { contacts: loggedInUserId },
     });
 
+    // Notify targetUser in real time if online
+    const targetSocketId = getReceiverSocketId(targetUser._id.toString());
+    if (targetSocketId) {
+      const loggedInUserWithoutPassword = await User.findById(loggedInUserId).select("-password");
+      io.to(targetSocketId).emit("newContactAdded", {
+        user: loggedInUserWithoutPassword,
+      });
+    }
+
     res.status(200).json({
       message: `Added ${targetUser.fullName} to contacts!`,
       contact: targetUser,
@@ -133,9 +142,18 @@ export const sendMessage = async (req, res) => {
 
     await newMessage.save();
 
+    // Ensure bidirectional contacts linkage
+    await User.findByIdAndUpdate(senderId, { $addToSet: { contacts: receiverId } });
+    await User.findByIdAndUpdate(receiverId, { $addToSet: { contacts: senderId } });
+
+    const sender = await User.findById(senderId).select("fullName profilePic chatCode");
+
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage);
+      io.to(receiverSocketId).emit("newMessage", {
+        ...newMessage.toObject(),
+        sender,
+      });
     }
 
     res.status(201).json(newMessage);
