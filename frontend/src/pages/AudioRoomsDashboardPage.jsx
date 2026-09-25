@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import { Radio, Plus, LogIn, Volume2, Users, Sparkles, Lock, ArrowRight, Shield } from "lucide-react";
+import { Plus, LogIn, Volume2, Users, Sparkles, Lock, ArrowRight, Shield } from "lucide-react";
 import toast from "react-hot-toast";
 
 const AudioRoomsDashboardPage = () => {
@@ -70,10 +70,6 @@ const AudioRoomsDashboardPage = () => {
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header Hero Title */}
         <div className="text-center space-y-2 max-w-2xl mx-auto pt-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border-2 border-blue-500 text-black text-xs font-black tracking-wide uppercase shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-            <Radio size={14} className="animate-pulse text-blue-600" />
-            <span className="text-black font-black">Drop-In WebRTC Audio Suite</span>
-          </div>
           <h1 className="text-3xl sm:text-4xl font-black text-[var(--primary-text)] tracking-tight">
             Live Audio Rooms
           </h1>
