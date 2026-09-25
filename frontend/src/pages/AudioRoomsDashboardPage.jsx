@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import { Plus, LogIn, Volume2, Users, Sparkles, Lock, ArrowRight, Shield } from "lucide-react";
+import { Radio, Plus, LogIn, Volume2, Users, Sparkles, Lock, ArrowRight, Shield } from "lucide-react";
 import toast from "react-hot-toast";
 
 const AudioRoomsDashboardPage = () => {
