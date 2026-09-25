@@ -10,23 +10,7 @@ export const getUsersForSidebar = async (req, res) => {
 
     // Fetch user's saved contacts
     const currentUser = await User.findById(loggedInUserId).populate("contacts", "-password");
-    const contactIds = (currentUser?.contacts || []).map((c) => c._id.toString());
-
-    // Also include any user with whom messages have been exchanged
-    const senders = await Message.find({ receiverId: loggedInUserId }).distinct("senderId");
-    const receivers = await Message.find({ senderId: loggedInUserId }).distinct("receiverId");
-
-    const messagePartnerIds = [...senders, ...receivers]
-      .map((id) => id.toString())
-      .filter((id) => id !== loggedInUserId.toString());
-
-    const allAllowedIds = [...new Set([...contactIds, ...messagePartnerIds])];
-
-    const allowedUsers = await User.find({
-      _id: { $in: allAllowedIds },
-    }).select("-password");
-
-    res.status(200).json(allowedUsers);
+    res.status(200).json(currentUser?.contacts || []);
   } catch (error) {
     console.error("Error in getUsersForSidebar: ", error.message);
     res.status(500).json({ error: "Internal server error" });
@@ -162,3 +146,107 @@ export const sendMessage = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const clearChat = async (req, res) => {
+  try {
+    const { id: userToChatId } = req.params;
+    const myId = req.user._id;
+
+    await Message.deleteMany({
+      $or: [
+        { senderId: myId, receiverId: userToChatId },
+        { senderId: userToChatId, receiverId: myId },
+      ],
+    });
+
+    // Notify receiver in real time if online
+    const receiverSocketId = getReceiverSocketId(userToChatId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("chatCleared", {
+        clearedBy: myId.toString(),
+        chatPartnerId: userToChatId.toString(),
+      });
+    }
+
+    res.status(200).json({ message: "Chat conversation cleared successfully" });
+  } catch (error) {
+    console.error("Error in clearChat controller: ", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const deleteMessage = async (req, res) => {
+  try {
+    const { id: messageId } = req.params;
+    const myId = req.user._id;
+
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ message: "Message not found" });
+    }
+
+    // Check authorization: user must be sender or receiver
+    if (
+      message.senderId.toString() !== myId.toString() &&
+      message.receiverId.toString() !== myId.toString()
+    ) {
+      return res.status(403).json({ message: "Not authorized to delete this message" });
+    }
+
+    await Message.findByIdAndDelete(messageId);
+
+    // Notify other participant in real time
+    const otherUserId =
+      message.senderId.toString() === myId.toString()
+        ? message.receiverId.toString()
+        : message.senderId.toString();
+
+    const receiverSocketId = getReceiverSocketId(otherUserId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("messageDeleted", {
+        messageId: messageId.toString(),
+        deletedBy: myId.toString(),
+      });
+    }
+
+    res.status(200).json({ message: "Message deleted successfully", messageId });
+  } catch (error) {
+    console.error("Error in deleteMessage controller: ", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const removeContact = async (req, res) => {
+  try {
+    const { id: contactId } = req.params;
+    const loggedInUserId = req.user._id;
+    const { deleteChatHistory } = req.query; // e.g. ?deleteChatHistory=true
+
+    await User.findByIdAndUpdate(loggedInUserId, {
+      $pull: { contacts: contactId },
+    });
+
+    if (deleteChatHistory === "true") {
+      await Message.deleteMany({
+        $or: [
+          { senderId: loggedInUserId, receiverId: contactId },
+          { senderId: contactId, receiverId: loggedInUserId },
+        ],
+      });
+
+      const receiverSocketId = getReceiverSocketId(contactId);
+      if (receiverSocketId) {
+        io.to(receiverSocketId).emit("chatCleared", {
+          clearedBy: loggedInUserId.toString(),
+          chatPartnerId: contactId.toString(),
+        });
+      }
+    }
+
+    res.status(200).json({ message: "Contact removed from saved list" });
+  } catch (error) {
+    console.error("Error in removeContact controller: ", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+

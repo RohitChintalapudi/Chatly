@@ -10,6 +10,8 @@ export const useChatStore = create((set, get) => ({
   isUsersLoading: false,
   isMessagesLoading: false,
   isAddingContact: false,
+  isClearingChat: false,
+  isRemovingContact: false,
   unreadCounts: {},
 
   getUsers: async () => {
@@ -48,6 +50,62 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  clearChat: async (userId) => {
+    set({ isClearingChat: true });
+    try {
+      await axiosInstance.delete(`/messages/clear/${userId}`);
+      set({ messages: [] });
+      toast.success("Chat cleared successfully");
+      return true;
+    } catch (error) {
+      const msg = error.response?.data?.message || "Failed to clear chat";
+      toast.error(msg);
+      return false;
+    } finally {
+      set({ isClearingChat: false });
+    }
+  },
+
+  deleteMessage: async (messageId) => {
+    try {
+      await axiosInstance.delete(`/messages/message/${messageId}`);
+      set({
+        messages: (get().messages || []).filter((m) => m._id !== messageId),
+      });
+      toast.success("Message deleted");
+      return true;
+    } catch (error) {
+      const msg = error.response?.data?.message || "Failed to delete message";
+      toast.error(msg);
+      return false;
+    }
+  },
+
+  removeContact: async (userId, deleteHistory = false) => {
+    set({ isRemovingContact: true });
+    try {
+      const url = `/messages/contact/${userId}${deleteHistory ? "?deleteChatHistory=true" : ""}`;
+      await axiosInstance.delete(url);
+
+      const currentUsers = get().users || [];
+      const updatedUsers = currentUsers.filter((u) => u._id !== userId);
+      set({ users: updatedUsers });
+
+      if (get().selectedUser?._id === userId) {
+        set({ selectedUser: null, messages: [] });
+      }
+
+      toast.success("Contact removed from your saved list");
+      return true;
+    } catch (error) {
+      const msg = error.response?.data?.message || "Failed to remove contact";
+      toast.error(msg);
+      return false;
+    } finally {
+      set({ isRemovingContact: false });
+    }
+  },
+
   getMessages: async (userId) => {
     set({ isMessagesLoading: true });
     try {
@@ -61,6 +119,7 @@ export const useChatStore = create((set, get) => ({
       set({ isMessagesLoading: false });
     }
   },
+
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
     try {
@@ -78,6 +137,8 @@ export const useChatStore = create((set, get) => ({
 
     socket.off("newMessage");
     socket.off("newContactAdded");
+    socket.off("chatCleared");
+    socket.off("messageDeleted");
 
     socket.on("newMessage", async (newMessage) => {
       const { selectedUser, unreadCounts, users } = get();
@@ -131,6 +192,22 @@ export const useChatStore = create((set, get) => ({
         toast.success(`${data.user.fullName} connected with you!`);
       }
     });
+
+    socket.on("chatCleared", (data) => {
+      const { selectedUser } = get();
+      if (selectedUser && (selectedUser._id === data.clearedBy || selectedUser._id === data.chatPartnerId)) {
+        set({ messages: [] });
+        toast("Chat history was cleared", { icon: "🧹" });
+      }
+    });
+
+    socket.on("messageDeleted", (data) => {
+      if (data?.messageId) {
+        set({
+          messages: (get().messages || []).filter((m) => m._id !== data.messageId),
+        });
+      }
+    });
   },
 
   unsubscribeFromMessages: () => {
@@ -138,6 +215,8 @@ export const useChatStore = create((set, get) => ({
     if (socket) {
       socket.off("newMessage");
       socket.off("newContactAdded");
+      socket.off("chatCleared");
+      socket.off("messageDeleted");
     }
   },
 
@@ -152,3 +231,4 @@ export const useChatStore = create((set, get) => ({
     }
   },
 }));
+
