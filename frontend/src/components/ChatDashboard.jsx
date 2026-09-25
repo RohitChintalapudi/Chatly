@@ -1,6 +1,14 @@
-import { MessageSquare, Users, Zap, ImageIcon, Bell, Sparkles } from "lucide-react";
+import { MessageSquare, Users, Zap, ImageIcon, Bell, Sparkles, Gamepad2, Share2 } from "lucide-react";
+import { useGamesStore } from "../store/useGamesStore";
 
 const features = [
+  {
+    icon: Gamepad2,
+    title: "Mini Games Arcade",
+    desc: "Play Flappy Bird, Tetris, and Snake directly inside Chatly.",
+    status: "live",
+    isGame: true,
+  },
   {
     icon: MessageSquare,
     title: "Real-time Chat",
@@ -23,23 +31,18 @@ const features = [
     icon: Zap,
     title: "Voice Messages",
     desc: "Record and send voice notes to express yourself.",
-    status: "coming",
+    status: "live",
   },
   {
-    icon: Bell,
-    title: "Push Notifications",
-    desc: "Get notified of new messages even when you're away.",
-    status: "coming",
-  },
-  {
-    icon: Sparkles,
-    title: "AI Assistant",
-    desc: "Smart replies and conversation summaries powered by AI.",
-    status: "coming",
+    icon: Share2,
+    title: "P2P File Transfer",
+    desc: "Send files directly without size limits using WebRTC.",
+    status: "live",
   },
 ];
 
 const ChatDashboard = () => {
+  const openGames = useGamesStore((s) => s.openGames);
   return (
     <div className="w-full hidden lg:flex flex-1 flex-col items-center justify-center p-8 md:p-12 bg-[var(--surface-muted)] overflow-y-auto transition-colors">
       <div className="max-w-2xl w-full text-center space-y-6">
@@ -65,7 +68,10 @@ const ChatDashboard = () => {
             return (
               <div
                 key={f.title}
-                className="group relative p-4 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] hover:shadow-[3px_3px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all duration-200"
+                onClick={f.isGame ? () => openGames() : undefined}
+                className={`group relative p-4 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] hover:shadow-[3px_3px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all duration-200 ${
+                  f.isGame ? "cursor-pointer ring-1 ring-[var(--accent)]/50 hover:ring-2 hover:ring-[var(--accent)]" : ""
+                }`}
               >
                 <div className="flex items-start gap-3">
                   <div className="w-9 h-9 rounded-lg bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center flex-shrink-0 transition-colors">
@@ -78,7 +84,7 @@ const ChatDashboard = () => {
                       </span>
                       {f.status === "live" ? (
                         <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-green-500/15 text-green-600 border border-green-500/30">
-                          LIVE
+                          {f.isGame ? "PLAY NOW" : "LIVE"}
                         </span>
                       ) : (
                         <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-[var(--accent)]/15 text-[var(--accent)] border border-[var(--accent)]/30">
