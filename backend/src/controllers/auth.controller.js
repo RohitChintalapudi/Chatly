@@ -3,6 +3,19 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
 
+export const generateUniqueChatCode = async () => {
+  let isUnique = false;
+  let code = "";
+  while (!isUnique) {
+    code = Math.floor(100000 + Math.random() * 900000).toString();
+    const existing = await User.findOne({ chatCode: code });
+    if (!existing) {
+      isUnique = true;
+    }
+  }
+  return code;
+};
+
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
   try {
@@ -21,10 +34,14 @@ export const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    const chatCode = await generateUniqueChatCode();
+
     const newUser = new User({
       fullName,
       email,
       password: hashedPassword,
+      chatCode,
+      contacts: [],
     });
 
     if (newUser) {
@@ -37,6 +54,7 @@ export const signup = async (req, res) => {
         fullName: newUser.fullName,
         email: newUser.email,
         profilePic: newUser.profilePic,
+        chatCode: newUser.chatCode,
         createdAt: newUser.createdAt,
       });
     } else {
@@ -62,6 +80,11 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    if (!user.chatCode) {
+      user.chatCode = await generateUniqueChatCode();
+      await user.save();
+    }
+
     generateToken(user._id, req, res);
 
     res.status(200).json({
@@ -69,6 +92,7 @@ export const login = async (req, res) => {
       fullName: user.fullName,
       email: user.email,
       profilePic: user.profilePic,
+      chatCode: user.chatCode,
       createdAt: user.createdAt,
     });
   } catch (error) {
@@ -96,17 +120,30 @@ export const logout = (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const { profilePic } = req.body;
+    const { profilePic, fullName } = req.body;
     const userId = req.user._id;
 
-    if (!profilePic) {
-      return res.status(400).json({ message: "Profile pic is required" });
+    const updateData = {};
+
+    if (profilePic) {
+      const uploadResponse = await cloudinary.uploader.upload(profilePic);
+      updateData.profilePic = uploadResponse.secure_url;
     }
 
-    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+    if (fullName !== undefined) {
+      if (!fullName || !fullName.trim()) {
+        return res.status(400).json({ message: "Full name cannot be empty" });
+      }
+      updateData.fullName = fullName.trim();
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ message: "No profile data provided to update" });
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { profilePic: uploadResponse.secure_url },
+      updateData,
       { new: true }
     );
 
@@ -117,9 +154,15 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-export const checkAuth = (req, res) => {
+export const checkAuth = async (req, res) => {
   try {
-    res.status(200).json(req.user);
+    let user = req.user;
+    if (!user.chatCode) {
+      const generatedCode = await generateUniqueChatCode();
+      const updated = await User.findByIdAndUpdate(user._id, { chatCode: generatedCode }, { new: true }).select("-password");
+      user = updated;
+    }
+    res.status(200).json(user);
   } catch (error) {
     console.log("Error in checkAuth controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });

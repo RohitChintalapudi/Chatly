@@ -1,10 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Camera, Mail, User, Lock, Eye, EyeOff } from "lucide-react";
+import { Camera, Mail, User, Lock, Eye, EyeOff, Check, Loader2, Copy } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile, changePassword } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
+  const [fullName, setFullName] = useState(authUser?.fullName || "");
+  const [isUpdatingName, setIsUpdatingName] = useState(false);
+
+  useEffect(() => {
+    if (authUser?.fullName) {
+      setFullName(authUser.fullName);
+    }
+  }, [authUser?.fullName]);
 
   if (!authUser) return null;
 
@@ -28,6 +37,20 @@ const ProfilePage = () => {
     };
   };
 
+  const handleUpdateFullName = async (e) => {
+    e.preventDefault();
+    const trimmed = fullName.trim();
+    if (!trimmed) {
+      toast.error("Full name cannot be empty");
+      return;
+    }
+    if (trimmed === authUser.fullName) return;
+
+    setIsUpdatingName(true);
+    await updateProfile({ fullName: trimmed });
+    setIsUpdatingName(false);
+  };
+
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     if (!oldPassword || !newPassword || !confirmPassword) return;
@@ -41,6 +64,8 @@ const ProfilePage = () => {
     setConfirmPassword("");
     setIsChanging(false);
   };
+
+  const isNameChanged = fullName.trim().length > 0 && fullName.trim() !== authUser?.fullName;
 
   const passwordsMatch = newPassword && confirmPassword && newPassword === confirmPassword;
   const passwordsMismatch = confirmPassword && newPassword !== confirmPassword;
@@ -77,13 +102,42 @@ const ProfilePage = () => {
               </p>
             </div>
 
-            <div className="space-y-3">
-              <div className="space-y-1">
-                <div className="text-xs text-[var(--secondary-text)] font-bold flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5" /> Full Name
+            <div className="space-y-4">
+              <form onSubmit={handleUpdateFullName} className="space-y-1.5">
+                <div className="text-xs text-[var(--secondary-text)] font-bold flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <User className="w-3.5 h-3.5" /> Full Name
+                  </span>
+                  {isNameChanged && (
+                    <span className="text-[10px] text-[var(--accent)] font-extrabold uppercase tracking-wider animate-pulse">
+                      Unsaved Changes
+                    </span>
+                  )}
                 </div>
-                <p className="px-3 py-2 bg-[var(--surface-muted)] rounded-xl border-2 border-[var(--line)] text-[var(--primary-text)] font-medium text-sm transition-colors">{authUser?.fullName}</p>
-              </div>
+                <div className="relative flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Enter your full name"
+                    className="flex-1 px-3 py-2 bg-[var(--surface)] rounded-xl border-2 border-[var(--line)] text-[var(--primary-text)] font-medium text-sm focus:outline-none focus:border-[var(--accent)] transition-colors"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isUpdatingName || isUpdatingProfile || !isNameChanged}
+                    className="px-3.5 py-2 bg-[var(--accent)] text-[var(--primary-text)] font-extrabold text-xs rounded-xl border-2 border-[var(--line)] hover:shadow-[2px_2px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-none disabled:hover:translate-y-0 cursor-pointer flex items-center gap-1.5 shrink-0"
+                    title="Save Full Name"
+                  >
+                    {isUpdatingName ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Check className="w-3.5 h-3.5" />
+                    )}
+                    <span>Save</span>
+                  </button>
+                </div>
+              </form>
+
               <div className="space-y-1">
                 <div className="text-xs text-[var(--secondary-text)] font-bold flex items-center gap-1.5">
                   <Mail className="w-3.5 h-3.5" /> Email Address
@@ -95,6 +149,27 @@ const ProfilePage = () => {
             <div className="bg-[var(--surface-muted)] rounded-xl border-2 border-[var(--line)] p-4 transition-colors">
               <h2 className="text-sm font-extrabold text-[var(--primary-text)] mb-3">Account Information</h2>
               <div className="space-y-2 text-xs">
+                <div className="flex items-center justify-between py-1.5 border-b border-[var(--line)]/20">
+                  <span className="font-semibold text-[var(--primary-text)]">My 6-Digit Chat Code</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono font-black text-xs tracking-widest bg-[var(--surface)] px-2 py-0.5 rounded-lg border border-[var(--line)] text-[var(--primary-text)]">
+                      {authUser.chatCode || "------"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (authUser?.chatCode) {
+                          navigator.clipboard.writeText(authUser.chatCode);
+                          toast.success("Chat code copied to clipboard!");
+                        }
+                      }}
+                      className="p-1 rounded-lg border border-[var(--line)] bg-[var(--surface)] hover:bg-[var(--accent)] hover:text-black transition-colors cursor-pointer"
+                      title="Copy Code"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
                 <div className="flex items-center justify-between py-1.5 border-b border-[var(--line)]/20">
                   <span className="font-semibold text-[var(--primary-text)]">Member Since</span>
                   <span className="font-bold text-[var(--primary-text)]">{authUser.createdAt?.split("T")[0]}</span>
