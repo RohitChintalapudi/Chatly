@@ -17,7 +17,14 @@ const ChatHeader = () => {
             )}
           </div>
           <div className="min-w-0 text-left">
-            <h3 className="font-extrabold text-[var(--primary-text)] text-sm truncate">{selectedUser.fullName}</h3>
+            <div className="flex items-center gap-1.5">
+              <h3 className="font-extrabold text-[var(--primary-text)] text-sm truncate">{selectedUser.fullName}</h3>
+              {selectedUser.chatCode && (
+                <span className="text-[10px] font-mono text-[var(--secondary-text)] bg-[var(--surface-muted)] px-1.5 py-0.5 rounded border border-[var(--line)]/30 shrink-0">
+                  #{selectedUser.chatCode}
+                </span>
+              )}
+            </div>
             <p className="text-xs text-[var(--secondary-text)] font-semibold truncate">
               {onlineUsers.includes(selectedUser._id) ? "Online" : "Offline"}
             </p>

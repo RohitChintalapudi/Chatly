@@ -9,6 +9,7 @@ export const useChatStore = create((set, get) => ({
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
+  isAddingContact: false,
   unreadCounts: {},
 
   getUsers: async () => {
@@ -17,11 +18,33 @@ export const useChatStore = create((set, get) => ({
       const res = await axiosInstance.get("/messages/users");
       set({ users: Array.isArray(res.data) ? res.data : [] });
     } catch (error) {
-      const msg = error.response?.data?.message || "Failed to load users";
+      const msg = error.response?.data?.message || "Failed to load contacts";
       toast.error(msg);
       set({ users: [] });
     } finally {
       set({ isUsersLoading: false });
+    }
+  },
+
+  addContact: async (code) => {
+    set({ isAddingContact: true });
+    try {
+      const res = await axiosInstance.post("/messages/add-contact", { code });
+      const newContact = res.data.contact;
+      const currentUsers = get().users || [];
+      const exists = currentUsers.some((u) => u._id === newContact._id);
+      if (!exists) {
+        set({ users: [newContact, ...currentUsers] });
+      }
+      set({ selectedUser: newContact });
+      toast.success(res.data.message || "Contact added successfully!");
+      return true;
+    } catch (error) {
+      const msg = error.response?.data?.message || "Failed to add contact";
+      toast.error(msg);
+      return false;
+    } finally {
+      set({ isAddingContact: false });
     }
   },
 

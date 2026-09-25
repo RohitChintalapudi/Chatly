@@ -7,12 +7,74 @@ import { getReceiverSocketId, io } from "../lib/socket.js";
 export const getUsersForSidebar = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
-    const filteredUsers = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
 
-    res.status(200).json(filteredUsers);
+    // Fetch user's saved contacts
+    const currentUser = await User.findById(loggedInUserId).populate("contacts", "-password");
+    const contactIds = (currentUser?.contacts || []).map((c) => c._id.toString());
+
+    // Also include any user with whom messages have been exchanged
+    const senders = await Message.find({ receiverId: loggedInUserId }).distinct("senderId");
+    const receivers = await Message.find({ senderId: loggedInUserId }).distinct("receiverId");
+
+    const messagePartnerIds = [...senders, ...receivers]
+      .map((id) => id.toString())
+      .filter((id) => id !== loggedInUserId.toString());
+
+    const allAllowedIds = [...new Set([...contactIds, ...messagePartnerIds])];
+
+    const allowedUsers = await User.find({
+      _id: { $in: allAllowedIds },
+    }).select("-password");
+
+    res.status(200).json(allowedUsers);
   } catch (error) {
     console.error("Error in getUsersForSidebar: ", error.message);
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const addContactByCode = async (req, res) => {
+  try {
+    const { code } = req.body;
+    const loggedInUserId = req.user._id;
+
+    if (!code || !code.trim()) {
+      return res.status(400).json({ message: "6-digit code is required" });
+    }
+
+    const cleanCode = code.trim();
+
+    if (!/^\d{6}$/.test(cleanCode)) {
+      return res.status(400).json({ message: "Code must be a 6-digit number" });
+    }
+
+    const targetUser = await User.findOne({ chatCode: cleanCode }).select("-password");
+
+    if (!targetUser) {
+      return res.status(404).json({ message: "No user found with this 6-digit code" });
+    }
+
+    if (targetUser._id.toString() === loggedInUserId.toString()) {
+      return res.status(400).json({ message: "You cannot add yourself as a contact" });
+    }
+
+    // Add targetUser to current user's contacts
+    await User.findByIdAndUpdate(loggedInUserId, {
+      $addToSet: { contacts: targetUser._id },
+    });
+
+    // Also add current user to targetUser's contacts so both can chat seamlessly
+    await User.findByIdAndUpdate(targetUser._id, {
+      $addToSet: { contacts: loggedInUserId },
+    });
+
+    res.status(200).json({
+      message: `Added ${targetUser.fullName} to contacts!`,
+      contact: targetUser,
+    });
+  } catch (error) {
+    console.error("Error in addContactByCode: ", error.message);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

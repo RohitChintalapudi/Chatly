@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Camera, Mail, User, Lock, Eye, EyeOff, Check, Loader2 } from "lucide-react";
+import { Camera, Mail, User, Lock, Eye, EyeOff, Check, Loader2, Copy } from "lucide-react";
 import toast from "react-hot-toast";
 
 const ProfilePage = () => {
@@ -149,6 +149,27 @@ const ProfilePage = () => {
             <div className="bg-[var(--surface-muted)] rounded-xl border-2 border-[var(--line)] p-4 transition-colors">
               <h2 className="text-sm font-extrabold text-[var(--primary-text)] mb-3">Account Information</h2>
               <div className="space-y-2 text-xs">
+                <div className="flex items-center justify-between py-1.5 border-b border-[var(--line)]/20">
+                  <span className="font-semibold text-[var(--primary-text)]">My 6-Digit Chat Code</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono font-black text-xs tracking-widest bg-[var(--surface)] px-2 py-0.5 rounded-lg border border-[var(--line)] text-[var(--primary-text)]">
+                      {authUser.chatCode || "------"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (authUser?.chatCode) {
+                          navigator.clipboard.writeText(authUser.chatCode);
+                          toast.success("Chat code copied to clipboard!");
+                        }
+                      }}
+                      className="p-1 rounded-lg border border-[var(--line)] bg-[var(--surface)] hover:bg-[var(--accent)] hover:text-black transition-colors cursor-pointer"
+                      title="Copy Code"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
                 <div className="flex items-center justify-between py-1.5 border-b border-[var(--line)]/20">
                   <span className="font-semibold text-[var(--primary-text)]">Member Since</span>
                   <span className="font-bold text-[var(--primary-text)]">{authUser.createdAt?.split("T")[0]}</span>
