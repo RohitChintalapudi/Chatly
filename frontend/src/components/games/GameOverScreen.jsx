@@ -44,8 +44,8 @@ export const GameOverScreen = ({
   };
 
   return (
-    <div className="absolute inset-0 z-40 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200">
-      <div className="w-full max-w-sm bg-[var(--surface)] border-3 border-[var(--line)] rounded-3xl p-5 sm:p-6 shadow-[8px_8px_0px_0px_var(--line)] text-center space-y-4 transition-colors relative my-auto">
+    <div className="absolute inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-200 w-full h-full min-h-full">
+      <div className="w-full max-w-sm bg-[var(--surface)] border-2 sm:border-3 border-[var(--line)] rounded-3xl p-5 sm:p-6 shadow-[6px_6px_0px_0px_var(--line)] text-center space-y-4 transition-colors relative my-auto">
         {/* Glow effect for high score */}
         {isNewHighScore && (
           <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 bg-amber-500/25 rounded-full blur-2xl pointer-events-none animate-pulse" />

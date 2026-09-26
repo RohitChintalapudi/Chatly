@@ -432,7 +432,7 @@ export const FlappyBird = ({ onBack }) => {
   }, [gameState, timeOfDay, triggerGameOver, soundEnabled]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-[var(--surface-muted)] relative overflow-hidden select-none">
+    <div className="flex flex-col flex-1 min-h-0 h-full w-full bg-[var(--surface-muted)] relative overflow-hidden select-none">
       {/* Header */}
       <GameHeader
         gameId="flappy"

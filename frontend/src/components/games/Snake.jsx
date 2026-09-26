@@ -427,7 +427,7 @@ export const Snake = ({ onBack }) => {
   }, [gameState, triggerGameOver, spawnFood, spawnBonusFood, soundEnabled]);
 
   return (
-    <div className="flex flex-col h-full w-full bg-[var(--surface-muted)] relative overflow-hidden select-none">
+    <div className="flex flex-col flex-1 min-h-0 h-full w-full bg-[var(--surface-muted)] relative overflow-hidden select-none">
       {/* Header */}
       <GameHeader
         gameId="snake"
@@ -444,13 +444,13 @@ export const Snake = ({ onBack }) => {
       />
 
       {/* Main Game Board */}
-      <div className="flex-1 flex flex-col items-center justify-center p-2 sm:p-4 overflow-y-auto">
+      <div className="flex-1 min-h-0 flex flex-col items-center justify-center p-2 sm:p-4 overflow-y-auto relative">
         <div className="relative border-4 border-[var(--line)] rounded-3xl overflow-hidden shadow-[6px_6px_0px_0px_var(--line)] bg-[var(--surface)]">
           <canvas
             ref={canvasRef}
             width={CELL_COUNT * GRID_SIZE}
             height={CELL_COUNT * GRID_SIZE}
-            className="block aspect-square w-full max-w-[360px] h-auto max-h-[calc(100vh-250px)]"
+            className="block aspect-square w-full max-w-[340px] sm:max-w-[380px] h-auto max-h-[calc(100vh-270px)]"
           />
 
           {/* READY State Overlay */}

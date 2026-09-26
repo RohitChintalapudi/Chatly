@@ -12,9 +12,11 @@ export const GamesSection = ({ onClose, showClose = false }) => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-[var(--surface)] text-[var(--primary-text)] overflow-y-auto">
+    <div className="w-full h-full flex-1 min-h-0 flex flex-col bg-[var(--surface)] text-[var(--primary-text)] relative overflow-hidden">
       {activeGame === null && (
-        <GameSelector onClose={onClose} showClose={showClose} />
+        <div className="w-full h-full flex-1 overflow-y-auto">
+          <GameSelector onClose={onClose} showClose={showClose} />
+        </div>
       )}
       {activeGame === "flappy" && (
         <FlappyBird onBack={handleBackToMenu} />
