@@ -6,6 +6,7 @@ import Sidebar from "../components/Sidebar";
 import ChatDashboard from "../components/ChatDashboard";
 import ChatContainer from "../components/ChatContainer";
 import { FileTransferModal } from "../components/FileTransferModal";
+import { MiniGamesModal } from "../components/games/MiniGamesModal";
 
 const HomePage = () => {
   const { selectedUser } = useChatStore();
@@ -37,6 +38,7 @@ const HomePage = () => {
         </div>
       </div>
       <FileTransferModal />
+      <MiniGamesModal />
     </div>
   );
 };

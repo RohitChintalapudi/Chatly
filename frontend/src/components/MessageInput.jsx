@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useFileTransferStore } from "../hooks/useFileTransfer";
-import { Image, Send, X, Mic, Trash2, Paperclip } from "lucide-react";
+import { useGamesStore } from "../store/useGamesStore";
+import { Image, Send, X, Mic, Trash2, Paperclip, Gamepad2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { formatDuration } from "../lib/utils";
 
@@ -20,6 +21,7 @@ const MessageInput = () => {
 
   const { sendMessage, selectedUser } = useChatStore();
   const selectFile = useFileTransferStore((s) => s.selectFile);
+  const openGames = useGamesStore((s) => s.openGames);
 
   useEffect(() => {
     return () => {
@@ -265,6 +267,16 @@ const MessageInput = () => {
               title="Share File Peer-to-Peer"
             >
               <Paperclip size={18} />
+            </button>
+
+            {/* Mini Games Arcade Button */}
+            <button
+              type="button"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--secondary-text)] hover:text-amber-500 hover:border-amber-500 hover:bg-amber-500/10 transition-all cursor-pointer flex items-center justify-center"
+              onClick={() => openGames()}
+              title="Play Mini Games Arcade"
+            >
+              <Gamepad2 size={18} />
             </button>
 
             {/* Mic Record Button */}
