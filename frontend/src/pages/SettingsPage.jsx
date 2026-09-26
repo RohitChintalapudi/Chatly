@@ -33,7 +33,7 @@ const SettingsPage = () => {
   const previewAccent = ACCENT_COLORS.find((c) => c.name.toLowerCase() === tempAccent) || ACCENT_COLORS[0];
 
   return (
-    <div className="h-screen bg-[var(--surface)] container mx-auto px-4 pt-28 xl:pt-20 pb-8 max-w-5xl overflow-y-auto no-scrollbar transition-colors">
+    <div className="min-h-screen bg-[var(--surface)] container mx-auto px-4 pt-32 xl:pt-24 pb-8 max-w-5xl overflow-y-auto no-scrollbar transition-colors">
       <div className="space-y-8">
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-extrabold text-[var(--primary-text)]">Settings</h2>
