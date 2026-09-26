@@ -36,7 +36,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="h-[100dvh] max-h-screen bg-[var(--surface)] flex items-center justify-center relative overflow-hidden px-4 pt-16">
+    <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center relative overflow-y-auto px-4 pt-24 pb-8">
       {/* Floating Bubbles */}
       <div className="absolute w-40 h-40 rounded-full bg-[var(--accent)] opacity-8 border-2 border-[var(--line)] top-[10%] left-[5%] animate-float pointer-events-none" />
       <div className="absolute w-24 h-24 rounded-full bg-[var(--accent)] opacity-6 border-2 border-[var(--line)] bottom-[15%] right-[8%] animate-float-slow pointer-events-none" />
@@ -46,7 +46,7 @@ const SignUpPage = () => {
       {/* Glow behind card */}
       <div className="absolute w-[500px] h-[500px] bg-[var(--accent)] opacity-10 blur-[120px] rounded-full pointer-events-none" />
 
-      <div className="w-full max-w-sm relative -mt-3 sm:-mt-4">
+      <div className="w-full max-w-sm relative my-auto">
         {/* Card */}
         <div className="bg-[var(--surface)] rounded-3xl border-2 border-[var(--line)] p-6 sm:p-7 shadow-[0_0_40px_color-mix(in_srgb,var(--accent)_15%,transparent)]">
           {/* Logo */}
