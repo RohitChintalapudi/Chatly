@@ -162,7 +162,7 @@ export const ScoreBoard = () => {
           {/* Social / Multiplayer-ready banner */}
           <div className="p-5 rounded-3xl border-2 border-[var(--line)] bg-gradient-to-r from-[var(--accent)]/20 via-[var(--surface)] to-[var(--accent)]/10 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[4px_4px_0px_0px_var(--line)]">
             <div className="flex items-center gap-3.5 text-left">
-              <div className="w-12 h-12 rounded-2xl bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-2xl bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center shrink-0 shadow-[2px_2px_0px_0px_var(--line)]">
                 <Swords className="w-6 h-6 text-black" />
               </div>
               <div>
@@ -174,19 +174,24 @@ export const ScoreBoard = () => {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5 shrink-0">
               <button
+                type="button"
                 onClick={() => handleSendChallenge("flappy")}
-                className="px-3.5 py-2 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-extrabold text-xs hover:shadow-[2px_2px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all cursor-pointer shrink-0 flex items-center gap-1"
+                className="px-4 py-2.5 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] hover:bg-[var(--surface-muted)] text-[var(--primary-text)] font-extrabold text-xs hover:shadow-[2px_2px_0px_0px_var(--line)] hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center gap-1.5"
+                title="Send Flappy Bird Challenge"
               >
-                <span>🐦 Bird</span>
+                <span className="text-sm">🐦</span>
+                <span>Flappy Bird</span>
               </button>
               <button
+                type="button"
                 onClick={() => handleSendChallenge("snake")}
-                className="px-3.5 py-2 rounded-xl border-2 border-[var(--line)] bg-[var(--accent)] text-black font-extrabold text-xs hover:shadow-[2px_2px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all cursor-pointer shrink-0 flex items-center gap-1"
+                className="px-4 py-2.5 rounded-xl border-2 border-[var(--line)] bg-[var(--accent)] text-black font-extrabold text-xs hover:shadow-[2px_2px_0px_0px_var(--line)] hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer flex items-center gap-1.5"
+                title="Send Snake Challenge"
               >
-                <Send className="w-3.5 h-3.5" />
-                <span>🐍 Snake</span>
+                <span className="text-sm">🐍</span>
+                <span>Snake</span>
               </button>
             </div>
           </div>
