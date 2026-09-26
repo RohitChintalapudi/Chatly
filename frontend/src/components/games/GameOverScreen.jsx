@@ -60,11 +60,11 @@ export const GameOverScreen = ({
             </div>
           ) : (
             <span className="text-[11px] font-black uppercase tracking-widest text-[var(--secondary-text)]">
-              Flight Over
+              {gameId === "flappy" ? "Flight Over" : "Game Over"}
             </span>
           )}
           <h3 className="text-xl sm:text-2xl font-black text-[var(--primary-text)] flex items-center justify-center gap-2">
-            <span>{meta.emoji}</span>
+            <span className="text-2xl sm:text-3xl">{meta.emoji}</span>
             <span>{meta.title}</span>
           </h3>
         </div>

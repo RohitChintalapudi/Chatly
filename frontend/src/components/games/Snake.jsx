@@ -117,8 +117,8 @@ export const Snake = ({ onBack }) => {
     });
     setIsNewRecord(isNewHighScore);
     setLastStats({
-      "Apples Eaten": s.apples,
-      "Snake Length": s.snake.length,
+      "Apples Eaten": `${s.apples} 🍎`,
+      "Snake Length": `${s.snake.length} segments`,
     });
     setGameState("GAMEOVER");
   }, [recordGameScore, soundEnabled]);
