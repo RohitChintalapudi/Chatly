@@ -9,8 +9,7 @@ export const GameSelector = ({ onClose, showClose = false }) => {
 
   const games = [
     { id: "flappy", isPopular: true, comingSoon: false },
-    { id: "tetris", isPopular: false, comingSoon: true },
-    { id: "snake", isPopular: false, comingSoon: true },
+    { id: "snake", isPopular: true, comingSoon: false },
   ];
 
   return (
@@ -27,7 +26,7 @@ export const GameSelector = ({ onClose, showClose = false }) => {
                 MINI GAMES ARCADE
               </h2>
               <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-[var(--accent)] text-black border border-[var(--line)]">
-                FLAPPABLE
+                2 GAMES LIVE
               </span>
             </div>
             <p className="text-xs text-[var(--secondary-text)] font-semibold mt-0.5">
@@ -62,18 +61,18 @@ export const GameSelector = ({ onClose, showClose = false }) => {
         </div>
       </div>
 
-      {/* 3 Main Game Cards Grid */}
+      {/* Main Game Cards Grid */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-black text-[var(--primary-text)] uppercase tracking-wider flex items-center gap-2">
             <span>🕹️</span> Choose a Game
           </h3>
           <span className="text-xs text-[var(--secondary-text)] font-bold">
-            Instant Play &bull; Flappable Active
+            Instant Play &bull; Flappy &amp; Snake Live
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {games.map((g) => (
             <GameCard
               key={g.id}

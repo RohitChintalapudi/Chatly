@@ -489,59 +489,61 @@ export const Snake = ({ onBack }) => {
               </button>
             </div>
           )}
-
-          {/* GAME OVER Overlay */}
-          {gameState === "GAMEOVER" && (
-            <GameOverScreen
-              gameId="snake"
-              score={score}
-              isNewHighScore={isNewRecord}
-              highScore={Math.max(currentHighScore, score)}
-              extraStats={lastStats}
-              onPlayAgain={resetGame}
-              onBackToMenu={onBack}
-            />
-          )}
         </div>
 
         {/* Mobile Virtual D-Pad */}
-        <div className="w-full max-w-[240px] mt-3 flex flex-col items-center gap-1">
-          <button
-            type="button"
-            onClick={() => changeDirection({ x: 0, y: -1 })}
-            className="w-12 h-11 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-black text-base active:scale-95 shadow-[2px_2px_0px_0px_var(--line)] flex items-center justify-center cursor-pointer"
-            aria-label="Up"
-          >
-            <ArrowUp className="w-5 h-5" />
-          </button>
-          <div className="flex items-center gap-4">
+        {gameState !== "GAMEOVER" && (
+          <div className="w-full max-w-[240px] mt-3 flex flex-col items-center gap-1">
             <button
               type="button"
-              onClick={() => changeDirection({ x: -1, y: 0 })}
+              onClick={() => changeDirection({ x: 0, y: -1 })}
               className="w-12 h-11 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-black text-base active:scale-95 shadow-[2px_2px_0px_0px_var(--line)] flex items-center justify-center cursor-pointer"
-              aria-label="Left"
+              aria-label="Up"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowUp className="w-5 h-5" />
             </button>
-            <button
-              type="button"
-              onClick={() => changeDirection({ x: 0, y: 1 })}
-              className="w-12 h-11 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-black text-base active:scale-95 shadow-[2px_2px_0px_0px_var(--line)] flex items-center justify-center cursor-pointer"
-              aria-label="Down"
-            >
-              <ArrowDown className="w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => changeDirection({ x: 1, y: 0 })}
-              className="w-12 h-11 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-black text-base active:scale-95 shadow-[2px_2px_0px_0px_var(--line)] flex items-center justify-center cursor-pointer"
-              aria-label="Right"
-            >
-              <ArrowRight className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => changeDirection({ x: -1, y: 0 })}
+                className="w-12 h-11 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-black text-base active:scale-95 shadow-[2px_2px_0px_0px_var(--line)] flex items-center justify-center cursor-pointer"
+                aria-label="Left"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => changeDirection({ x: 0, y: 1 })}
+                className="w-12 h-11 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-black text-base active:scale-95 shadow-[2px_2px_0px_0px_var(--line)] flex items-center justify-center cursor-pointer"
+                aria-label="Down"
+              >
+                <ArrowDown className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => changeDirection({ x: 1, y: 0 })}
+                className="w-12 h-11 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-black text-base active:scale-95 shadow-[2px_2px_0px_0px_var(--line)] flex items-center justify-center cursor-pointer"
+                aria-label="Right"
+              >
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
+
+      {/* GAME OVER Overlay (Root Level) */}
+      {gameState === "GAMEOVER" && (
+        <GameOverScreen
+          gameId="snake"
+          score={score}
+          isNewHighScore={isNewRecord}
+          highScore={Math.max(currentHighScore, score)}
+          extraStats={lastStats}
+          onPlayAgain={resetGame}
+          onBackToMenu={onBack}
+        />
+      )}
     </div>
   );
 };

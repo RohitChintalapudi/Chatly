@@ -5,7 +5,7 @@ const features = [
   {
     icon: Gamepad2,
     title: "Mini Games Arcade",
-    desc: "Play Flappy Bird, Tetris, and Snake directly inside Chatly.",
+    desc: "Play Flappy Bird and Snake directly inside Chatly.",
     status: "live",
     isGame: true,
   },

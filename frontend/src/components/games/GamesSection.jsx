@@ -2,7 +2,6 @@ import React from "react";
 import { useGamesStore } from "../../store/useGamesStore";
 import { GameSelector } from "./GameSelector";
 import { FlappyBird } from "./FlappyBird";
-import { Tetris } from "./Tetris";
 import { Snake } from "./Snake";
 
 export const GamesSection = ({ onClose, showClose = false }) => {
@@ -19,9 +18,6 @@ export const GamesSection = ({ onClose, showClose = false }) => {
       )}
       {activeGame === "flappy" && (
         <FlappyBird onBack={handleBackToMenu} />
-      )}
-      {activeGame === "tetris" && (
-        <Tetris onBack={handleBackToMenu} />
       )}
       {activeGame === "snake" && (
         <Snake onBack={handleBackToMenu} />

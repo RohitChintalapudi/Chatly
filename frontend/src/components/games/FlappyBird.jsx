@@ -569,36 +569,38 @@ export const FlappyBird = ({ onBack }) => {
               </button>
             </div>
           )}
-
-          {/* GAME OVER Overlay */}
-          {gameState === "GAMEOVER" && (
-            <GameOverScreen
-              gameId="flappy"
-              score={score}
-              isNewHighScore={isNewRecord}
-              highScore={Math.max(currentHighScore, score)}
-              extraStats={lastStats}
-              onPlayAgain={resetGame}
-              onBackToMenu={onBack}
-            />
-          )}
         </div>
 
-        {/* Big Tap to Flap button for mobile and quick play */}
-        <div className="w-full max-w-[380px] mt-3 flex items-center justify-between gap-2">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              jump();
-            }}
-            className="flex-1 py-3.5 rounded-2xl border-2 border-[var(--line)] bg-[var(--accent)] text-black font-black text-sm active:translate-y-1 shadow-[3px_3px_0px_0px_var(--line)] transition-all cursor-pointer flex items-center justify-center gap-2"
-          >
-            <span>TAP TO FLAP</span>
-            <span className="text-base">🚀</span>
-          </button>
-        </div>
+        {/* Big Tap to Flap button for mobile and quick play (hidden on Game Over) */}
+        {gameState !== "GAMEOVER" && (
+          <div className="w-full max-w-[380px] mt-3 flex items-center justify-between gap-2">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                jump();
+              }}
+              className="flex-1 py-3.5 rounded-2xl border-2 border-[var(--line)] bg-[var(--accent)] text-black font-black text-sm active:translate-y-1 shadow-[3px_3px_0px_0px_var(--line)] transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>TAP TO FLAP</span>
+              <span className="text-base">🚀</span>
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* GAME OVER Full Screen Overlay (Root Level) */}
+      {gameState === "GAMEOVER" && (
+        <GameOverScreen
+          gameId="flappy"
+          score={score}
+          isNewHighScore={isNewRecord}
+          highScore={Math.max(currentHighScore, score)}
+          extraStats={lastStats}
+          onPlayAgain={resetGame}
+          onBackToMenu={onBack}
+        />
+      )}
     </div>
   );
 };

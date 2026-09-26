@@ -9,9 +9,9 @@ const STORAGE_KEY_SOUND = "chatly_arcade_sound";
 const getInitialHighScores = () => {
   try {
     const saved = localStorage.getItem(STORAGE_KEY_SCORES);
-    return saved ? JSON.parse(saved) : { flappy: 0, tetris: 0, snake: 0 };
+    return saved ? JSON.parse(saved) : { flappy: 0, snake: 0 };
   } catch {
-    return { flappy: 0, tetris: 0, snake: 0 };
+    return { flappy: 0, snake: 0 };
   }
 };
 
@@ -22,13 +22,11 @@ const getInitialStats = () => {
       ? JSON.parse(saved)
       : {
           flappy: { gamesPlayed: 0, bestScore: 0, totalScore: 0 },
-          tetris: { gamesPlayed: 0, bestScore: 0, totalLines: 0, maxLevel: 1 },
           snake: { gamesPlayed: 0, bestScore: 0, totalApples: 0 },
         };
   } catch {
     return {
       flappy: { gamesPlayed: 0, bestScore: 0, totalScore: 0 },
-      tetris: { gamesPlayed: 0, bestScore: 0, totalLines: 0, maxLevel: 1 },
       snake: { gamesPlayed: 0, bestScore: 0, totalApples: 0 },
     };
   }
@@ -64,17 +62,6 @@ export const GAME_METADATA = {
     borderAccent: "border-orange-500/40 hover:border-orange-500",
     scoreUnit: "pts",
   },
-  tetris: {
-    id: "tetris",
-    title: "Tetris",
-    emoji: "🧱",
-    tagline: "Stack blocks, clear lines & beat gravity!",
-    badge: "Puzzle Legend",
-    color: "#3b82f6", // blue
-    themeGradient: "from-blue-500/20 to-cyan-500/10",
-    borderAccent: "border-blue-500/40 hover:border-blue-500",
-    scoreUnit: "pts",
-  },
   snake: {
     id: "snake",
     title: "Snake",
@@ -90,7 +77,7 @@ export const GAME_METADATA = {
 
 export const useGamesStore = create((set, get) => ({
   isGamesModalOpen: false,
-  activeGame: null, // null (selector) | "flappy" | "tetris" | "snake"
+  activeGame: null, // null (selector) | "flappy" | "snake"
   soundEnabled: getInitialSound(),
   highScores: getInitialHighScores(),
   gameStats: getInitialStats(),
@@ -163,10 +150,7 @@ export const useGamesStore = create((set, get) => ({
       ...extraStats,
     };
 
-    if (gameId === "tetris") {
-      updatedGameStat.totalLines = (gameStat.totalLines || 0) + (extraStats.lines || 0);
-      updatedGameStat.maxLevel = Math.max(gameStat.maxLevel || 1, extraStats.level || 1);
-    } else if (gameId === "snake") {
+    if (gameId === "snake") {
       updatedGameStat.totalApples = (gameStat.totalApples || 0) + (extraStats.apples || 0);
     }
 
