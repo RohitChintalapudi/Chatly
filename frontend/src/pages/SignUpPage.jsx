@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, User, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -51,13 +51,15 @@ const SignUpPage = () => {
         <div className="bg-[var(--surface)] rounded-3xl border-2 border-[var(--line)] p-6 sm:p-7 shadow-[0_0_40px_color-mix(in_srgb,var(--accent)_15%,transparent)]">
           {/* Logo */}
           <div className="text-center mb-4 sm:mb-5">
-            <Link to="/" className="inline-flex items-center gap-2.5 mb-2.5">
-              <div className="w-12 h-12 rounded-xl bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center shadow-[3px_3px_0px_0px_var(--line)]">
-                <MessageSquare className="w-6 h-6 text-[var(--primary-text)]" strokeWidth={2.5} />
-              </div>
+            <Link to="/" className="inline-flex items-center gap-2.5 mb-2 hover:opacity-85 hover:scale-105 transition-all">
+              <img
+                src="/chatly-logo.png"
+                alt="Chatly Logo"
+                className="w-12 h-12 sm:w-14 sm:h-14 object-contain drop-shadow-md"
+              />
             </Link>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--primary-text)]">Create Account</h1>
-            <p className="text-xs sm:text-sm text-[var(--secondary-text)] font-medium mt-0.5">Get started with your free account</p>
+            <p className="text-xs sm:text-sm text-[var(--secondary-text)] font-medium mt-0.5">More than a chatting app — get started free</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-3.5">

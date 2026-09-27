@@ -49,8 +49,12 @@ const ChatDashboard = () => {
         <div className="flex justify-center mb-2">
           <div className="relative">
             <div className="absolute inset-0 blur-xl bg-[var(--accent)] opacity-20 rounded-2xl animate-glow-pulse" />
-            <div className="relative w-20 h-20 rounded-2xl bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center shadow-[4px_4px_0px_0px_var(--line)] transition-colors">
-              <MessageSquare className="w-10 h-10 text-[var(--primary-text)]" strokeWidth={2.5} />
+            <div className="relative w-20 h-20 rounded-2xl bg-[var(--surface)] border-2 border-[var(--line)] flex items-center justify-center p-2.5 shadow-[4px_4px_0px_0px_var(--line)] transition-colors">
+              <img
+                src="/chatly-logo.png"
+                alt="Chatly Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
           </div>
         </div>
@@ -58,8 +62,13 @@ const ChatDashboard = () => {
         <h2 className="text-3xl font-extrabold text-[var(--primary-text)]">
           Welcome to Chatly!
         </h2>
-        <p className="text-[var(--secondary-text)] font-medium max-w-md mx-auto">
-          Select a contact from the sidebar to start a conversation, or explore what Chatly has to offer.
+        <div className="inline-block">
+          <span className="text-xs font-black uppercase tracking-widest text-[var(--primary-text)] bg-[var(--accent)]/20 border-2 border-[var(--line)] px-3.5 py-1 rounded-full shadow-[2px_2px_0px_0px_var(--line)]">
+            More Than A Chatting App
+          </span>
+        </div>
+        <p className="text-[var(--secondary-text)] font-medium max-w-md mx-auto text-sm">
+          Select a contact to start chatting, join live audio rooms, play retro mini games, or send files peer-to-peer.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-8 text-left">

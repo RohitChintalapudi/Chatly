@@ -15,6 +15,15 @@ import {
   Smartphone,
   Loader2,
   Share2,
+  Gamepad2,
+  Radio,
+  Trophy,
+  Flame,
+  Github,
+  Twitter,
+  Instagram,
+  Youtube,
+  Linkedin,
 } from "lucide-react";
 import SectionDivider from "../components/SectionDivider";
 import { axiosInstance } from "../lib/axios";
@@ -174,7 +183,7 @@ const LandingPage = () => {
             <div className="space-y-8 animate-slide-in-left">
               <div className="inline-flex items-center gap-2 bg-[var(--accent)]/15 text-[var(--primary-text)] px-5 py-2.5 rounded-full text-sm font-bold border-2 border-[var(--line)]">
                 <Sparkles className="w-4 h-4" />
-                Chat beautifully with anyone
+                More than a chatting app
               </div>
 
               <h1 className="text-5xl lg:text-7xl font-extrabold text-[var(--primary-text)] leading-[1.1]">
@@ -188,7 +197,7 @@ const LandingPage = () => {
               </h1>
 
               <p className="text-lg text-[var(--secondary-text)] max-w-lg leading-relaxed font-medium">
-                Chatly is not just a chatting application. It is a complete real-time collaboration hub featuring direct peer-to-peer file sharing, instant audio rooms, and beautiful connections that feel alive.
+                Chatly is more than a chatting app — it is a complete real-time collaboration and entertainment hub featuring instant messaging, retro arcade mini games, live audio lounges, and direct P2P file sharing.
               </p>
 
               <div className="flex flex-wrap gap-4">
@@ -213,9 +222,11 @@ const LandingPage = () => {
               <div className="relative">
                 <div className="relative bg-[var(--surface)] rounded-3xl border-2 border-[var(--line)] p-8 animate-float-slow hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-shadow duration-300">
                   <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-[var(--line)]/10">
-                    <div className="w-10 h-10 rounded-xl bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center">
-                      <MessageSquare className="w-5 h-5 text-[var(--primary-text)]" strokeWidth={2.5} />
-                    </div>
+                    <img
+                      src="/chatly-logo.png"
+                      alt="Chatly"
+                      className="size-10 rounded-xl object-contain shadow-sm"
+                    />
                     <div>
                       <p className="font-extrabold text-[var(--primary-text)] text-sm">Chatly</p>
                       <p className="text-xs text-green-600 font-bold flex items-center gap-1">
@@ -227,9 +238,9 @@ const LandingPage = () => {
 
                   <div className="space-y-3">
                     <ChatBubblePreview text="Hey! How's it going?" delay="0.3s" align="left" />
-                    <ChatBubblePreview text="Amazing! Just built something cool" delay="0.6s" align="right" />
-                    <ChatBubblePreview text="That sounds awesome! Tell me more" delay="0.9s" align="left" />
-                    <ChatBubblePreview text="It's a real-time chat app with smooth animations!" delay="1.2s" align="right" />
+                    <ChatBubblePreview text="Amazing! Just scored 45 in Flappy Bird! 🐦" delay="0.6s" align="right" />
+                    <ChatBubblePreview text="No way! Send me the challenge link 🔥" delay="0.9s" align="left" />
+                    <ChatBubblePreview text="🎮 Chatly Arcade: Beat my score if you can!" delay="1.2s" align="right" />
                   </div>
 
                   <div className="mt-4 flex items-center gap-2 text-[var(--secondary-text)] text-xs font-medium">
@@ -262,50 +273,164 @@ const LandingPage = () => {
               of the App
             </h2>
             <p className="text-[var(--secondary-text)] text-lg max-w-2xl mx-auto font-medium">
-              Everything you need for seamless, secure, and modern real-time communication.
+              Everything you need for seamless, secure, and fun real-time communication.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             <FeatureCard
-              icon={Zap}
-              title="Lightning Fast"
-              description="Messages delivered in real-time with WebSocket technology. No refreshing, no delays."
+              icon={Gamepad2}
+              title="Mini Games Arcade"
+              description="Play retro favorites like Flappy Bird and Snake directly inside your chat. Compete on leaderboards with 8-bit sounds!"
               delay="0.2s"
             />
             <FeatureCard
-              icon={Shield}
-              title="Private & Secure"
-              description="Your conversations stay yours. End-to-end privacy with secure authentication."
+              icon={Share2}
+              title="P2P File Transfer"
+              description="Transfer any file format up to 1GB directly browser-to-browser via WebRTC with zero server storage limits."
               delay="0.4s"
             />
             <FeatureCard
-              icon={Users}
-              title="Stay Connected"
-              description="See who's online, share moments, and never miss a beat with live status."
+              icon={Radio}
+              title="Live Audio Lounges"
+              description="Drop in and talk with low-latency spatial audio rooms for teams, friends, and community hangouts."
               delay="0.6s"
             />
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mt-6">
             <FeatureCard
-              icon={Globe}
-              title="Works Everywhere"
-              description="Access Chatly from any device. Desktop, tablet, or phone - it just works."
+              icon={Zap}
+              title="Lightning Fast"
+              description="Messages delivered in real-time with WebSocket technology. Instant updates, typing indicators, and zero delays."
               delay="0.3s"
             />
             <FeatureCard
-              icon={Smartphone}
-              title="Mobile Friendly"
-              description="Fully responsive design that feels native on every screen size and orientation."
+              icon={Shield}
+              title="Private & Secure"
+              description="Your conversations stay protected. 6-digit connect codes, JWT authentication, and private 1-on-1 direct messaging."
               delay="0.5s"
             />
             <FeatureCard
-              icon={Share2}
-              title="P2P File Transfer"
-              description="Transfer any file format up to 1GB directly browser-to-browser via WebRTC. Speed limits are set only by your network."
+              icon={Globe}
+              title="Works Everywhere"
+              description="Access Chatly from any device. Responsive design that feels fast and native on desktop, tablet, or phone."
               delay="0.7s"
             />
+          </div>
+        </div>
+      </section>
+
+      <SectionDivider />
+
+      {/* Mini Games Arcade Showcase Section */}
+      <section id="arcade" className="relative z-10 py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="bg-[var(--surface)] rounded-3xl border-2 border-[var(--line)] p-8 sm:p-12 shadow-[8px_8px_0px_0px_var(--line)] relative overflow-hidden">
+            {/* Background Glow */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--accent)] rounded-full filter blur-[120px] opacity-15 pointer-events-none" />
+
+            <div className="grid lg:grid-cols-12 gap-8 items-center relative z-10">
+              {/* Left Column - Intro & Info */}
+              <div className="lg:col-span-7 space-y-6">
+                <div className="inline-flex items-center gap-2 bg-[var(--accent)]/15 text-[var(--primary-text)] px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider border-2 border-[var(--line)]">
+                  <Gamepad2 className="w-4 h-4" />
+                  Chatly Mini Games Arcade
+                </div>
+
+                <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--primary-text)] leading-tight">
+                  Play Retro Games <br className="hidden sm:inline" />{" "}
+                  <span className="underline decoration-[var(--accent)] decoration-4 sm:decoration-[6px] underline-offset-4 sm:underline-offset-8 [text-decoration-skip-ink:none]">
+                    Right Inside Your Chat
+                  </span>
+                </h2>
+
+                <p className="text-[var(--secondary-text)] font-medium text-base leading-relaxed">
+                  Never get bored waiting for a reply! Enjoy classic arcade favorites like Flappy Bird and Snake with real synthesized 8-bit sound effects, high score leaderboards, and instant challenge invites to your friends.
+                </p>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
+                  <div className="p-3.5 rounded-2xl bg-[var(--surface-muted)] border-2 border-[var(--line)] shadow-[2px_2px_0px_0px_var(--line)]">
+                    <div className="text-2xl mb-1">🐦</div>
+                    <p className="font-extrabold text-xs text-[var(--primary-text)]">Flappy Bird</p>
+                    <p className="text-[10px] text-[var(--secondary-text)] font-medium">Physics & Pipes</p>
+                  </div>
+
+                  <div className="p-3.5 rounded-2xl bg-[var(--surface-muted)] border-2 border-[var(--line)] shadow-[2px_2px_0px_0px_var(--line)]">
+                    <div className="text-2xl mb-1">🐍</div>
+                    <p className="font-extrabold text-xs text-[var(--primary-text)]">Retro Snake</p>
+                    <p className="text-[10px] text-[var(--secondary-text)] font-medium">Classic Grid Eater</p>
+                  </div>
+
+                  <div className="p-3.5 rounded-2xl bg-[var(--surface-muted)] border-2 border-[var(--line)] shadow-[2px_2px_0px_0px_var(--line)] col-span-2 sm:col-span-1">
+                    <div className="text-2xl mb-1">🏆</div>
+                    <p className="font-extrabold text-xs text-[var(--primary-text)]">Arcade Challenges</p>
+                    <p className="text-[10px] text-[var(--secondary-text)] font-medium">1-Click Share</p>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <Link
+                    to="/signup"
+                    className="inline-flex items-center gap-2 bg-[var(--accent)] text-[var(--primary-text)] px-6 py-3 rounded-xl font-extrabold text-sm border-2 border-[var(--line)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 hover:bg-[var(--accent-hover)] transition-all duration-200"
+                  >
+                    <Gamepad2 className="w-4 h-4" />
+                    Join & Play Now
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Right Column - Arcade Visual Card */}
+              <div className="lg:col-span-5">
+                <div className="bg-[var(--surface-muted)] border-2 border-[var(--line)] rounded-2xl p-5 shadow-[4px_4px_0px_0px_var(--line)] space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b-2 border-[var(--line)]/20">
+                    <div className="flex items-center gap-2">
+                      <div className="size-3 rounded-full bg-red-500 border border-[var(--line)]" />
+                      <div className="size-3 rounded-full bg-yellow-500 border border-[var(--line)]" />
+                      <div className="size-3 rounded-full bg-green-500 border border-[var(--line)]" />
+                    </div>
+                    <span className="text-[10px] font-mono font-black uppercase text-[var(--secondary-text)] tracking-wider">
+                      RETRO ENGINE V2.0
+                    </span>
+                  </div>
+
+                  <div className="bg-black/90 rounded-xl p-4 border border-[var(--line)] font-mono text-xs text-green-400 space-y-2">
+                    <div className="flex items-center justify-between text-yellow-400 font-bold border-b border-white/10 pb-1.5">
+                      <span>HIGH SCORE BOARD</span>
+                      <span>RANK #1</span>
+                    </div>
+                    <div className="flex justify-between text-[11px]">
+                      <span>1. Flappy Master</span>
+                      <span className="text-white font-bold">42 pts 🐦</span>
+                    </div>
+                    <div className="flex justify-between text-[11px]">
+                      <span>2. Snake Charmer</span>
+                      <span className="text-white font-bold">180 pts 🐍</span>
+                    </div>
+                    <div className="flex justify-between text-[11px] text-zinc-500">
+                      <span>3. Speed Runner</span>
+                      <span>95 pts ⚡</span>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-[var(--surface)] rounded-xl border border-[var(--line)] flex items-center gap-3">
+                    <div className="size-9 rounded-lg bg-[var(--accent)] border border-[var(--line)] flex items-center justify-center font-bold text-sm">
+                      🎮
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-black text-[var(--primary-text)] truncate">
+                        Challenge Friends in Chat
+                      </p>
+                      <p className="text-[10px] text-[var(--secondary-text)] font-semibold truncate">
+                        Share high scores with one tap
+                      </p>
+                    </div>
+                    <Flame className="w-4 h-4 text-orange-500 shrink-0" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -497,77 +622,112 @@ const LandingPage = () => {
 
         <div className="max-w-6xl mx-auto px-6 pt-16 pb-8">
           <div className="grid md:grid-cols-4 gap-10 mb-14">
-            {/* Brand */}
-            <div className="md:col-span-1">
-              <Link to="/" className="flex items-center gap-2.5 mb-5">
-                <div className="size-10 rounded-xl bg-[var(--accent)] border-2 border-white/20 flex items-center justify-center">
-                  <MessageSquare className="w-5 h-5 text-[var(--primary-text)]" strokeWidth={2.5} />
-                </div>
+            {/* Brand & Socials */}
+            <div className="md:col-span-1 space-y-4">
+              <Link to="/" className="flex items-center gap-2.5 hover:opacity-85 transition-opacity">
+                <img
+                  src="/chatly-logo.png"
+                  alt="Chatly Logo"
+                  className="size-10 rounded-xl object-contain shadow-sm"
+                />
                 <h1 className="text-xl font-extrabold text-white">Chatly</h1>
               </Link>
-              <p className="text-[var(--secondary-text)] text-sm font-medium leading-relaxed mb-6">
-                The modern way to connect with your team and friends. Fast, secure, and beautifully simple.
+              <p className="text-[var(--secondary-text)] text-sm font-medium leading-relaxed">
+                Chatly — More than a chatting app. Connect with friends, play retro games, join live audio lounges, and share files directly.
               </p>
-              <div className="flex gap-3">
-                {["X", "GH", "IG", "YT"].map((label) => (
-                  <a
-                    key={label}
-                    href="#"
-                    className="w-9 h-9 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-xs font-bold text-white hover:bg-[var(--accent)] hover:text-[var(--primary-text)] hover:border-[var(--accent)] transition-all duration-300"
-                  >
-                    {label}
-                  </a>
-                ))}
+              <div className="flex flex-wrap gap-2.5 pt-1">
+                {[
+                  { name: "Twitter / X", icon: Twitter, href: "https://twitter.com" },
+                  { name: "GitHub", icon: Github, href: "https://github.com" },
+                  { name: "Instagram", icon: Instagram, href: "https://instagram.com" },
+                  { name: "YouTube", icon: Youtube, href: "https://youtube.com" },
+                  { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={item.name}
+                      title={item.name}
+                      className="size-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-[var(--accent)] hover:text-[var(--primary-text)] hover:border-[var(--accent)] hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--accent)] transition-all duration-200 cursor-pointer"
+                    >
+                      <Icon className="w-4.5 h-4.5" />
+                    </a>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Product */}
+            {/* Explore Features */}
             <div>
-              <h3 className="font-extrabold text-white text-sm uppercase tracking-wider mb-5">Product</h3>
+              <h3 className="font-extrabold text-white text-sm uppercase tracking-wider mb-5">Features</h3>
               <ul className="space-y-3">
-                {["Features", "Pricing", "Integrations", "Changelog", "API Docs"].map((item) => (
-                  <li key={item}>
-                    <a href="#" className="text-[var(--secondary-text)] text-sm font-medium hover:text-[var(--accent)] transition-colors">
-                      {item}
+                {[
+                  { label: "Home", href: "#home" },
+                  { label: "Core Features", href: "#features" },
+                  { label: "Mini Games Arcade", href: "#arcade" },
+                  { label: "Live Audio Lounges", href: "#features" },
+                  { label: "P2P File Sharing", href: "#features" },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <a
+                      href={item.href}
+                      className="text-[var(--secondary-text)] text-sm font-medium hover:text-[var(--accent)] transition-colors"
+                    >
+                      {item.label}
                     </a>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Company */}
+            {/* Navigation & App Access */}
             <div>
-              <h3 className="font-extrabold text-white text-sm uppercase tracking-wider mb-5">Company</h3>
+              <h3 className="font-extrabold text-white text-sm uppercase tracking-wider mb-5">Get Started</h3>
               <ul className="space-y-3">
-                {["About Us", "Careers", "Blog", "Press Kit", "Partners"].map((item) => (
-                  <li key={item}>
-                    <a href="#" className="text-[var(--secondary-text)] text-sm font-medium hover:text-[var(--accent)] transition-colors">
-                      {item}
-                    </a>
+                {[
+                  { label: "Create Account", href: "/signup", isRoute: true },
+                  { label: "Sign In", href: "/login", isRoute: true },
+                  { label: "Community Feedback", href: "#feedback", isRoute: false },
+                  { label: "Get in Touch", href: "#contact", isRoute: false },
+                ].map((item) => (
+                  <li key={item.label}>
+                    {item.isRoute ? (
+                      <Link
+                        to={item.href}
+                        className="text-[var(--secondary-text)] text-sm font-medium hover:text-[var(--accent)] transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        className="text-[var(--secondary-text)] text-sm font-medium hover:text-[var(--accent)] transition-colors"
+                      >
+                        {item.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Newsletter */}
+            {/* Contact & Support CTA */}
             <div>
-              <h3 className="font-extrabold text-white text-sm uppercase tracking-wider mb-5">Stay Updated</h3>
-              <p className="text-[var(--secondary-text)] text-sm font-medium mb-4">
-                Get the latest updates and news straight to your inbox.
+              <h3 className="font-extrabold text-white text-sm uppercase tracking-wider mb-5">Support & Help</h3>
+              <p className="text-[var(--secondary-text)] text-sm font-medium mb-4 leading-relaxed">
+                Have questions or suggestions? We&apos;d love to hear your thoughts and feedback.
               </p>
-              <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  type="email"
-                  placeholder="you@email.com"
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-white/10 border-2 border-white/20 text-white text-sm font-medium placeholder:text-gray-500 focus:outline-none focus:border-[var(--accent)] transition-colors"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2.5 rounded-xl bg-[var(--accent)] border-2 border-[var(--accent)] text-[var(--primary-text)] text-sm font-extrabold hover:bg-[var(--accent-hover)] hover:border-[var(--accent-hover)] transition-all cursor-pointer"
-                >
-                  Join
-                </button>
-              </form>
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--accent)] text-[var(--primary-text)] text-sm font-extrabold hover:bg-[var(--accent-hover)] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_white] transition-all cursor-pointer"
+              >
+                <Send className="w-4 h-4" />
+                Get in Touch
+              </a>
             </div>
           </div>
 
@@ -576,17 +736,9 @@ const LandingPage = () => {
             <p className="text-[var(--secondary-text)] text-xs font-semibold">
               &copy; {new Date().getFullYear()} Chatly. All rights reserved.
             </p>
-            <div className="flex items-center gap-6">
-              {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="text-[var(--secondary-text)] text-xs font-semibold hover:text-[var(--accent)] transition-colors"
-                >
-                  {item}
-                </a>
-              ))}
-            </div>
+            <p className="text-[var(--accent)] text-xs font-black uppercase tracking-wider">
+              More than a chatting app
+            </p>
             <p className="text-[var(--secondary-text)] text-xs font-semibold flex items-center gap-1.5">
               Built with <Heart className="w-3 h-3 text-[var(--accent)] fill-[var(--accent)]" /> Team Chatly
             </p>

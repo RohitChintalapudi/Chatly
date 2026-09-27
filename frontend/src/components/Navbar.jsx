@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 const landingLinks = [
   { label: "Home", href: "#home" },
   { label: "Features", href: "#features" },
+  { label: "Arcade", href: "#arcade" },
   { label: "Feedback", href: "#feedback" },
   { label: "Contact", href: "#contact" },
 ];
@@ -90,9 +91,11 @@ const Navbar = () => {
         <div className="container mx-auto px-4 h-16">
           <div className="flex items-center justify-between h-full">
             <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-all">
-              <div className="size-9 rounded-xl bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center transition-colors">
-                <MessageSquare className="w-5 h-5 text-[var(--primary-text)]" strokeWidth={2.5} />
-              </div>
+              <img
+                src="/chatly-logo.png"
+                alt="Chatly Logo"
+                className="size-9 rounded-xl object-contain shadow-sm"
+              />
               <h1 className="text-lg font-extrabold text-[var(--primary-text)] transition-colors">Chatly</h1>
             </Link>
 

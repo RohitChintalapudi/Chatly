@@ -16,7 +16,6 @@ import { useAuthStore } from "./store/useAuthStore";
 import { useThemeStore, getAccentByKey } from "./store/useThemeStore";
 import { useEffect, useMemo } from "react";
 
-import { MessageSquare } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {
@@ -40,17 +39,21 @@ const App = () => {
             <span className="absolute -inset-3.5 rounded-2xl bg-[var(--accent)] opacity-20 animate-ping duration-1000" />
             <span className="absolute -inset-1 rounded-2xl bg-[var(--accent)] opacity-10 animate-pulse" />
             
-            <div className="size-16 rounded-2xl bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center shadow-[4px_4px_0px_0px_var(--line)] transition-all">
-              <MessageSquare className="w-8 h-8 text-black animate-bounce" strokeWidth={2.5} />
+            <div className="size-16 rounded-2xl bg-[var(--surface)] border-2 border-[var(--line)] flex items-center justify-center p-2.5 shadow-[4px_4px_0px_0px_var(--line)] transition-all">
+              <img
+                src="/chatly-logo.png"
+                alt="Chatly"
+                className="w-10 h-10 object-contain animate-bounce"
+              />
             </div>
           </div>
           
-          <div className="flex flex-col items-center mt-3 select-none">
+          <div className="flex flex-col items-center mt-3 select-none text-center">
             <span className="text-sm font-black text-[var(--primary-text)] tracking-wider uppercase">
               Chatly
             </span>
-            <span className="text-[10px] font-extrabold text-[var(--secondary-text)] tracking-widest uppercase mt-1 animate-pulse">
-              Loading...
+            <span className="text-[10px] font-extrabold text-[var(--accent)] tracking-widest uppercase mt-0.5">
+              More than a chatting app
             </span>
           </div>
         </div>
