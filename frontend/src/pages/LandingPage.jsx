@@ -19,6 +19,11 @@ import {
   Radio,
   Trophy,
   Flame,
+  Github,
+  Twitter,
+  Instagram,
+  Youtube,
+  Linkedin,
 } from "lucide-react";
 import SectionDivider from "../components/SectionDivider";
 import { axiosInstance } from "../lib/axios";
@@ -631,16 +636,29 @@ const LandingPage = () => {
               <p className="text-[var(--secondary-text)] text-sm font-medium leading-relaxed mb-6">
                 The modern way to connect with your team and friends. Fast, secure, and beautifully simple.
               </p>
-              <div className="flex gap-3">
-                {["X", "GH", "IG", "YT"].map((label) => (
-                  <a
-                    key={label}
-                    href="#"
-                    className="w-9 h-9 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-xs font-bold text-white hover:bg-[var(--accent)] hover:text-[var(--primary-text)] hover:border-[var(--accent)] transition-all duration-300"
-                  >
-                    {label}
-                  </a>
-                ))}
+              <div className="flex flex-wrap gap-2.5">
+                {[
+                  { name: "Twitter / X", icon: Twitter, href: "https://twitter.com" },
+                  { name: "GitHub", icon: Github, href: "https://github.com" },
+                  { name: "Instagram", icon: Instagram, href: "https://instagram.com" },
+                  { name: "YouTube", icon: Youtube, href: "https://youtube.com" },
+                  { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={item.name}
+                      title={item.name}
+                      className="size-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-[var(--accent)] hover:text-[var(--primary-text)] hover:border-[var(--accent)] hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_var(--accent)] transition-all duration-200 cursor-pointer"
+                    >
+                      <Icon className="w-4.5 h-4.5" />
+                    </a>
+                  );
+                })}
               </div>
             </div>
 
