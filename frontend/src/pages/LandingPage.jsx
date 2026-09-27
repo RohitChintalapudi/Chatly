@@ -213,9 +213,11 @@ const LandingPage = () => {
               <div className="relative">
                 <div className="relative bg-[var(--surface)] rounded-3xl border-2 border-[var(--line)] p-8 animate-float-slow hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-shadow duration-300">
                   <div className="flex items-center gap-3 mb-6 pb-4 border-b-2 border-[var(--line)]/10">
-                    <div className="w-10 h-10 rounded-xl bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center">
-                      <MessageSquare className="w-5 h-5 text-[var(--primary-text)]" strokeWidth={2.5} />
-                    </div>
+                    <img
+                      src="/chatly-logo.png"
+                      alt="Chatly"
+                      className="size-10 rounded-xl object-contain shadow-sm"
+                    />
                     <div>
                       <p className="font-extrabold text-[var(--primary-text)] text-sm">Chatly</p>
                       <p className="text-xs text-green-600 font-bold flex items-center gap-1">
@@ -499,10 +501,12 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-4 gap-10 mb-14">
             {/* Brand */}
             <div className="md:col-span-1">
-              <Link to="/" className="flex items-center gap-2.5 mb-5">
-                <div className="size-10 rounded-xl bg-[var(--accent)] border-2 border-white/20 flex items-center justify-center">
-                  <MessageSquare className="w-5 h-5 text-[var(--primary-text)]" strokeWidth={2.5} />
-                </div>
+              <Link to="/" className="flex items-center gap-2.5 mb-5 hover:opacity-85 transition-opacity">
+                <img
+                  src="/chatly-logo.png"
+                  alt="Chatly Logo"
+                  className="size-10 rounded-xl object-contain shadow-sm"
+                />
                 <h1 className="text-xl font-extrabold text-white">Chatly</h1>
               </Link>
               <p className="text-[var(--secondary-text)] text-sm font-medium leading-relaxed mb-6">

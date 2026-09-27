@@ -1,4 +1,4 @@
-import { MessageSquare, Copy, Check } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -21,8 +21,12 @@ const NoChatSelected = () => {
         <div className="flex justify-center gap-4 mb-2">
           <div className="relative">
             <div className="absolute inset-0 blur-xl bg-[var(--accent)] opacity-20 rounded-2xl animate-glow-pulse" />
-            <div className="relative w-20 h-20 rounded-2xl bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center animate-bounce shadow-[4px_4px_0px_0px_var(--line)] transition-colors">
-              <MessageSquare className="w-10 h-10 text-[var(--primary-text)]" strokeWidth={2.5} />
+            <div className="relative w-20 h-20 rounded-2xl bg-[var(--surface)] border-2 border-[var(--line)] flex items-center justify-center p-2.5 animate-bounce shadow-[4px_4px_0px_0px_var(--line)] transition-colors">
+              <img
+                src="/chatly-logo.png"
+                alt="Chatly Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
           </div>
         </div>
