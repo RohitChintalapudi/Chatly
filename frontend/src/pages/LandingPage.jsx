@@ -339,10 +339,9 @@ const LandingPage = () => {
                 </div>
 
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--primary-text)] leading-tight">
-                  Play Retro Games <br />
-                  <span className="relative inline-block">
-                    <span className="relative z-10">Right Inside Your Chat</span>
-                    <span className="absolute bottom-1 left-0 w-full h-3 bg-[var(--accent)] -z-0 rounded-sm" />
+                  Play Retro Games <br className="hidden sm:inline" />{" "}
+                  <span className="underline decoration-[var(--accent)] decoration-4 sm:decoration-[6px] underline-offset-4 sm:underline-offset-8 [text-decoration-skip-ink:none]">
+                    Right Inside Your Chat
                   </span>
                 </h2>
 
