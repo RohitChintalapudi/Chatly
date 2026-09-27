@@ -1,8 +1,8 @@
 <div align="center">
 
-# Chatly — Not just a chatting application
+# Chatly — More than a chatting app
 
-**A state-of-the-art, full-stack real-time messaging platform, P2P file sharing utility, and live drop-in audio suite built with React, Node.js, Socket.IO, and P2P WebRTC — with zero external audio SDK dependencies.**
+**A state-of-the-art, full-stack real-time messaging platform, retro arcade suite, P2P file sharing utility, and live drop-in audio lounge built with React, Node.js, Socket.IO, and P2P WebRTC.**
 
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Node.js](https://img.shields.io/badge/Node.js-20-339933?style=for-the-badge&logo=node.js&logoColor=white)

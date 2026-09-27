@@ -183,7 +183,7 @@ const LandingPage = () => {
             <div className="space-y-8 animate-slide-in-left">
               <div className="inline-flex items-center gap-2 bg-[var(--accent)]/15 text-[var(--primary-text)] px-5 py-2.5 rounded-full text-sm font-bold border-2 border-[var(--line)]">
                 <Sparkles className="w-4 h-4" />
-                Chat beautifully with anyone
+                More than a chatting app
               </div>
 
               <h1 className="text-5xl lg:text-7xl font-extrabold text-[var(--primary-text)] leading-[1.1]">
@@ -197,7 +197,7 @@ const LandingPage = () => {
               </h1>
 
               <p className="text-lg text-[var(--secondary-text)] max-w-lg leading-relaxed font-medium">
-                Chatly is not just a chatting application. It is a complete real-time collaboration and entertainment hub featuring instant messaging, retro mini games, live audio lounges, and direct P2P file sharing.
+                Chatly is more than a chatting app — it is a complete real-time collaboration and entertainment hub featuring instant messaging, retro arcade mini games, live audio lounges, and direct P2P file sharing.
               </p>
 
               <div className="flex flex-wrap gap-4">
@@ -634,7 +634,7 @@ const LandingPage = () => {
                 <h1 className="text-xl font-extrabold text-white">Chatly</h1>
               </Link>
               <p className="text-[var(--secondary-text)] text-sm font-medium leading-relaxed mb-6">
-                The modern way to connect with your team and friends. Fast, secure, and beautifully simple.
+                Chatly — More than a chatting app. Connect with your friends, play retro games, hang out in live audio lounges, and share files seamlessly.
               </p>
               <div className="flex flex-wrap gap-2.5">
                 {[

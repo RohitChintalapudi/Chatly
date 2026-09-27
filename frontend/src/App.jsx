@@ -48,12 +48,12 @@ const App = () => {
             </div>
           </div>
           
-          <div className="flex flex-col items-center mt-3 select-none">
+          <div className="flex flex-col items-center mt-3 select-none text-center">
             <span className="text-sm font-black text-[var(--primary-text)] tracking-wider uppercase">
               Chatly
             </span>
-            <span className="text-[10px] font-extrabold text-[var(--secondary-text)] tracking-widest uppercase mt-1 animate-pulse">
-              Loading...
+            <span className="text-[10px] font-extrabold text-[var(--accent)] tracking-widest uppercase mt-0.5">
+              More than a chatting app
             </span>
           </div>
         </div>

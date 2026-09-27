@@ -62,8 +62,13 @@ const ChatDashboard = () => {
         <h2 className="text-3xl font-extrabold text-[var(--primary-text)]">
           Welcome to Chatly!
         </h2>
-        <p className="text-[var(--secondary-text)] font-medium max-w-md mx-auto">
-          Select a contact from the sidebar to start a conversation, or explore what Chatly has to offer.
+        <div className="inline-block">
+          <span className="text-xs font-black uppercase tracking-widest text-[var(--primary-text)] bg-[var(--accent)]/20 border-2 border-[var(--line)] px-3.5 py-1 rounded-full shadow-[2px_2px_0px_0px_var(--line)]">
+            More Than A Chatting App
+          </span>
+        </div>
+        <p className="text-[var(--secondary-text)] font-medium max-w-md mx-auto text-sm">
+          Select a contact to start chatting, join live audio rooms, play retro mini games, or send files peer-to-peer.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-8 text-left">

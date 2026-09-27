@@ -44,7 +44,7 @@ const LoginPage = () => {
               />
             </Link>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--primary-text)]">Welcome Back</h1>
-            <p className="text-xs sm:text-sm text-[var(--secondary-text)] font-medium mt-0.5">Sign in to your account</p>
+            <p className="text-xs sm:text-sm text-[var(--secondary-text)] font-medium mt-0.5">More than a chatting app — sign in to continue</p>
           </div>
 
           {/* Form */}
