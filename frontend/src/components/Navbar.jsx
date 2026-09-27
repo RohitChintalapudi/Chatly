@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 const landingLinks = [
   { label: "Home", href: "#home" },
   { label: "Features", href: "#features" },
+  { label: "Arcade", href: "#arcade" },
   { label: "Feedback", href: "#feedback" },
   { label: "Contact", href: "#contact" },
 ];
