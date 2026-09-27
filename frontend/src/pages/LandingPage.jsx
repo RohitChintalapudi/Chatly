@@ -623,9 +623,9 @@ const LandingPage = () => {
 
         <div className="max-w-6xl mx-auto px-6 pt-16 pb-8">
           <div className="grid md:grid-cols-4 gap-10 mb-14">
-            {/* Brand */}
-            <div className="md:col-span-1">
-              <Link to="/" className="flex items-center gap-2.5 mb-5 hover:opacity-85 transition-opacity">
+            {/* Brand & Socials */}
+            <div className="md:col-span-1 space-y-4">
+              <Link to="/" className="flex items-center gap-2.5 hover:opacity-85 transition-opacity">
                 <img
                   src="/chatly-logo.png"
                   alt="Chatly Logo"
@@ -633,10 +633,10 @@ const LandingPage = () => {
                 />
                 <h1 className="text-xl font-extrabold text-white">Chatly</h1>
               </Link>
-              <p className="text-[var(--secondary-text)] text-sm font-medium leading-relaxed mb-6">
-                Chatly — More than a chatting app. Connect with your friends, play retro games, hang out in live audio lounges, and share files seamlessly.
+              <p className="text-[var(--secondary-text)] text-sm font-medium leading-relaxed">
+                Chatly — More than a chatting app. Connect with friends, play retro games, join live audio lounges, and share files directly.
               </p>
-              <div className="flex flex-wrap gap-2.5">
+              <div className="flex flex-wrap gap-2.5 pt-1">
                 {[
                   { name: "Twitter / X", icon: Twitter, href: "https://twitter.com" },
                   { name: "GitHub", icon: Github, href: "https://github.com" },
@@ -662,53 +662,73 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Product */}
+            {/* Explore Features */}
             <div>
-              <h3 className="font-extrabold text-white text-sm uppercase tracking-wider mb-5">Product</h3>
+              <h3 className="font-extrabold text-white text-sm uppercase tracking-wider mb-5">Features</h3>
               <ul className="space-y-3">
-                {["Features", "Pricing", "Integrations", "Changelog", "API Docs"].map((item) => (
-                  <li key={item}>
-                    <a href="#" className="text-[var(--secondary-text)] text-sm font-medium hover:text-[var(--accent)] transition-colors">
-                      {item}
+                {[
+                  { label: "Home", href: "#home" },
+                  { label: "Core Features", href: "#features" },
+                  { label: "Mini Games Arcade", href: "#arcade" },
+                  { label: "Live Audio Lounges", href: "#features" },
+                  { label: "P2P File Sharing", href: "#features" },
+                ].map((item) => (
+                  <li key={item.label}>
+                    <a
+                      href={item.href}
+                      className="text-[var(--secondary-text)] text-sm font-medium hover:text-[var(--accent)] transition-colors"
+                    >
+                      {item.label}
                     </a>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Company */}
+            {/* Navigation & App Access */}
             <div>
-              <h3 className="font-extrabold text-white text-sm uppercase tracking-wider mb-5">Company</h3>
+              <h3 className="font-extrabold text-white text-sm uppercase tracking-wider mb-5">Get Started</h3>
               <ul className="space-y-3">
-                {["About Us", "Careers", "Blog", "Press Kit", "Partners"].map((item) => (
-                  <li key={item}>
-                    <a href="#" className="text-[var(--secondary-text)] text-sm font-medium hover:text-[var(--accent)] transition-colors">
-                      {item}
-                    </a>
+                {[
+                  { label: "Create Account", href: "/signup", isRoute: true },
+                  { label: "Sign In", href: "/login", isRoute: true },
+                  { label: "Community Feedback", href: "#feedback", isRoute: false },
+                  { label: "Get in Touch", href: "#contact", isRoute: false },
+                ].map((item) => (
+                  <li key={item.label}>
+                    {item.isRoute ? (
+                      <Link
+                        to={item.href}
+                        className="text-[var(--secondary-text)] text-sm font-medium hover:text-[var(--accent)] transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        className="text-[var(--secondary-text)] text-sm font-medium hover:text-[var(--accent)] transition-colors"
+                      >
+                        {item.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Newsletter */}
+            {/* Contact & Support CTA */}
             <div>
-              <h3 className="font-extrabold text-white text-sm uppercase tracking-wider mb-5">Stay Updated</h3>
-              <p className="text-[var(--secondary-text)] text-sm font-medium mb-4">
-                Get the latest updates and news straight to your inbox.
+              <h3 className="font-extrabold text-white text-sm uppercase tracking-wider mb-5">Support & Help</h3>
+              <p className="text-[var(--secondary-text)] text-sm font-medium mb-4 leading-relaxed">
+                Have questions or suggestions? We&apos;d love to hear your thoughts and feedback.
               </p>
-              <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
-                <input
-                  type="email"
-                  placeholder="you@email.com"
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-white/10 border-2 border-white/20 text-white text-sm font-medium placeholder:text-gray-500 focus:outline-none focus:border-[var(--accent)] transition-colors"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2.5 rounded-xl bg-[var(--accent)] border-2 border-[var(--accent)] text-[var(--primary-text)] text-sm font-extrabold hover:bg-[var(--accent-hover)] hover:border-[var(--accent-hover)] transition-all cursor-pointer"
-                >
-                  Join
-                </button>
-              </form>
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--accent)] text-[var(--primary-text)] text-sm font-extrabold hover:bg-[var(--accent-hover)] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_white] transition-all cursor-pointer"
+              >
+                <Send className="w-4 h-4" />
+                Get in Touch
+              </a>
             </div>
           </div>
 
@@ -717,17 +737,9 @@ const LandingPage = () => {
             <p className="text-[var(--secondary-text)] text-xs font-semibold">
               &copy; {new Date().getFullYear()} Chatly. All rights reserved.
             </p>
-            <div className="flex items-center gap-6">
-              {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="text-[var(--secondary-text)] text-xs font-semibold hover:text-[var(--accent)] transition-colors"
-                >
-                  {item}
-                </a>
-              ))}
-            </div>
+            <p className="text-[var(--accent)] text-xs font-black uppercase tracking-wider">
+              More than a chatting app
+            </p>
             <p className="text-[var(--secondary-text)] text-xs font-semibold flex items-center gap-1.5">
               Built with <Heart className="w-3 h-3 text-[var(--accent)] fill-[var(--accent)]" /> Team Chatly
             </p>
