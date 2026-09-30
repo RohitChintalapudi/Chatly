@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import LoadingScreen from "./components/LoadingScreen";
 
 import HomePage from "./pages/HomePage";
 import LandingPage from "./pages/LandingPage";
@@ -27,38 +28,16 @@ const App = () => {
     checkAuth();
   }, [checkAuth]);
 
-  if (isCheckingAuth && !authUser)
+  if (isCheckingAuth && !authUser) {
     return (
       <div
         className={isDark ? "dark" : ""}
         style={{ "--accent": accent.accent, "--accent-hover": accent.hover }}
       >
-        <div className="flex flex-col items-center justify-center gap-4 h-screen bg-[var(--surface)] transition-colors">
-          <div className="relative flex items-center justify-center">
-            {/* Glowing pulsating rings */}
-            <span className="absolute -inset-3.5 rounded-2xl bg-[var(--accent)] opacity-20 animate-ping duration-1000" />
-            <span className="absolute -inset-1 rounded-2xl bg-[var(--accent)] opacity-10 animate-pulse" />
-            
-            <div className="size-16 rounded-2xl bg-[var(--surface)] border-2 border-[var(--line)] flex items-center justify-center p-2.5 shadow-[4px_4px_0px_0px_var(--line)] transition-all">
-              <img
-                src="/chatly-logo.png"
-                alt="Chatly"
-                className="w-10 h-10 object-contain animate-bounce"
-              />
-            </div>
-          </div>
-          
-          <div className="flex flex-col items-center mt-3 select-none text-center">
-            <span className="text-sm font-black text-[var(--primary-text)] tracking-wider uppercase">
-              Chatly
-            </span>
-            <span className="text-[10px] font-extrabold text-[var(--accent)] tracking-widest uppercase mt-0.5">
-              More than a chatting app
-            </span>
-          </div>
-        </div>
+        <LoadingScreen />
       </div>
     );
+  }
 
   return (
     <div
