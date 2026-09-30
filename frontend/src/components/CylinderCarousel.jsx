@@ -14,9 +14,9 @@ import {
 } from "framer-motion";
 
 // Soft spring for momentum glide after release
-const GLIDE_SPRING = { stiffness: 40, damping: 20, mass: 3 };
+const GLIDE_SPRING = { stiffness: 45, damping: 22, mass: 2.8 };
 const FLICK_MOMENTUM = 0.45;
-const MAX_FLICK_ITEMS = 6;
+const MAX_FLICK_ITEMS = 5;
 
 // The frame edge sits at this wall angle; how far the wall curves in frame.
 const THETA_EDGE = (72 * Math.PI) / 180;
@@ -51,7 +51,9 @@ function CarouselBall({
   convex,
   arc,
   halfWidth,
-  itemSize,
+  itemWidth,
+  itemHeight,
+  onSelect,
   children,
 }) {
   // Nearest wrapped offset so items loop around continuously
@@ -80,20 +82,21 @@ function CarouselBall({
 
   const opacity = useTransform(offset, (o) => {
     const dist = Math.abs(o);
-    if (dist > edgeOffset + 0.5) return 0;
-    if (dist > edgeOffset - 0.5) return Math.max(0, 1 - (dist - (edgeOffset - 0.5)));
+    if (dist > edgeOffset + 0.6) return 0;
+    if (dist > edgeOffset - 0.4) return Math.max(0, 1 - (dist - (edgeOffset - 0.4)) * 1.5);
     return 1;
   });
 
   const zIndex = useTransform(scale, (s) => Math.round(s * 100));
 
   const visibility = useTransform(x, (px) =>
-    Math.abs(px) > halfWidth + itemSize ? "hidden" : "visible"
+    Math.abs(px) > halfWidth + itemWidth ? "hidden" : "visible"
   );
 
   return (
     <motion.div
-      className="absolute top-1/2 left-1/2 select-none"
+      onClick={onSelect}
+      className="absolute top-1/2 left-1/2 select-none cursor-pointer transition-shadow"
       style={{
         x,
         y,
@@ -101,10 +104,10 @@ function CarouselBall({
         opacity,
         zIndex,
         visibility,
-        width: itemSize,
-        height: itemSize,
-        marginLeft: -itemSize / 2,
-        marginTop: -itemSize / 2,
+        width: itemWidth,
+        height: itemHeight,
+        marginLeft: -itemWidth / 2,
+        marginTop: -itemHeight / 2,
       }}
     >
       {children}
@@ -117,15 +120,16 @@ function CarouselBall({
  */
 export function CylinderCarousel({
   children,
-  itemSize = 320,
+  itemWidth = 320,
+  itemHeight = 380,
   visibleItems = 5,
-  variant = "concave",
-  minScale = 0.65,
-  dragSpeed = 1.4,
+  variant = "convex",
+  minScale = 0.8,
+  dragSpeed = 1.3,
   arc: arcProp,
   snap = true,
   autoRotate = true,
-  autoRotateSpeed = 0.25,
+  autoRotateSpeed = 0.22,
   defaultIndex = 0,
   onIndexChange,
   height,
@@ -160,10 +164,13 @@ export function CylinderCarousel({
       ? 1 - (1 - minScale) * t
       : minScale + (1 - minScale) * t;
   }
-  const size = Math.min(itemSize, (stageWidth * 0.85) / scaleSum);
+  
+  // Responsive card dimensions
+  const finalItemWidth = Math.min(itemWidth, Math.max(260, stageWidth * 0.75 / (visibleItems > 3 ? 3 : 1.5)));
+  const finalItemHeight = itemHeight;
 
-  const gap = stageWidth / (visibleItems + 1);
-  const arc = arcProp ?? size * 0.25;
+  const gap = Math.min(finalItemWidth * 1.05, stageWidth / (visibleItems + 0.5));
+  const arc = arcProp ?? (convex ? 25 : 35);
 
   const alpha = THETA_EDGE / edgeOffset;
   const k = Math.max(0.2, (minScale - Math.cos(THETA_EDGE)) / (1 - minScale));
@@ -172,7 +179,7 @@ export function CylinderCarousel({
 
   const scroll = useMotionValue(defaultIndex);
   const indexRef = useRef(defaultIndex);
-  const [, setActiveIndex] = useState(defaultIndex);
+  const [currentIndex, setCurrentIndex] = useState(defaultIndex);
   const glideRef = useRef(null);
   const draggingRef = useRef(false);
   const hoverRef = useRef(false);
@@ -183,7 +190,7 @@ export function CylinderCarousel({
       const idx = ((Math.round(v) % count) + count) % count;
       if (idx !== indexRef.current) {
         indexRef.current = idx;
-        setActiveIndex(idx);
+        setCurrentIndex(idx);
         onIndexChange?.(idx);
       }
     });
@@ -196,7 +203,7 @@ export function CylinderCarousel({
   }, []);
 
   const glideTo = useCallback(
-    (to, velocity) => {
+    (to, velocity = 0) => {
       stopGlide();
       if (reduce) {
         scroll.set(to);
@@ -318,10 +325,11 @@ export function CylinderCarousel({
     return () => cancelAnimationFrame(raf);
   }, [autoRotate, autoRotateSpeed, reduce, count, scroll]);
 
-  const stageHeight = height ?? Math.max(380, size + 60);
+  const stageHeight = height ?? (finalItemHeight + 60);
 
   return (
     <div className="relative w-full flex flex-col items-center">
+      {/* 3D Curved Perspective Stage */}
       <div
         ref={stageRef}
         role="region"
@@ -347,7 +355,7 @@ export function CylinderCarousel({
         onPointerLeave={() => {
           hoverRef.current = false;
         }}
-        className={`relative w-full touch-none outline-none overflow-hidden cursor-grab active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${className}`}
+        className={`relative w-full touch-none outline-none overflow-visible cursor-grab active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${className}`}
         style={{ height: stageHeight }}
       >
         {items.map((item, i) => (
@@ -365,35 +373,71 @@ export function CylinderCarousel({
             convex={convex}
             arc={arc}
             halfWidth={halfWidth}
-            itemSize={size}
+            itemWidth={finalItemWidth}
+            itemHeight={finalItemHeight}
+            onSelect={() => {
+              // Smoothly glide clicked item to center
+              const currentS = scroll.get();
+              const nearest = Math.round(currentS);
+              let diff = i - (nearest % count);
+              if (diff > count / 2) diff -= count;
+              if (diff < -count / 2) diff += count;
+              glideTo(nearest + diff);
+            }}
           >
             {item}
           </CarouselBall>
         ))}
       </div>
 
-      {/* Interactive Drag & Glide Prompt with Arrow Controls */}
-      <div className="flex items-center justify-center gap-4 mt-2">
+      {/* Interactive Navigation HUD */}
+      <div className="flex flex-wrap items-center justify-center gap-4 mt-6 z-20">
         <button
           type="button"
           onClick={() => rollBy(-1)}
           aria-label="Previous feature"
-          className="size-9 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] flex items-center justify-center hover:bg-[var(--accent)] hover:shadow-[2px_2px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all cursor-pointer shadow-sm"
+          className="size-10 rounded-2xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-black flex items-center justify-center hover:bg-[var(--accent)] hover:shadow-[3px_3px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all cursor-pointer shadow-sm active:translate-y-0"
         >
           ←
         </button>
-        <span className="text-xs font-mono font-bold text-[var(--secondary-text)] tracking-wider uppercase">
-          Drag / Scroll to explore features
-        </span>
+
+        {/* Feature Index Indicators */}
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border-2 border-[var(--line)] bg-[var(--surface)] shadow-[2px_2px_0px_0px_var(--line)]">
+          {items.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => {
+                const currentS = scroll.get();
+                const nearest = Math.round(currentS);
+                let diff = i - (nearest % count);
+                if (diff > count / 2) diff -= count;
+                if (diff < -count / 2) diff += count;
+                glideTo(nearest + diff);
+              }}
+              aria-label={`Jump to slide ${i + 1}`}
+              className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                currentIndex === i
+                  ? "w-7 bg-[var(--accent)] border border-[var(--line)]"
+                  : "w-2.5 bg-[var(--line)]/20 hover:bg-[var(--line)]/50"
+              }`}
+            />
+          ))}
+        </div>
+
         <button
           type="button"
           onClick={() => rollBy(1)}
           aria-label="Next feature"
-          className="size-9 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] flex items-center justify-center hover:bg-[var(--accent)] hover:shadow-[2px_2px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all cursor-pointer shadow-sm"
+          className="size-10 rounded-2xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-black flex items-center justify-center hover:bg-[var(--accent)] hover:shadow-[3px_3px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all cursor-pointer shadow-sm active:translate-y-0"
         >
           →
         </button>
       </div>
+
+      <p className="mt-2 text-[11px] font-mono font-bold text-[var(--secondary-text)] uppercase tracking-wider">
+        Drag • Scroll • Click any card to focus
+      </p>
     </div>
   );
 }

@@ -51,65 +51,120 @@ const FloatingBubble = ({ size, left, top, delay, duration }) => (
 const CORE_FEATURES = [
   {
     icon: Gamepad2,
+    badgeColor: "bg-purple-500/15 text-purple-500 border-purple-500/30",
+    iconBg: "bg-purple-500",
     tag: "ARCADE+",
     title: "Mini Games Arcade",
-    description: "Play retro favorites like Flappy Bird and Snake directly inside your chat. Compete on leaderboards with 8-bit sounds!",
+    description: "Play retro favorites like Flappy Bird and Snake directly inside your chat. Compete on leaderboards with 8-bit retro sound effects!",
+    highlights: ["🕹️ Flappy & Snake", "🏆 High Scores", "⚔️ 1v1 Challenges"],
+    metric: "Instant Play in Chat",
   },
   {
     icon: Share2,
+    badgeColor: "bg-emerald-500/15 text-emerald-500 border-emerald-500/30",
+    iconBg: "bg-emerald-500",
     tag: "P2P DIRECT",
     title: "P2P File Transfer",
     description: "Transfer any file format up to 1GB directly browser-to-browser via WebRTC with zero server storage limits.",
+    highlights: ["⚡ WebRTC Direct", "📦 Up to 1GB", "🔒 End-to-End Private"],
+    metric: "0 Cloud Upload Delay",
   },
   {
     icon: Radio,
+    badgeColor: "bg-pink-500/15 text-pink-500 border-pink-500/30",
+    iconBg: "bg-pink-500",
     tag: "SPATIAL AUDIO",
     title: "Live Audio Lounges",
-    description: "Drop in and talk with low-latency spatial audio rooms for teams, friends, and community hangouts.",
+    description: "Drop in and talk with low-latency spatial audio rooms for teams, friends, gaming squads, and chillouts.",
+    highlights: ["🎙️ Multi-User Voice", "👑 Host Controls", "🔊 Spatial Sound"],
+    metric: "Live Room Mesh",
   },
   {
     icon: Zap,
+    badgeColor: "bg-amber-500/15 text-amber-500 border-amber-500/30",
+    iconBg: "bg-amber-500",
     tag: "WEBSOCKETS",
     title: "Lightning Fast Chat",
     description: "Messages delivered in real-time with WebSocket technology. Instant updates, typing indicators, and zero delays.",
+    highlights: ["⚡ <10ms Latency", "✍️ Live Typing", "🟢 Online Status"],
+    metric: "Bi-directional Stream",
   },
   {
     icon: Shield,
+    badgeColor: "bg-cyan-500/15 text-cyan-500 border-cyan-500/30",
+    iconBg: "bg-cyan-500",
     tag: "E2E ENCRYPTED",
     title: "Private & Secure",
     description: "Your conversations stay protected. 6-digit connect codes, JWT authentication, and private 1-on-1 direct messaging.",
+    highlights: ["🔐 6-Digit Codes", "🛡️ JWT Auth", "🚫 Zero Stranger Spam"],
+    metric: "Protected Direct Mesh",
   },
   {
     icon: Globe,
+    badgeColor: "bg-blue-500/15 text-blue-500 border-blue-500/30",
+    iconBg: "bg-blue-500",
     tag: "CROSS-PLATFORM",
     title: "Works Everywhere",
     description: "Access Chatly from any device. Responsive design that feels fast and native on desktop, tablet, or phone.",
+    highlights: ["📱 Mobile Ready", "💻 Desktop Power", "🎨 8 Dynamic Themes"],
+    metric: "Zero Install Needed",
   },
 ];
 
-const CylinderFeatureCard = ({ icon: Icon, tag, title, description }) => (
-  <div className="w-full h-full bg-[var(--surface)] rounded-3xl p-6 sm:p-7 border-2 border-[var(--line)] shadow-[6px_6px_0px_0px_var(--line)] flex flex-col justify-between select-none relative overflow-hidden group hover:border-[var(--accent)] transition-all">
+const CylinderFeatureCard = ({
+  icon: Icon,
+  tag,
+  title,
+  description,
+  badgeColor = "bg-[var(--accent)]/15 text-[var(--primary-text)] border-[var(--line)]",
+  iconBg = "bg-[var(--accent)]",
+  highlights = [],
+  metric = "Live Feature",
+}) => (
+  <div className="w-full h-full bg-[var(--surface)] rounded-3xl p-6 border-2 border-[var(--line)] shadow-[6px_6px_0px_0px_var(--line)] flex flex-col justify-between select-none relative overflow-hidden group hover:border-[var(--accent)] hover:shadow-[8px_8px_0px_0px_var(--line)] transition-all duration-300">
+    {/* Top Header */}
     <div>
       <div className="flex items-center justify-between mb-4">
-        <div className="size-12 rounded-2xl bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center shadow-[2px_2px_0px_0px_var(--line)]">
-          <Icon className="size-6 text-[var(--primary-text)]" strokeWidth={2.5} />
+        <div className={`size-12 rounded-2xl ${iconBg} border-2 border-[var(--line)] flex items-center justify-center shadow-[3px_3px_0px_0px_var(--line)] transition-transform group-hover:scale-105`}>
+          <Icon className="size-6 text-white stroke-[2.5]" />
         </div>
         {tag && (
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--surface-muted)] border border-[var(--line)] text-[var(--secondary-text)] shadow-sm">
+          <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider border ${badgeColor} shadow-sm`}>
             {tag}
           </span>
         )}
       </div>
-      <h3 className="text-lg sm:text-xl font-black text-[var(--primary-text)] mb-2 font-mono tracking-tight">
+
+      <h3 className="text-xl font-black text-[var(--primary-text)] mb-2 font-mono tracking-tight group-hover:text-[var(--accent)] transition-colors">
         {title}
       </h3>
-      <p className="text-xs sm:text-sm text-[var(--secondary-text)] leading-relaxed font-medium">
+
+      <p className="text-xs text-[var(--secondary-text)] leading-relaxed font-medium line-clamp-3 mb-4">
         {description}
       </p>
+
+      {/* Feature Highlights Pills */}
+      {highlights.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {highlights.map((h, i) => (
+            <span
+              key={i}
+              className="px-2 py-0.5 rounded-lg bg-[var(--surface-muted)] border border-[var(--line)]/30 text-[10px] font-mono font-bold text-[var(--primary-text)] shadow-xs"
+            >
+              {h}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
-    <div className="pt-4 mt-2 border-t border-dashed border-[var(--line)]/20 flex items-center justify-between text-[11px] font-mono font-bold text-[var(--accent)]">
-      <span>Chatly Core</span>
-      <span>⚡ LIVE</span>
+
+    {/* Bottom Status Footer */}
+    <div className="pt-3 mt-3 border-t-2 border-dashed border-[var(--line)]/20 flex items-center justify-between text-[11px] font-mono font-bold">
+      <span className="text-[var(--secondary-text)] truncate text-[10px]">{metric}</span>
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-green-500/10 text-green-500 border border-green-500/30 text-[10px] font-black uppercase shrink-0">
+        <span className="size-1.5 rounded-full bg-green-500 animate-pulse" />
+        ACTIVE
+      </span>
     </div>
   </div>
 );
@@ -525,10 +580,10 @@ const LandingPage = () => {
       {/* Features Section */}
       <section id="features" className="relative z-10 py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12 animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 bg-[var(--surface-muted)] text-[var(--secondary-text)] px-3.5 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider border border-[var(--line)] mb-3 shadow-[2px_2px_0px_0px_var(--line)]">
+          <div className="text-center mb-10 animate-fade-in-up">
+            <div className="inline-flex items-center gap-2 bg-[var(--surface-muted)] text-[var(--secondary-text)] px-4 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border-2 border-[var(--line)] mb-3 shadow-[2px_2px_0px_0px_var(--line)]">
               <Sparkles className="size-3.5 text-[var(--accent)]" />
-              <span>Interactive Feature Showcase</span>
+              <span>Interactive 3D Feature Explorer</span>
             </div>
             <h2 className="text-3xl lg:text-4xl font-extrabold text-[var(--primary-text)] mb-4">
               Core{" "}
@@ -539,29 +594,27 @@ const LandingPage = () => {
               of the App
             </h2>
             <p className="text-[var(--secondary-text)] text-base sm:text-lg max-w-2xl mx-auto font-medium">
-              Everything you need for seamless, secure, and fun real-time communication.
+              Explore everything Chatly has to offer with our interactive 3D feature showcase.
             </p>
           </div>
 
           {/* 3D Cylindrical Carousel Feature Showcase */}
           <div className="w-full">
             <CylinderCarousel
-              itemSize={300}
+              itemWidth={330}
+              itemHeight={380}
               visibleItems={5}
-              variant="concave"
-              minScale={0.7}
-              dragSpeed={1.4}
+              variant="convex"
+              minScale={0.8}
+              dragSpeed={1.3}
               autoRotate={true}
-              autoRotateSpeed={0.3}
-              height={360}
+              autoRotateSpeed={0.2}
+              height={440}
             >
               {CORE_FEATURES.map((feat) => (
                 <CylinderFeatureCard
                   key={feat.title}
-                  icon={feat.icon}
-                  tag={feat.tag}
-                  title={feat.title}
-                  description={feat.description}
+                  {...feat}
                 />
               ))}
             </CylinderCarousel>
