@@ -70,33 +70,35 @@ function CarouselBall({
   });
 
   const scale = useTransform(offset, (o) => {
-    const t = Math.min(Math.abs(o) / edgeOffset, THETA_CLAMP / THETA_EDGE);
+    const dist = Math.abs(o);
+    const t = Math.min(dist / edgeOffset, 1.2);
     return convex ? 1 - (1 - minScale) * t : minScale + (1 - minScale) * t;
   });
 
-  const y = useTransform(x, (px) => {
-    const t = px / halfWidth;
-    const valley = arc * (0.5 - t * t);
-    return convex ? -valley : valley;
+  const y = useTransform(offset, (o) => {
+    const dist = Math.abs(o);
+    // Smooth convex parabolic arch: center item is highest (0), sides descend naturally
+    const archOffset = dist * dist * (convex ? 10 : -12);
+    return archOffset;
   });
 
   const opacity = useTransform(offset, (o) => {
     const dist = Math.abs(o);
-    if (dist > edgeOffset + 0.6) return 0;
-    if (dist > edgeOffset - 0.4) return Math.max(0, 1 - (dist - (edgeOffset - 0.4)) * 1.5);
+    if (dist > edgeOffset + 0.8) return 0;
+    if (dist > 1.8) return Math.max(0, 1 - (dist - 1.8) * 1.2);
     return 1;
   });
 
   const zIndex = useTransform(scale, (s) => Math.round(s * 100));
 
   const visibility = useTransform(x, (px) =>
-    Math.abs(px) > halfWidth + itemWidth ? "hidden" : "visible"
+    Math.abs(px) > halfWidth + itemWidth + 50 ? "hidden" : "visible"
   );
 
   return (
     <motion.div
       onClick={onSelect}
-      className="absolute top-1/2 left-1/2 select-none cursor-pointer transition-shadow"
+      className="absolute top-1/2 left-1/2 select-none cursor-pointer"
       style={{
         x,
         y,
@@ -120,8 +122,8 @@ function CarouselBall({
  */
 export function CylinderCarousel({
   children,
-  itemWidth = 320,
-  itemHeight = 380,
+  itemWidth = 310,
+  itemHeight = 390,
   visibleItems = 5,
   variant = "convex",
   minScale = 0.8,
@@ -157,19 +159,13 @@ export function CylinderCarousel({
   const edgeOffset = (visibleItems + 1) / 2;
 
   const convex = variant === "convex";
-  let scaleSum = 0;
-  for (let i = 0; i < visibleItems; i++) {
-    const t = Math.abs(i - (visibleItems - 1) / 2) / edgeOffset;
-    scaleSum += convex
-      ? 1 - (1 - minScale) * t
-      : minScale + (1 - minScale) * t;
-  }
   
-  // Responsive card dimensions
-  const finalItemWidth = Math.min(itemWidth, Math.max(260, stageWidth * 0.75 / (visibleItems > 3 ? 3 : 1.5)));
+  // Responsive card dimensions and generous gap between each feature card
+  const finalItemWidth = Math.min(itemWidth, Math.max(260, stageWidth * 0.8 / (visibleItems > 3 ? 3.2 : 1.4)));
   const finalItemHeight = itemHeight;
 
-  const gap = Math.min(finalItemWidth * 1.05, stageWidth / (visibleItems + 0.5));
+  // Clear horizontal gap between cards so each feature stands apart with ample breathing room
+  const gap = finalItemWidth + 36;
   const arc = arcProp ?? (convex ? 25 : 35);
 
   const alpha = THETA_EDGE / edgeOffset;
