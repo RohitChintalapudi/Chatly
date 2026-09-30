@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { memo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   MessageSquare,
@@ -111,7 +111,7 @@ const CORE_FEATURES = [
   },
 ];
 
-const CylinderFeatureCard = ({
+const CylinderFeatureCard = React.memo(({
   icon: Icon,
   tag,
   title,
@@ -121,11 +121,11 @@ const CylinderFeatureCard = ({
   highlights = [],
   metric = "Live Feature",
 }) => (
-  <div className="w-full h-full bg-[var(--surface)] rounded-3xl p-6 border-2 border-[var(--line)] shadow-[6px_6px_0px_0px_var(--line)] flex flex-col justify-between select-none relative overflow-hidden group hover:border-[var(--accent)] hover:shadow-[8px_8px_0px_0px_var(--line)] transition-all duration-300">
+  <div className="w-full h-full bg-[var(--surface)] rounded-3xl p-6 border-2 border-[var(--line)] shadow-[6px_6px_0px_0px_var(--line)] flex flex-col justify-between select-none relative overflow-hidden group hover:border-[var(--accent)] transition-[border-color,box-shadow] duration-150">
     {/* Top Header */}
     <div>
       <div className="flex items-center justify-between mb-4">
-        <div className={`size-12 rounded-2xl ${iconBg} border-2 border-[var(--line)] flex items-center justify-center shadow-[3px_3px_0px_0px_var(--line)] transition-transform group-hover:scale-105`}>
+        <div className={`size-12 rounded-2xl ${iconBg} border-2 border-[var(--line)] flex items-center justify-center shadow-[3px_3px_0px_0px_var(--line)]`}>
           <Icon className="size-6 text-white stroke-[2.5]" />
         </div>
         {tag && (
@@ -167,7 +167,7 @@ const CylinderFeatureCard = ({
       </span>
     </div>
   </div>
-);
+));
 
 const FeatureCard = ({ icon: Icon, title, description, delay }) => (
   <div

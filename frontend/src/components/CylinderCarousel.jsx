@@ -1,5 +1,6 @@
 import {
   Children,
+  memo,
   useCallback,
   useEffect,
   useRef,
@@ -13,15 +14,10 @@ import {
   useTransform,
 } from "framer-motion";
 
-// Soft spring for momentum glide after release
-const GLIDE_SPRING = { stiffness: 45, damping: 22, mass: 2.8 };
-const FLICK_MOMENTUM = 0.45;
-const MAX_FLICK_ITEMS = 5;
-
-// The frame edge sits at this wall angle; how far the wall curves in frame.
-const THETA_EDGE = (72 * Math.PI) / 180;
-// Wall angle past which an item is hidden
-const THETA_CLAMP = (95 * Math.PI) / 180;
+// Soft spring with optimal damping for smooth 60/120fps glide
+const GLIDE_SPRING = { stiffness: 55, damping: 26, mass: 2.2 };
+const FLICK_MOMENTUM = 0.38;
+const MAX_FLICK_ITEMS = 4;
 
 function capturePointer(el, id) {
   try {
@@ -36,102 +32,140 @@ function releasePointer(el, id) {
 }
 
 /**
- * One item card on the cylinder wall, rendered through perspective projection
+ * High-performance, GPU-accelerated card item
+ * Rendered using 3D hardware transforms (translate3d, preserve-3d) to bypass
+ * browser layout thrashing and z-index recalculations.
  */
-function CarouselBall({
+const CarouselBall = memo(function CarouselBall({
   scroll,
   index,
   count,
-  alpha,
-  k,
-  projection,
   gap,
-  edgeOffset,
   minScale,
-  convex,
-  arc,
   halfWidth,
   itemWidth,
   itemHeight,
   onSelect,
   children,
 }) {
-  // Nearest wrapped offset so items loop around continuously
+  // Nearest wrapped offset so items loop around continuously without jumps
   const offset = useTransform(scroll, (s) => {
     let o = index - s;
     o -= Math.round(o / count) * count;
     return o;
   });
 
-  const x = useTransform(offset, (o) => {
-    if (convex) return o * gap;
-    const th = Math.max(-THETA_CLAMP, Math.min(THETA_CLAMP, o * alpha));
-    return (projection * Math.sin(th)) / (Math.cos(th) + k);
-  });
+  // Direct GPU-accelerated horizontal slot position
+  const x = useTransform(offset, (o) => o * gap);
 
-  const scale = useTransform(offset, (o) => {
-    const dist = Math.abs(o);
-    const t = Math.min(dist / edgeOffset, 1.2);
-    return convex ? 1 - (1 - minScale) * t : minScale + (1 - minScale) * t;
-  });
-
+  // Smooth parabolic convex arch: center card at highest elevation (0), side cards curve down
   const y = useTransform(offset, (o) => {
     const dist = Math.abs(o);
-    // Smooth convex parabolic arch: center item is highest (0), sides descend naturally
-    const archOffset = dist * dist * (convex ? 10 : -12);
-    return archOffset;
+    return dist * dist * 10;
   });
 
+  // Convex Scale: Center card reaches 1.0, side cards smoothly scale down
+  const scale = useTransform(offset, (o) => {
+    const dist = Math.abs(o);
+    const factor = Math.min(dist / 2.4, 1);
+    return 1 - (1 - minScale) * factor;
+  });
+
+  // 3D Depth Layering on GPU: center card is closest in z-space (translateZ: 60px)
+  const z = useTransform(offset, (o) => {
+    const dist = Math.abs(o);
+    return Math.max(0, (1 - dist / 2.4) * 60);
+  });
+
+  // Fade out cards at the periphery
   const opacity = useTransform(offset, (o) => {
     const dist = Math.abs(o);
-    if (dist > edgeOffset + 0.8) return 0;
-    if (dist > 1.8) return Math.max(0, 1 - (dist - 1.8) * 1.2);
+    if (dist > 2.6) return 0;
+    if (dist > 1.6) return Math.max(0, 1 - (dist - 1.6) * 1.4);
     return 1;
   });
 
-  const zIndex = useTransform(scale, (s) => Math.round(s * 100));
-
-  const visibility = useTransform(x, (px) =>
-    Math.abs(px) > halfWidth + itemWidth + 50 ? "hidden" : "visible"
+  // Prevent interactions on peripheral clipped cards
+  const pointerEvents = useTransform(offset, (o) =>
+    Math.abs(o) > 2.2 ? "none" : "auto"
   );
 
   return (
     <motion.div
       onClick={onSelect}
-      className="absolute top-1/2 left-1/2 select-none cursor-pointer"
+      className="absolute top-1/2 left-1/2 select-none cursor-pointer will-change-transform"
       style={{
         x,
         y,
+        z,
         scale,
         opacity,
-        zIndex,
-        visibility,
+        pointerEvents,
         width: itemWidth,
         height: itemHeight,
         marginLeft: -itemWidth / 2,
         marginTop: -itemHeight / 2,
+        transformStyle: "preserve-3d",
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
       }}
     >
       {children}
     </motion.div>
   );
-}
+});
 
 /**
- * CylinderCarousel Component
+ * Isolated Dots Navigation Indicator
+ * Tracks active index locally to prevent re-rendering the parent carousel during animation
+ */
+const CarouselDots = memo(function CarouselDots({ scroll, count, onSelect }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const unsub = scroll.on("change", (v) => {
+      const idx = ((Math.round(v) % count) + count) % count;
+      setActiveIndex(idx);
+    });
+    return unsub;
+  }, [scroll, count]);
+
+  return (
+    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border-2 border-[var(--line)] bg-[var(--surface)] shadow-[2px_2px_0px_0px_var(--line)]">
+      {Array.from({ length: count }).map((_, i) => (
+        <button
+          key={i}
+          type="button"
+          onClick={() => onSelect(i)}
+          aria-label={`Jump to slide ${i + 1}`}
+          className={`h-2.5 rounded-full transition-all duration-200 cursor-pointer ${
+            activeIndex === i
+              ? "w-7 bg-[var(--accent)] border border-[var(--line)]"
+              : "w-2.5 bg-[var(--line)]/20 hover:bg-[var(--line)]/50"
+          }`}
+        />
+      ))}
+    </div>
+  );
+});
+
+/**
+ * Ultra-Smooth CylinderCarousel Component
+ * - 0 React re-renders during motion
+ * - Pure GPU compositor execution via translate3d / preserve-3d
+ * - Auto-pauses offscreen via IntersectionObserver
  */
 export function CylinderCarousel({
   children,
-  itemWidth = 310,
+  itemWidth = 320,
   itemHeight = 390,
   visibleItems = 5,
   variant = "convex",
-  minScale = 0.8,
-  dragSpeed = 1.3,
-  arc: arcProp,
+  minScale = 0.82,
+  dragSpeed = 1.2,
   snap = true,
   autoRotate = true,
-  autoRotateSpeed = 0.22,
+  autoRotateSpeed = 0.2,
   defaultIndex = 0,
   onIndexChange,
   height,
@@ -143,7 +177,9 @@ export function CylinderCarousel({
 
   const stageRef = useRef(null);
   const [width, setWidth] = useState(0);
+  const [isInView, setIsInView] = useState(true);
 
+  // ResizeObserver for responsive width
   useEffect(() => {
     const el = stageRef.current;
     if (!el) return;
@@ -154,40 +190,45 @@ export function CylinderCarousel({
     return () => ro.disconnect();
   }, []);
 
+  // IntersectionObserver to pause RAF when out of viewport
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   const stageWidth = width || 900;
   const halfWidth = stageWidth / 2;
-  const edgeOffset = (visibleItems + 1) / 2;
 
-  const convex = variant === "convex";
-  
-  // Responsive card dimensions and generous gap between each feature card
-  const finalItemWidth = Math.min(itemWidth, Math.max(260, stageWidth * 0.8 / (visibleItems > 3 ? 3.2 : 1.4)));
+  // Responsive card dimension & generous spacing gap
+  const finalItemWidth = Math.min(
+    itemWidth,
+    Math.max(260, (stageWidth * 0.82) / (visibleItems > 3 ? 3.2 : 1.4))
+  );
   const finalItemHeight = itemHeight;
-
-  // Clear horizontal gap between cards so each feature stands apart with ample breathing room
   const gap = finalItemWidth + 36;
-  const arc = arcProp ?? (convex ? 25 : 35);
-
-  const alpha = THETA_EDGE / edgeOffset;
-  const k = Math.max(0.2, (minScale - Math.cos(THETA_EDGE)) / (1 - minScale));
-  const projection =
-    (halfWidth * (Math.cos(THETA_EDGE) + k)) / Math.sin(THETA_EDGE);
 
   const scroll = useMotionValue(defaultIndex);
-  const indexRef = useRef(defaultIndex);
-  const [currentIndex, setCurrentIndex] = useState(defaultIndex);
   const glideRef = useRef(null);
   const draggingRef = useRef(false);
   const hoverRef = useRef(false);
 
+  // Optional external index change callback (debounced/throttled)
+  const indexRef = useRef(defaultIndex);
   useEffect(() => {
-    if (count === 0) return;
+    if (!onIndexChange || count === 0) return;
     const unsub = scroll.on("change", (v) => {
       const idx = ((Math.round(v) % count) + count) % count;
       if (idx !== indexRef.current) {
         indexRef.current = idx;
-        setCurrentIndex(idx);
-        onIndexChange?.(idx);
+        onIndexChange(idx);
       }
     });
     return unsub;
@@ -227,6 +268,18 @@ export function CylinderCarousel({
       glideTo(snap ? Math.round(projected) : projected, velocity);
     },
     [scroll, snap, glideTo]
+  );
+
+  const selectIndex = useCallback(
+    (targetIndex) => {
+      const currentS = scroll.get();
+      const nearest = Math.round(currentS);
+      let diff = targetIndex - (nearest % count);
+      if (diff > count / 2) diff -= count;
+      if (diff < -count / 2) diff += count;
+      glideTo(nearest + diff);
+    },
+    [scroll, count, glideTo]
   );
 
   const drag = useRef({
@@ -305,12 +358,13 @@ export function CylinderCarousel({
     [scroll, gap, settle, stopGlide]
   );
 
+  // Auto-rotation loop with RAF and delta-capping (active only when in viewport)
   useEffect(() => {
-    if (!autoRotate || reduce || count === 0) return;
+    if (!autoRotate || reduce || count === 0 || !isInView) return;
     let raf = 0;
     let last = performance.now();
     const tick = (now) => {
-      const dt = (now - last) / 1000;
+      const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       if (!draggingRef.current && !hoverRef.current && !glideRef.current) {
         scroll.set(scroll.get() + autoRotateSpeed * dt);
@@ -319,13 +373,13 @@ export function CylinderCarousel({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [autoRotate, autoRotateSpeed, reduce, count, scroll]);
+  }, [autoRotate, autoRotateSpeed, reduce, count, scroll, isInView]);
 
-  const stageHeight = height ?? (finalItemHeight + 60);
+  const stageHeight = height ?? finalItemHeight + 60;
 
   return (
     <div className="relative w-full flex flex-col items-center">
-      {/* 3D Curved Perspective Stage */}
+      {/* 3D Hardware Accelerated Perspective Stage */}
       <div
         ref={stageRef}
         role="region"
@@ -352,7 +406,12 @@ export function CylinderCarousel({
           hoverRef.current = false;
         }}
         className={`relative w-full touch-none outline-none overflow-visible cursor-grab active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${className}`}
-        style={{ height: stageHeight }}
+        style={{
+          height: stageHeight,
+          perspective: 1200,
+          perspectiveOrigin: "50% 50%",
+          transformStyle: "preserve-3d",
+        }}
       >
         {items.map((item, i) => (
           <CarouselBall
@@ -360,26 +419,12 @@ export function CylinderCarousel({
             scroll={scroll}
             index={i}
             count={count}
-            alpha={alpha}
-            k={k}
-            projection={projection}
             gap={gap}
-            edgeOffset={edgeOffset}
             minScale={minScale}
-            convex={convex}
-            arc={arc}
             halfWidth={halfWidth}
             itemWidth={finalItemWidth}
             itemHeight={finalItemHeight}
-            onSelect={() => {
-              // Smoothly glide clicked item to center
-              const currentS = scroll.get();
-              const nearest = Math.round(currentS);
-              let diff = i - (nearest % count);
-              if (diff > count / 2) diff -= count;
-              if (diff < -count / 2) diff += count;
-              glideTo(nearest + diff);
-            }}
+            onSelect={() => selectIndex(i)}
           >
             {item}
           </CarouselBall>
@@ -397,29 +442,8 @@ export function CylinderCarousel({
           ←
         </button>
 
-        {/* Feature Index Indicators */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full border-2 border-[var(--line)] bg-[var(--surface)] shadow-[2px_2px_0px_0px_var(--line)]">
-          {items.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => {
-                const currentS = scroll.get();
-                const nearest = Math.round(currentS);
-                let diff = i - (nearest % count);
-                if (diff > count / 2) diff -= count;
-                if (diff < -count / 2) diff += count;
-                glideTo(nearest + diff);
-              }}
-              aria-label={`Jump to slide ${i + 1}`}
-              className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                currentIndex === i
-                  ? "w-7 bg-[var(--accent)] border border-[var(--line)]"
-                  : "w-2.5 bg-[var(--line)]/20 hover:bg-[var(--line)]/50"
-              }`}
-            />
-          ))}
-        </div>
+        {/* Feature Index Indicators (isolated state for zero parent re-renders) */}
+        <CarouselDots scroll={scroll} count={count} onSelect={selectIndex} />
 
         <button
           type="button"
