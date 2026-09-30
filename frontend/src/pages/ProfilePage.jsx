@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuthStore } from "../store/useAuthStore";
+import { ActionSwapCascadeButton } from "../components/ActionSwap";
 import { Camera, Mail, User, Lock, Eye, EyeOff, Check, Loader2, Copy } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -155,19 +156,15 @@ const ProfilePage = () => {
                     <span className="font-mono font-black text-xs tracking-widest bg-[var(--surface)] px-2 py-0.5 rounded-lg border border-[var(--line)] text-[var(--primary-text)]">
                       {authUser.chatCode || "------"}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (authUser?.chatCode) {
-                          navigator.clipboard.writeText(authUser.chatCode);
-                          toast.success("Chat code copied to clipboard!");
-                        }
-                      }}
-                      className="p-1 rounded-lg border border-[var(--line)] bg-[var(--surface)] hover:bg-[var(--accent)] hover:text-black transition-colors cursor-pointer"
+                    <ActionSwapCascadeButton
+                      copyText={authUser?.chatCode}
+                      showText={false}
+                      size="icon-sm"
+                      variant="outline"
+                      toastMessage="Chat code copied to clipboard!"
                       title="Copy Code"
-                    >
-                      <Copy className="w-3.5 h-3.5" />
-                    </button>
+                      disabled={!authUser?.chatCode}
+                    />
                   </div>
                 </div>
                 <div className="flex items-center justify-between py-1.5 border-b border-[var(--line)]/20">

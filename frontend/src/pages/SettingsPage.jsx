@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Send, Check } from "lucide-react";
 import { useThemeStore, ACCENT_COLORS, CHAT_FONT_WEIGHTS } from "../store/useThemeStore";
+import { ColorSelector, ColorSelectorList, ColorSelectorItem } from "../components/ColorSelector";
 import toast from "react-hot-toast";
 
 const PREVIEW_MESSAGES = [
@@ -44,36 +45,27 @@ const SettingsPage = () => {
         <div>
           <h3 className="text-base font-extrabold text-[var(--primary-text)] mb-1">Accent Color</h3>
           <p className="text-xs text-[var(--secondary-text)] font-medium mb-4">Choose a color theme, then save to apply</p>
-          <div className="grid grid-cols-4 sm:grid-cols-8 gap-3">
-            {ACCENT_COLORS.map((color) => {
-              const isActive = tempAccent === color.name.toLowerCase();
-              const isSaved = accentKey === color.name.toLowerCase();
-              return (
-                <button
-                  key={color.name}
-                  onClick={() => setTempAccent(color.name.toLowerCase())}
-                  className={`group flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all cursor-pointer ${
-                    isActive
-                      ? "border-[var(--line)] shadow-[3px_3px_0px_0px_var(--line)] -translate-y-0.5 bg-[var(--surface-muted)]"
-                      : "border-[var(--line)]/20 hover:border-[var(--line)]/60 hover:shadow-[2px_2px_0px_0px_var(--line)] hover:-translate-y-0.5"
-                  }`}
-                >
-                  <div className="relative">
-                    <div
-                      className="w-10 h-10 rounded-xl border-2 border-[var(--line)] transition-transform group-hover:scale-110"
-                      style={{ backgroundColor: color.accent }}
-                    />
-                    {isSaved && (
-                      <div className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-[var(--surface)] flex items-center justify-center">
-                        <Check className="w-2 h-2 text-white" strokeWidth={3} />
-                      </div>
-                    )}
-                  </div>
-                  <span className="text-[10px] font-bold text-[var(--primary-text)]">{color.name}</span>
-                </button>
-              );
-            })}
-          </div>
+          <ColorSelector
+            value={tempAccent}
+            onValueChange={(val) => setTempAccent(val)}
+            name="chat-accent-picker"
+          >
+            <ColorSelectorList>
+              {ACCENT_COLORS.map((color) => {
+                const colorValue = color.name.toLowerCase();
+                const isSaved = accentKey === colorValue;
+                return (
+                  <ColorSelectorItem
+                    key={color.name}
+                    value={colorValue}
+                    color={color.accent}
+                    label={color.name}
+                    isSaved={isSaved}
+                  />
+                );
+              })}
+            </ColorSelectorList>
+          </ColorSelector>
 
           {/* Save Button */}
           <div className="mt-4 flex items-center gap-3">

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
+import { ActionSwapCascadeButton } from "./ActionSwap";
 import {
   Users,
   UserPlus,
@@ -154,15 +155,15 @@ const Sidebar = () => {
                   {authUser.chatCode}
                 </span>
               </div>
-              <button
-                type="button"
-                onClick={handleCopyCode}
-                className="inline-flex items-center gap-1 px-2.5 py-1 bg-[var(--accent)] text-[var(--primary-text)] font-extrabold text-xs rounded-lg border-2 border-[var(--line)] hover:shadow-[2px_2px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all cursor-pointer"
+              <ActionSwapCascadeButton
+                copyText={authUser.chatCode}
+                initialText="Copy"
+                swappedText="Copied!"
+                size="xs"
+                variant="accent"
+                toastMessage="Your 6-digit code copied to clipboard!"
                 title="Copy your chat code"
-              >
-                {copiedCode ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copiedCode ? "Copied" : "Copy"}</span>
-              </button>
+              />
             </div>
           )}
 

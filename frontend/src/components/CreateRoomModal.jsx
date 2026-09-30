@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { X, Radio, Copy, Check, Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../store/useAuthStore";
+import { ActionSwapCascadeButton } from "./ActionSwap";
 
 const CreateRoomModal = ({ isOpen, onClose }) => {
   const [title, setTitle] = useState("");
@@ -115,25 +116,25 @@ const CreateRoomModal = ({ isOpen, onClose }) => {
                   value={roomLink}
                   className="flex-1 bg-transparent text-xs font-mono font-bold text-[var(--primary-text)] truncate focus:outline-none"
                 />
-                <button
-                  type="button"
-                  onClick={copyLink}
-                  className="px-3 py-1.5 rounded-lg border-2 border-[var(--line)] bg-[var(--surface)] text-xs font-extrabold flex items-center gap-1 hover:bg-[var(--accent)]/10 cursor-pointer"
-                >
-                  {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
-                  <span>{copied ? "Copied" : "Copy"}</span>
-                </button>
+                <ActionSwapCascadeButton
+                  copyText={roomLink}
+                  initialText="Copy"
+                  swappedText="Copied!"
+                  size="xs"
+                  toastMessage="Room link copied to clipboard!"
+                />
               </div>
             </div>
 
             <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={copyLink}
-                className="flex-1 py-2.5 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-extrabold text-sm hover:bg-[var(--accent)]/10 transition-all cursor-pointer"
-              >
-                Copy Link
-              </button>
+              <ActionSwapCascadeButton
+                copyText={roomLink}
+                initialText="Copy Room Link"
+                swappedText="Link Copied!"
+                size="md"
+                className="flex-1"
+                toastMessage="Room link copied to clipboard!"
+              />
               <button
                 type="button"
                 onClick={handleJoinNow}

@@ -44,8 +44,8 @@ const features = [
 const ChatDashboard = () => {
   const openGames = useGamesStore((s) => s.openGames);
   return (
-    <div className="w-full hidden lg:flex flex-1 flex-col items-center justify-center p-8 md:p-12 bg-[var(--surface-muted)] overflow-y-auto transition-colors">
-      <div className="max-w-2xl w-full text-center space-y-6">
+    <div className="w-full hidden lg:flex flex-1 flex-col items-center justify-center p-4 md:p-6 bg-[var(--surface-muted)] overflow-y-auto no-scrollbar transition-colors">
+      <div className="max-w-2xl w-full text-center space-y-5 scale-90 origin-center transition-transform">
         <div className="flex justify-center mb-2">
           <div className="relative">
             <div className="absolute inset-0 blur-xl bg-[var(--accent)] opacity-20 rounded-2xl animate-glow-pulse" />

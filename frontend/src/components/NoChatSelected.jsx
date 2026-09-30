@@ -1,19 +1,8 @@
-import { Copy, Check } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
-import { useState } from "react";
-import toast from "react-hot-toast";
+import { ActionSwapCascadeButton } from "./ActionSwap";
 
 const NoChatSelected = () => {
   const { authUser } = useAuthStore();
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    if (!authUser?.chatCode) return;
-    navigator.clipboard.writeText(authUser.chatCode);
-    setCopied(true);
-    toast.success("Chat code copied to clipboard!");
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   return (
     <div className="w-full flex flex-1 flex-col items-center justify-center p-8 sm:p-16 bg-[var(--surface-muted)] transition-colors">
@@ -36,18 +25,19 @@ const NoChatSelected = () => {
         </p>
 
         {authUser?.chatCode && (
-          <div className="inline-flex items-center gap-2 bg-[var(--surface)] border-2 border-[var(--line)] px-4 py-2 rounded-2xl shadow-[3px_3px_0px_0px_var(--line)]">
+          <div className="inline-flex items-center gap-2.5 bg-[var(--surface)] border-2 border-[var(--line)] px-4 py-2 rounded-2xl shadow-[3px_3px_0px_0px_var(--line)]">
             <span className="text-xs font-bold text-[var(--secondary-text)]">Your Code:</span>
             <span className="font-mono font-black text-base tracking-widest text-[var(--primary-text)]">
               {authUser.chatCode}
             </span>
-            <button
-              onClick={handleCopy}
-              className="ml-1 p-1.5 rounded-lg border border-[var(--line)] bg-[var(--accent)] text-[var(--primary-text)] hover:shadow-sm transition-all cursor-pointer"
+            <ActionSwapCascadeButton
+              copyText={authUser.chatCode}
+              showText={false}
+              size="icon-sm"
+              variant="accent"
+              toastMessage="Chat code copied to clipboard!"
               title="Copy your 6-digit code"
-            >
-              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-            </button>
+            />
           </div>
         )}
 

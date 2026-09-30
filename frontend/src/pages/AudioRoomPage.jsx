@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import HostSettingsModal from "../components/HostSettingsModal";
+import { ActionSwapCascadeButton } from "../components/ActionSwap";
 import { Mic, MicOff, Share2, LogOut, Copy, Check, Users, Sparkles, Volume2, Settings, Crown, Lock } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -532,14 +533,13 @@ const AudioRoomPage = () => {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={copyInviteLink}
-            className="px-3 py-2 rounded-xl border-2 border-[var(--line)] bg-[var(--surface-muted)] hover:bg-[var(--accent)]/10 text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer"
-          >
-            {copiedLink ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
-            <span className="hidden sm:inline">{copiedLink ? "Link Copied" : "Copy Invite Link"}</span>
-          </button>
+          <ActionSwapCascadeButton
+            copyText={window.location.href}
+            initialText="Copy Invite Link"
+            swappedText="Link Copied!"
+            toastMessage="Audio room link copied to clipboard!"
+            size="sm"
+          />
         </div>
       </header>
 

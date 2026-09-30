@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { useThemeStore } from "../store/useThemeStore";
-import { LogOut, MessageSquare, Settings, User, Menu, X, Sun, Moon, Phone, Radio, Share2, Gamepad2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { LogOut, MessageSquare, Settings, User, Menu, X, Sun, Moon, Radio, Share2, Gamepad2 } from "lucide-react";
+import { useState } from "react";
+import LogoutModal from "./LogoutModal";
 
 const landingLinks = [
   { label: "Home", href: "#home" },
@@ -18,63 +19,6 @@ const appSections = [
   { label: "File Transfer", href: "/test-p2p", icon: Share2 },
   { label: "Mini Games", href: "/games", icon: Gamepad2 },
 ];
-
-const LogoutModal = ({ isOpen, onClose, onConfirm }) => {
-  const [mounted, setMounted] = useState(false);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      setMounted(true);
-      const raf = requestAnimationFrame(() => {
-        requestAnimationFrame(() => setVisible(true));
-      });
-      return () => cancelAnimationFrame(raf);
-    } else if (mounted) {
-      setVisible(false);
-      const timer = setTimeout(() => setMounted(false), 500);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
-
-  if (!mounted) return null;
-
-  return (
-    <div
-      className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-500 ease-out ${
-        visible ? "bg-black/60 backdrop-blur-sm" : "bg-black/0 backdrop-blur-0"
-      }`}
-      onClick={onClose}
-    >
-      <div
-        className={`bg-[var(--surface)] border-2 border-[var(--line)] rounded-2xl p-6 w-[90%] max-w-sm shadow-[6px_6px_0px_0px_var(--line)] transition-all duration-500 ease-out ${
-          visible ? "opacity-100 scale-100" : "opacity-0 scale-90"
-        }`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="w-12 h-12 rounded-xl bg-red-500/15 border-2 border-red-500 flex items-center justify-center mb-4">
-          <LogOut className="w-6 h-6 text-red-500" />
-        </div>
-        <h3 className="text-lg font-extrabold text-[var(--primary-text)]">Log out?</h3>
-        <p className="text-sm text-[var(--secondary-text)] font-medium mt-1">Are you sure you want to log out of your account?</p>
-        <div className="flex gap-3 mt-6">
-          <button
-            onClick={onClose}
-            className="flex-1 px-4 py-2.5 rounded-xl border-2 border-[var(--line)] bg-[var(--surface-muted)] text-[var(--primary-text)] font-bold text-sm hover:shadow-[2px_2px_0px_0px_var(--line)] hover:-translate-y-0.5 transition-all cursor-pointer"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            className="flex-1 px-4 py-2.5 rounded-xl border-2 border-red-500 bg-red-500 text-white font-extrabold text-sm hover:shadow-[3px_3px_0px_0px_rgba(239,68,68,0.5)] hover:-translate-y-0.5 transition-all cursor-pointer"
-          >
-            Log Out
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
