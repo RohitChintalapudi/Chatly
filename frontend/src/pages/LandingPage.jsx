@@ -26,6 +26,7 @@ import {
   Linkedin,
 } from "lucide-react";
 import SectionDivider from "../components/SectionDivider";
+import CylinderCarousel from "../components/CylinderCarousel";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
@@ -44,6 +45,72 @@ const FloatingBubble = ({ size, left, top, delay, duration }) => (
       animationDuration: duration,
     }}
   />
+);
+
+const CORE_FEATURES = [
+  {
+    icon: Gamepad2,
+    tag: "ARCADE+",
+    title: "Mini Games Arcade",
+    description: "Play retro favorites like Flappy Bird and Snake directly inside your chat. Compete on leaderboards with 8-bit sounds!",
+  },
+  {
+    icon: Share2,
+    tag: "P2P DIRECT",
+    title: "P2P File Transfer",
+    description: "Transfer any file format up to 1GB directly browser-to-browser via WebRTC with zero server storage limits.",
+  },
+  {
+    icon: Radio,
+    tag: "SPATIAL AUDIO",
+    title: "Live Audio Lounges",
+    description: "Drop in and talk with low-latency spatial audio rooms for teams, friends, and community hangouts.",
+  },
+  {
+    icon: Zap,
+    tag: "WEBSOCKETS",
+    title: "Lightning Fast Chat",
+    description: "Messages delivered in real-time with WebSocket technology. Instant updates, typing indicators, and zero delays.",
+  },
+  {
+    icon: Shield,
+    tag: "E2E ENCRYPTED",
+    title: "Private & Secure",
+    description: "Your conversations stay protected. 6-digit connect codes, JWT authentication, and private 1-on-1 direct messaging.",
+  },
+  {
+    icon: Globe,
+    tag: "CROSS-PLATFORM",
+    title: "Works Everywhere",
+    description: "Access Chatly from any device. Responsive design that feels fast and native on desktop, tablet, or phone.",
+  },
+];
+
+const CylinderFeatureCard = ({ icon: Icon, tag, title, description }) => (
+  <div className="w-full h-full bg-[var(--surface)] rounded-3xl p-6 sm:p-7 border-2 border-[var(--line)] shadow-[6px_6px_0px_0px_var(--line)] flex flex-col justify-between select-none relative overflow-hidden group hover:border-[var(--accent)] transition-all">
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="size-12 rounded-2xl bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center shadow-[2px_2px_0px_0px_var(--line)]">
+          <Icon className="size-6 text-[var(--primary-text)]" strokeWidth={2.5} />
+        </div>
+        {tag && (
+          <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-black uppercase tracking-wider bg-[var(--surface-muted)] border border-[var(--line)] text-[var(--secondary-text)] shadow-sm">
+            {tag}
+          </span>
+        )}
+      </div>
+      <h3 className="text-lg sm:text-xl font-black text-[var(--primary-text)] mb-2 font-mono tracking-tight">
+        {title}
+      </h3>
+      <p className="text-xs sm:text-sm text-[var(--secondary-text)] leading-relaxed font-medium">
+        {description}
+      </p>
+    </div>
+    <div className="pt-4 mt-2 border-t border-dashed border-[var(--line)]/20 flex items-center justify-between text-[11px] font-mono font-bold text-[var(--accent)]">
+      <span>Chatly Core</span>
+      <span>⚡ LIVE</span>
+    </div>
+  </div>
 );
 
 const FeatureCard = ({ icon: Icon, title, description, delay }) => (
@@ -261,9 +328,13 @@ const LandingPage = () => {
       <SectionDivider />
 
       {/* Features Section */}
-      <section id="features" className="relative z-10 py-20 px-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16 animate-fade-in-up">
+      <section id="features" className="relative z-10 py-20 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12 animate-fade-in-up">
+            <div className="inline-flex items-center gap-2 bg-[var(--surface-muted)] text-[var(--secondary-text)] px-3.5 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider border border-[var(--line)] mb-3 shadow-[2px_2px_0px_0px_var(--line)]">
+              <Sparkles className="size-3.5 text-[var(--accent)]" />
+              <span>Interactive Feature Showcase</span>
+            </div>
             <h2 className="text-3xl lg:text-4xl font-extrabold text-[var(--primary-text)] mb-4">
               Core{" "}
               <span className="relative inline-block">
@@ -272,51 +343,33 @@ const LandingPage = () => {
               </span>{" "}
               of the App
             </h2>
-            <p className="text-[var(--secondary-text)] text-lg max-w-2xl mx-auto font-medium">
+            <p className="text-[var(--secondary-text)] text-base sm:text-lg max-w-2xl mx-auto font-medium">
               Everything you need for seamless, secure, and fun real-time communication.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <FeatureCard
-              icon={Gamepad2}
-              title="Mini Games Arcade"
-              description="Play retro favorites like Flappy Bird and Snake directly inside your chat. Compete on leaderboards with 8-bit sounds!"
-              delay="0.2s"
-            />
-            <FeatureCard
-              icon={Share2}
-              title="P2P File Transfer"
-              description="Transfer any file format up to 1GB directly browser-to-browser via WebRTC with zero server storage limits."
-              delay="0.4s"
-            />
-            <FeatureCard
-              icon={Radio}
-              title="Live Audio Lounges"
-              description="Drop in and talk with low-latency spatial audio rooms for teams, friends, and community hangouts."
-              delay="0.6s"
-            />
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 mt-6">
-            <FeatureCard
-              icon={Zap}
-              title="Lightning Fast"
-              description="Messages delivered in real-time with WebSocket technology. Instant updates, typing indicators, and zero delays."
-              delay="0.3s"
-            />
-            <FeatureCard
-              icon={Shield}
-              title="Private & Secure"
-              description="Your conversations stay protected. 6-digit connect codes, JWT authentication, and private 1-on-1 direct messaging."
-              delay="0.5s"
-            />
-            <FeatureCard
-              icon={Globe}
-              title="Works Everywhere"
-              description="Access Chatly from any device. Responsive design that feels fast and native on desktop, tablet, or phone."
-              delay="0.7s"
-            />
+          {/* 3D Cylindrical Carousel Feature Showcase */}
+          <div className="w-full">
+            <CylinderCarousel
+              itemSize={300}
+              visibleItems={5}
+              variant="concave"
+              minScale={0.7}
+              dragSpeed={1.4}
+              autoRotate={true}
+              autoRotateSpeed={0.3}
+              height={360}
+            >
+              {CORE_FEATURES.map((feat) => (
+                <CylinderFeatureCard
+                  key={feat.title}
+                  icon={feat.icon}
+                  tag={feat.tag}
+                  title={feat.title}
+                  description={feat.description}
+                />
+              ))}
+            </CylinderCarousel>
           </div>
         </div>
       </section>
