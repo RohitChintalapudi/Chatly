@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import SectionDivider from "../components/SectionDivider";
 import CylinderCarousel from "../components/CylinderCarousel";
+import ProjectFolder from "../components/ProjectFolder";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
@@ -143,42 +144,236 @@ const ChatBubblePreview = ({ text, delay, align }) => (
   </div>
 );
 
-const testimonials = [
+const TESTIMONIAL_FOLDERS = [
   {
-    name: "Priya Sharma",
-    role: "Product Designer",
-    text: "Chatly completely changed how our team communicates. The real-time experience is buttery smooth!",
-    rating: 5,
+    id: "folder-design-ux",
+    title: "Design & UX Stories",
+    description: "Designers & Founders",
+    previews: [
+      {
+        id: "priya-sharma",
+        content: (
+          <div className="flex flex-col justify-between h-full">
+            <div>
+              <div className="flex items-center gap-1 mb-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="size-4 fill-[var(--accent)] text-[var(--primary-text)]" />
+                ))}
+              </div>
+              <Quote className="size-6 text-[var(--accent)] mb-2" />
+              <p className="text-xs sm:text-sm font-medium text-[var(--secondary-text)] leading-relaxed">
+                "Chatly completely changed how our team communicates. The real-time experience is buttery smooth!"
+              </p>
+            </div>
+            <div className="flex items-center gap-3 pt-3 mt-3 border-t-2 border-[var(--line)]/10">
+              <div className="size-8 rounded-full bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center font-black text-xs">
+                P
+              </div>
+              <div>
+                <p className="font-extrabold text-xs text-[var(--primary-text)]">Priya Sharma</p>
+                <p className="text-[10px] text-[var(--secondary-text)] font-semibold">Product Designer</p>
+              </div>
+            </div>
+          </div>
+        ),
+        previewSnippet: (
+          <div className="p-1 flex flex-col justify-between h-full text-left">
+            <div className="flex gap-0.5 text-[8px] text-[var(--accent)]">★★★★★</div>
+            <p className="line-clamp-3 text-[9px] font-semibold text-[var(--secondary-text)]">
+              "Buttery smooth real-time communication!"
+            </p>
+            <span className="font-extrabold text-[9px] text-[var(--primary-text)]">Priya S.</span>
+          </div>
+        ),
+      },
+      {
+        id: "ananya-reddy",
+        content: (
+          <div className="flex flex-col justify-between h-full">
+            <div>
+              <div className="flex items-center gap-1 mb-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="size-4 fill-[var(--accent)] text-[var(--primary-text)]" />
+                ))}
+              </div>
+              <Quote className="size-6 text-[var(--accent)] mb-2" />
+              <p className="text-xs sm:text-sm font-medium text-[var(--secondary-text)] leading-relaxed">
+                "The attention to detail in every interaction is remarkable. Best chat app I have ever used."
+              </p>
+            </div>
+            <div className="flex items-center gap-3 pt-3 mt-3 border-t-2 border-[var(--line)]/10">
+              <div className="size-8 rounded-full bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center font-black text-xs">
+                A
+              </div>
+              <div>
+                <p className="font-extrabold text-xs text-[var(--primary-text)]">Ananya Reddy</p>
+                <p className="text-[10px] text-[var(--secondary-text)] font-semibold">UX Researcher</p>
+              </div>
+            </div>
+          </div>
+        ),
+        previewSnippet: (
+          <div className="p-1 flex flex-col justify-between h-full text-left">
+            <div className="flex gap-0.5 text-[8px] text-[var(--accent)]">★★★★★</div>
+            <p className="line-clamp-3 text-[9px] font-semibold text-[var(--secondary-text)]">
+              "Attention to detail in every single interaction."
+            </p>
+            <span className="font-extrabold text-[9px] text-[var(--primary-text)]">Ananya R.</span>
+          </div>
+        ),
+      },
+      {
+        id: "rahul-verma",
+        content: (
+          <div className="flex flex-col justify-between h-full">
+            <div>
+              <div className="flex items-center gap-1 mb-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="size-4 fill-[var(--accent)] text-[var(--primary-text)]" />
+                ))}
+              </div>
+              <Quote className="size-6 text-[var(--accent)] mb-2" />
+              <p className="text-xs sm:text-sm font-medium text-[var(--secondary-text)] leading-relaxed">
+                "Built my entire company communication around Chatly. Fast, secure, and beautiful."
+              </p>
+            </div>
+            <div className="flex items-center gap-3 pt-3 mt-3 border-t-2 border-[var(--line)]/10">
+              <div className="size-8 rounded-full bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center font-black text-xs">
+                R
+              </div>
+              <div>
+                <p className="font-extrabold text-xs text-[var(--primary-text)]">Rahul Verma</p>
+                <p className="text-[10px] text-[var(--secondary-text)] font-semibold">Startup Founder</p>
+              </div>
+            </div>
+          </div>
+        ),
+        previewSnippet: (
+          <div className="p-1 flex flex-col justify-between h-full text-left">
+            <div className="flex gap-0.5 text-[8px] text-[var(--accent)]">★★★★★</div>
+            <p className="line-clamp-3 text-[9px] font-semibold text-[var(--secondary-text)]">
+              "Fast, secure, and beautiful for startups."
+            </p>
+            <span className="font-extrabold text-[9px] text-[var(--primary-text)]">Rahul V.</span>
+          </div>
+        ),
+      },
+    ],
   },
   {
-    name: "Arjun Mehta",
-    role: "Full Stack Developer",
-    text: "I love the clean UI and the speed. It feels like chatting in the future. Great experience overall.",
-    rating: 4,
-  },
-  {
-    name: "Sneha Patel",
-    role: "Marketing Lead",
-    text: "We switched from Slack to Chatly and never looked back. The animations are so satisfying.",
-    rating: 5,
-  },
-  {
-    name: "Rahul Verma",
-    role: "Startup Founder",
-    text: "Built my entire company communication around Chatly. Fast, secure, and beautiful.",
-    rating: 3,
-  },
-  {
-    name: "Ananya Reddy",
-    role: "UX Researcher",
-    text: "The attention to detail in every interaction is remarkable. Best chat app I have ever used.",
-    rating: 4,
-  },
-  {
-    name: "Vikram Singh",
-    role: "DevOps Engineer",
-    text: "Socket.io integration is flawless. Real-time notifications never miss a beat. Impressed!",
-    rating: 5,
+    id: "folder-eng-performance",
+    title: "Engineering & Speed",
+    description: "Developers & DevOps",
+    previews: [
+      {
+        id: "arjun-mehta",
+        content: (
+          <div className="flex flex-col justify-between h-full">
+            <div>
+              <div className="flex items-center gap-1 mb-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="size-4 fill-[var(--accent)] text-[var(--primary-text)]" />
+                ))}
+              </div>
+              <Quote className="size-6 text-[var(--accent)] mb-2" />
+              <p className="text-xs sm:text-sm font-medium text-[var(--secondary-text)] leading-relaxed">
+                "I love the clean UI and the speed. It feels like chatting in the future. Great experience overall."
+              </p>
+            </div>
+            <div className="flex items-center gap-3 pt-3 mt-3 border-t-2 border-[var(--line)]/10">
+              <div className="size-8 rounded-full bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center font-black text-xs">
+                A
+              </div>
+              <div>
+                <p className="font-extrabold text-xs text-[var(--primary-text)]">Arjun Mehta</p>
+                <p className="text-[10px] text-[var(--secondary-text)] font-semibold">Full Stack Developer</p>
+              </div>
+            </div>
+          </div>
+        ),
+        previewSnippet: (
+          <div className="p-1 flex flex-col justify-between h-full text-left">
+            <div className="flex gap-0.5 text-[8px] text-[var(--accent)]">★★★★★</div>
+            <p className="line-clamp-3 text-[9px] font-semibold text-[var(--secondary-text)]">
+              "Feels like chatting in the future!"
+            </p>
+            <span className="font-extrabold text-[9px] text-[var(--primary-text)]">Arjun M.</span>
+          </div>
+        ),
+      },
+      {
+        id: "vikram-singh",
+        content: (
+          <div className="flex flex-col justify-between h-full">
+            <div>
+              <div className="flex items-center gap-1 mb-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="size-4 fill-[var(--accent)] text-[var(--primary-text)]" />
+                ))}
+              </div>
+              <Quote className="size-6 text-[var(--accent)] mb-2" />
+              <p className="text-xs sm:text-sm font-medium text-[var(--secondary-text)] leading-relaxed">
+                "Socket.io integration is flawless. Real-time notifications never miss a beat. Impressed!"
+              </p>
+            </div>
+            <div className="flex items-center gap-3 pt-3 mt-3 border-t-2 border-[var(--line)]/10">
+              <div className="size-8 rounded-full bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center font-black text-xs">
+                V
+              </div>
+              <div>
+                <p className="font-extrabold text-xs text-[var(--primary-text)]">Vikram Singh</p>
+                <p className="text-[10px] text-[var(--secondary-text)] font-semibold">DevOps Engineer</p>
+              </div>
+            </div>
+          </div>
+        ),
+        previewSnippet: (
+          <div className="p-1 flex flex-col justify-between h-full text-left">
+            <div className="flex gap-0.5 text-[8px] text-[var(--accent)]">★★★★★</div>
+            <p className="line-clamp-3 text-[9px] font-semibold text-[var(--secondary-text)]">
+              "Real-time notifications never miss a beat."
+            </p>
+            <span className="font-extrabold text-[9px] text-[var(--primary-text)]">Vikram S.</span>
+          </div>
+        ),
+      },
+      {
+        id: "sneha-patel",
+        content: (
+          <div className="flex flex-col justify-between h-full">
+            <div>
+              <div className="flex items-center gap-1 mb-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="size-4 fill-[var(--accent)] text-[var(--primary-text)]" />
+                ))}
+              </div>
+              <Quote className="size-6 text-[var(--accent)] mb-2" />
+              <p className="text-xs sm:text-sm font-medium text-[var(--secondary-text)] leading-relaxed">
+                "We switched from Slack to Chatly and never looked back. The animations are so satisfying."
+              </p>
+            </div>
+            <div className="flex items-center gap-3 pt-3 mt-3 border-t-2 border-[var(--line)]/10">
+              <div className="size-8 rounded-full bg-[var(--accent)] border-2 border-[var(--line)] flex items-center justify-center font-black text-xs">
+                S
+              </div>
+              <div>
+                <p className="font-extrabold text-xs text-[var(--primary-text)]">Sneha Patel</p>
+                <p className="text-[10px] text-[var(--secondary-text)] font-semibold">Marketing Lead</p>
+              </div>
+            </div>
+          </div>
+        ),
+        previewSnippet: (
+          <div className="p-1 flex flex-col justify-between h-full text-left">
+            <div className="flex gap-0.5 text-[8px] text-[var(--accent)]">★★★★★</div>
+            <p className="line-clamp-3 text-[9px] font-semibold text-[var(--secondary-text)]">
+              "Switched from Slack and never looked back."
+            </p>
+            <span className="font-extrabold text-[9px] text-[var(--primary-text)]">Sneha P.</span>
+          </div>
+        ),
+      },
+    ],
   },
 ];
 
@@ -490,35 +685,36 @@ const LandingPage = () => {
 
       <SectionDivider />
 
-      {/* People's Feedback Carousel */}
-      <section id="feedback" className="relative z-10 py-20 overflow-hidden">
-        <div className="text-center mb-14 px-6">
-          <h2 className="text-3xl lg:text-4xl font-extrabold text-[var(--primary-text)] mb-4">
-            What people{" "}
-            <span className="relative inline-block">
-              <span className="relative z-10">say</span>
-              <span className="absolute bottom-1 left-0 w-full h-3 bg-[var(--accent)] -z-0 rounded-sm" />
-            </span>
-          </h2>
-          <p className="text-[var(--secondary-text)] text-lg max-w-2xl mx-auto font-medium">
-            Loved by thousands of happy users worldwide
-          </p>
-        </div>
+      {/* People's Feedback Section with ProjectFolder Animation */}
+      <section id="feedback" className="relative z-10 py-20 px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 bg-[var(--surface-muted)] text-[var(--secondary-text)] px-3.5 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider border border-[var(--line)] mb-3 shadow-[2px_2px_0px_0px_var(--line)]">
+              <Sparkles className="size-3.5 text-[var(--accent)]" />
+              <span>Interactive User Stories</span>
+            </div>
+            <h2 className="text-3xl lg:text-4xl font-extrabold text-[var(--primary-text)] mb-4">
+              What people{" "}
+              <span className="relative inline-block">
+                <span className="relative z-10">say</span>
+                <span className="absolute bottom-1 left-0 w-full h-3 bg-[var(--accent)] -z-0 rounded-sm" />
+              </span>
+            </h2>
+            <p className="text-[var(--secondary-text)] text-base sm:text-lg max-w-2xl mx-auto font-medium">
+              Hover over the folders to preview live reviews, or click to expand the full user gallery.
+            </p>
+          </div>
 
-        {/* Carousel with glow */}
-        <div className="relative carousel-glow">
-          {/* Fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[var(--surface)] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[var(--surface)] to-transparent z-10 pointer-events-none" />
-
-          <div className="carousel-track py-4">
-            {/* First set */}
-            {testimonials.map((t, i) => (
-              <TestimonialCard key={`a-${i}`} {...t} />
-            ))}
-            {/* Duplicate set for seamless loop */}
-            {testimonials.map((t, i) => (
-              <TestimonialCard key={`b-${i}`} {...t} />
+          {/* Project Folders Showcase */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-12 py-6">
+            {TESTIMONIAL_FOLDERS.map((folder) => (
+              <ProjectFolder
+                key={folder.id}
+                title={folder.title}
+                description={folder.description}
+                previews={folder.previews}
+                itemLabel="review"
+              />
             ))}
           </div>
         </div>
