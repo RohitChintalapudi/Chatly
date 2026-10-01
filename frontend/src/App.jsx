@@ -12,6 +12,7 @@ import AudioRoomsDashboardPage from "./pages/AudioRoomsDashboardPage";
 import P2PTestPage from "./pages/P2PTestPage";
 import GamesPage from "./pages/GamesPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import FeedbackWidget from "./components/FeedbackWidget";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "./store/useAuthStore";
@@ -59,6 +60,7 @@ const App = () => {
           <Route path="/games" element={authUser ? <GamesPage /> : <Navigate to="/login" />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        <FeedbackWidget />
         <Toaster
           position="top-center"
           gutter={12}

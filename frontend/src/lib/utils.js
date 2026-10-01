@@ -1,3 +1,11 @@
+export function cn(...inputs) {
+  return inputs
+    .flat()
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+}
+
 export function formatMessageTime(date) {
   return new Date(date).toLocaleTimeString("en-US", {
     hour: "2-digit",
