@@ -581,10 +581,6 @@ const LandingPage = () => {
       <section id="features" className="relative z-10 py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10 animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 bg-[var(--surface-muted)] text-[var(--secondary-text)] px-4 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border-2 border-[var(--line)] mb-3 shadow-[2px_2px_0px_0px_var(--line)]">
-              <Sparkles className="size-3.5 text-[var(--accent)]" />
-              <span>Interactive 3D Feature Explorer</span>
-            </div>
             <h2 className="text-3xl lg:text-4xl font-extrabold text-[var(--primary-text)] mb-4">
               Core{" "}
               <span className="relative inline-block">
