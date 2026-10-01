@@ -60,7 +60,7 @@ const App = () => {
           <Route path="/games" element={authUser ? <GamesPage /> : <Navigate to="/login" />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-        <FeedbackWidget />
+        {authUser && <FeedbackWidget />}
         <Toaster
           position="top-center"
           gutter={12}

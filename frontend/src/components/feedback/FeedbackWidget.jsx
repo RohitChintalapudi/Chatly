@@ -55,6 +55,8 @@ export function FeedbackWidget({
   const [message, setMessage] = useState("");
   const [category, setCategory] = useState("idea");
 
+  if (!authUser) return null;
+
   const open = status !== "idle";
   const busy = status === "sending";
 
