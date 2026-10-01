@@ -427,7 +427,7 @@ export function FeedbackWidget({
                         />
                       </div>
 
-                      <div className="flex items-center gap-2 pt-2.5 px-0.5">
+                      <div className="flex items-center gap-2.5 pt-3 px-0.5">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -445,7 +445,8 @@ export function FeedbackWidget({
                           disabled={busy || message.trim().length === 0}
                           className="flex-1"
                         >
-                          Send <Send className="size-3 stroke-[2.5]" />
+                          <span>Send</span>
+                          <Send className="size-3.5 stroke-[2.5]" />
                         </StatefulButton>
                       </div>
                     </motion.div>
