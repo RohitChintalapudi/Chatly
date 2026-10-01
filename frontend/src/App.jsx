@@ -11,6 +11,7 @@ import AudioRoomPage from "./pages/AudioRoomPage";
 import AudioRoomsDashboardPage from "./pages/AudioRoomsDashboardPage";
 import P2PTestPage from "./pages/P2PTestPage";
 import GamesPage from "./pages/GamesPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "./store/useAuthStore";
@@ -56,6 +57,7 @@ const App = () => {
           <Route path="/room/:roomId" element={<AudioRoomPage />} />
           <Route path="/test-p2p" element={<P2PTestPage />} />
           <Route path="/games" element={authUser ? <GamesPage /> : <Navigate to="/login" />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <Toaster
           position="top-center"
