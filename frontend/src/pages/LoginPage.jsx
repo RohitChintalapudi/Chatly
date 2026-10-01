@@ -3,6 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, Mail, ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import AuthBackgroundBubbles from "../components/auth/AuthBackgroundBubbles";
 
 const containerVariants = {
   hidden: { opacity: 0, y: 16, scale: 0.98 },
@@ -51,28 +52,8 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen bg-[var(--surface)] flex items-center justify-center relative overflow-y-auto px-4 pt-24 pb-12 transition-colors">
-      {/* Floating Background Bubbles */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Bordered Bubbles with Accents */}
-        <div className="absolute w-44 h-44 rounded-full bg-[var(--accent)]/10 border-2 border-[var(--line)] top-[8%] left-[5%] animate-float pointer-events-none shadow-[4px_4px_0px_0px_var(--line)]/20" />
-        <div className="absolute w-28 h-28 rounded-full bg-[var(--accent)]/15 border-2 border-[var(--line)] bottom-[12%] right-[7%] animate-float-slow pointer-events-none shadow-[3px_3px_0px_0px_var(--line)]/20" />
-        <div className="absolute w-20 h-20 rounded-full bg-[var(--accent)]/10 border-2 border-[var(--line)] top-[18%] right-[18%] animate-float pointer-events-none shadow-[2px_2px_0px_0px_var(--line)]/20" style={{ animationDelay: "2s" }} />
-        <div className="absolute w-24 h-24 rounded-full bg-[var(--accent)]/12 border-2 border-[var(--line)] bottom-[22%] left-[12%] animate-float pointer-events-none shadow-[3px_3px_0px_0px_var(--line)]/20" style={{ animationDelay: "1s" }} />
-        <div className="absolute w-16 h-16 rounded-full bg-[var(--accent)]/8 border-2 border-[var(--line)] top-[58%] right-[8%] animate-float-slow pointer-events-none" style={{ animationDelay: "3s" }} />
-        <div className="absolute w-12 h-12 rounded-full bg-[var(--accent)]/10 border-2 border-[var(--line)] top-[45%] left-[4%] animate-float pointer-events-none" style={{ animationDelay: "4s" }} />
-
-        {/* Glow behind card */}
-        <div className="absolute w-[500px] h-[500px] bg-[var(--accent)]/15 blur-[120px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-
-        {/* Cyber Grid */}
-        <div
-          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06]"
-          style={{
-            backgroundImage: `radial-gradient(var(--line) 1px, transparent 1px)`,
-            backgroundSize: "24px 24px",
-          }}
-        />
-      </div>
+      {/* Dynamic Theme-Reactive Floating Background Bubbles */}
+      <AuthBackgroundBubbles />
 
       {/* Main Centered Card Container */}
       <motion.div
