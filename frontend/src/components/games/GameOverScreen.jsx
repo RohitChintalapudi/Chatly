@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { RotateCcw, ArrowLeft, Trophy, Share2, Sparkles, Send } from "lucide-react";
 import { useGamesStore, GAME_METADATA } from "../../store/useGamesStore";
 import { useChatStore } from "../../store/useChatStore";
+import { AchievementMilestone } from "../AchievementMilestone";
 import { playHighScoreSound, playGameOverSound } from "../../utils/soundEffects";
 import toast from "react-hot-toast";
 
@@ -51,23 +52,26 @@ export const GameOverScreen = ({
           <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-48 bg-amber-500/25 rounded-full blur-2xl pointer-events-none animate-pulse" />
         )}
 
-        {/* Header Icon / Title */}
-        <div className="space-y-1">
-          {isNewHighScore ? (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border-2 border-amber-500 text-amber-600 font-black text-xs uppercase tracking-wider animate-bounce">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              New High Score! 🏆
-            </div>
-          ) : (
+        {/* Milestone Banner on New High Score */}
+        {isNewHighScore ? (
+          <AchievementMilestone
+            title="New Record Milestone! 🏆"
+            description={`You achieved a new personal best of ${score} pts in ${meta.title}!`}
+            badgeText="Record"
+            variant="amber"
+            className="text-left"
+          />
+        ) : (
+          <div className="space-y-1">
             <span className="text-[11px] font-black uppercase tracking-widest text-[var(--secondary-text)]">
               {gameId === "flappy" ? "Flight Over" : "Game Over"}
             </span>
-          )}
-          <h3 className="text-xl sm:text-2xl font-black text-[var(--primary-text)] flex items-center justify-center gap-2">
-            <span className="text-2xl sm:text-3xl">{meta.emoji}</span>
-            <span>{meta.title}</span>
-          </h3>
-        </div>
+            <h3 className="text-xl sm:text-2xl font-black text-[var(--primary-text)] flex items-center justify-center gap-2">
+              <span className="text-2xl sm:text-3xl">{meta.emoji}</span>
+              <span>{meta.title}</span>
+            </h3>
+          </div>
+        )}
 
         {/* Score Display Box */}
         <div className="bg-[var(--surface-muted)] border-2 border-[var(--line)] rounded-2xl p-3.5 sm:p-4 space-y-1.5">

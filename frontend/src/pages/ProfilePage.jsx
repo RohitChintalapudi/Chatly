@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { ActionSwapCascadeButton } from "../components/ActionSwap";
-import { Camera, Mail, User, Lock, Eye, EyeOff, Check, Loader2, Copy } from "lucide-react";
+import { AchievementMilestone } from "../components/AchievementMilestone";
+import { Camera, Mail, User, Lock, Eye, EyeOff, Check, Loader2, Copy, Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
 
 const ProfilePage = () => {
@@ -81,8 +82,17 @@ const ProfilePage = () => {
         <div className="absolute bottom-[5%] left-[30%] w-56 h-56 bg-[var(--accent)] rounded-full filter blur-3xl opacity-8 animate-float" style={{ animationDelay: "1s" }} />
       </div>
 
-      <div className="relative z-10 w-full max-w-4xl flex flex-col md:flex-row gap-5">
-        {/* Profile Card */}
+      <div className="relative z-10 w-full max-w-4xl space-y-6">
+        {/* Milestone Banner */}
+        <AchievementMilestone
+          title={`Active Explorer Milestone! 🎉`}
+          description={`Welcome, ${authUser.fullName || "Friend"}! Your Chatly account is verified with real-time peer-to-peer networking enabled.`}
+          badgeText="Profile Milestone"
+          variant="violet"
+        />
+
+        <div className="flex flex-col md:flex-row gap-5">
+          {/* Profile Card */}
         <div className="profile-glow flex-1">
           <div className="relative bg-[var(--surface-muted)] rounded-3xl border-2 border-[var(--line)] p-6 shadow-[6px_6px_0px_0px_var(--line)] space-y-5 transition-all duration-300 hover:shadow-[8px_8px_0px_0px_var(--line),0_0_20px_rgba(255,255,255,0.08)] hover:-translate-y-1 h-full">
             <div className="text-center">
@@ -264,6 +274,7 @@ const ProfilePage = () => {
             </form>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

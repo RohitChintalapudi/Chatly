@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Trophy, History, Swords, Share2, Send } from "lucide-react";
+import { Trophy, History, Swords, Share2, Send, Flame, Sparkles } from "lucide-react";
 import { useGamesStore, GAME_METADATA } from "../../store/useGamesStore";
 import { useChatStore } from "../../store/useChatStore";
+import { AchievementMilestone } from "../AchievementMilestone";
 import toast from "react-hot-toast";
 
 export const ScoreBoard = () => {
@@ -34,6 +35,17 @@ export const ScoreBoard = () => {
 
   return (
     <div className="w-full space-y-6">
+      {/* Milestone Alert if played or reached high score */}
+      {totalGamesPlayed > 0 && (
+        <AchievementMilestone
+          title="Arcade Veteran Milestone! 🏆"
+          description={`You've played ${totalGamesPlayed} rounds across retro mini games with a top score of ${Math.max(highScores.flappy || 0, highScores.snake || 0)} points!`}
+          badgeText="Arcade Milestone"
+          variant="amber"
+          icon={<Trophy className="h-5 w-5 sm:h-6 sm:w-6 text-white" />}
+        />
+      )}
+
       {/* Top Tabs */}
       <div className="flex items-center justify-center gap-1.5 p-1 bg-[var(--surface-muted)] rounded-2xl border-2 border-[var(--line)] max-w-xs mx-auto">
         <button
