@@ -9,6 +9,8 @@ import { useThemeStore } from "../store/useThemeStore";
 import { formatMessageTime } from "../lib/utils";
 import { Trash2, MessageSquare } from "lucide-react";
 
+import { SkeletonReveal } from "./spectrumui/skeleton-reveal";
+
 const ChatContainer = () => {
   const { messages, getMessages, isMessagesLoading, selectedUser, deleteMessage } = useChatStore();
   const { authUser } = useAuthStore();
@@ -23,26 +25,22 @@ const ChatContainer = () => {
   }, [selectedUser._id, getMessages]);
 
   useEffect(() => {
-    if (bottomRef.current) {
+    if (bottomRef.current && !isMessagesLoading) {
       bottomRef.current.scrollIntoView({ behavior: "instant" });
     }
-  }, [messages]);
-
-  if (isMessagesLoading) {
-    return (
-      <div className="flex-1 flex flex-col bg-[var(--surface)]">
-        <ChatHeader />
-        <MessageSkeleton />
-        <MessageInput />
-      </div>
-    );
-  }
+  }, [messages, isMessagesLoading]);
 
   const safeMessages = Array.isArray(messages) ? messages : [];
 
   return (
-    <div className="flex-1 flex flex-col bg-[var(--surface)]">
+    <div className="flex-1 flex flex-col bg-[var(--surface)] overflow-hidden">
       <ChatHeader />
+      <div className="flex-1 overflow-hidden flex flex-col">
+        <SkeletonReveal
+          loading={isMessagesLoading}
+          skeleton={<MessageSkeleton />}
+          className="flex-1 h-full flex flex-col overflow-hidden"
+        >
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 chat-scroll" style={{ willChange: "scroll-position" }}>
         {safeMessages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[var(--secondary-text)] space-y-3">
@@ -105,6 +103,8 @@ const ChatContainer = () => {
           })
         )}
         <div ref={bottomRef} />
+      </div>
+      </SkeletonReveal>
       </div>
       <MessageInput />
     </div>
