@@ -8,3 +8,4 @@ export {
   PillButton,
 } from "./animated-toast-stack.jsx";
 export { SwipeToDelete } from "./swipe-to-delete.jsx";
+export { SkeletonReveal } from "./skeleton-reveal.jsx";

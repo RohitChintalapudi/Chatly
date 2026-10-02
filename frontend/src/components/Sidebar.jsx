@@ -16,6 +16,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { SkeletonReveal } from "./spectrumui/skeleton-reveal";
 
 const Sidebar = () => {
   const {
@@ -122,8 +123,6 @@ const Sidebar = () => {
       : users
     : [];
 
-  if (isUsersLoading) return <SidebarSkeleton />;
-
   return (
     <>
       <aside
@@ -229,8 +228,24 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {/* Contacts List */}
+        {/* Contacts List with SkeletonReveal */}
         <div className="overflow-y-auto w-full py-2 flex-1 relative">
+          <SkeletonReveal
+            loading={isUsersLoading}
+            skeleton={
+              <div className="space-y-1">
+                {Array(6).fill(null).map((_, idx) => (
+                  <div key={idx} className="w-full p-3 flex items-center gap-3">
+                    <div className="size-11 rounded-full bg-[var(--surface-muted)] border-2 border-[var(--line)] animate-pulse shrink-0" />
+                    <div className="text-left min-w-0 flex-1 space-y-1.5">
+                      <div className="h-4 w-28 bg-[var(--surface-muted)] rounded-md border border-[var(--line)]/40 animate-pulse" />
+                      <div className="h-3 w-16 bg-[var(--surface-muted)] rounded-md border border-[var(--line)]/40 animate-pulse" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            }
+          >
           {filteredUsers.map((user) => (
             <div
               key={user._id}
@@ -342,6 +357,7 @@ const Sidebar = () => {
               </p>
             </div>
           )}
+          </SkeletonReveal>
         </div>
       </aside>
 
