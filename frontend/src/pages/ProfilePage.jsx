@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { ActionSwapCascadeButton } from "../components/ActionSwap";
-import { AchievementMilestone } from "../components/AchievementMilestone";
 import { Camera, Mail, User, Lock, Eye, EyeOff, Check, Loader2, Copy, Sparkles } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -83,14 +82,6 @@ const ProfilePage = () => {
       </div>
 
       <div className="relative z-10 w-full max-w-4xl space-y-6">
-        {/* Milestone Banner */}
-        <AchievementMilestone
-          title={`Active Explorer Milestone! 🎉`}
-          description={`Welcome, ${authUser.fullName || "Friend"}! Your Chatly account is verified with real-time peer-to-peer networking enabled.`}
-          badgeText="Profile Milestone"
-          variant="violet"
-        />
-
         <div className="flex flex-col md:flex-row gap-5">
           {/* Profile Card */}
         <div className="profile-glow flex-1">
