@@ -7,7 +7,6 @@ import {
   Users,
   Sparkles,
   ArrowRight,
-  Heart,
   Send,
   Mail,
   Star,
@@ -1080,15 +1079,9 @@ const LandingPage = () => {
           </div>
 
           {/* Bottom divider */}
-          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-[var(--secondary-text)] text-xs font-semibold">
+          <div className="border-t border-white/10 pt-8 flex items-center justify-center">
+            <p className="text-[var(--secondary-text)] text-xs font-semibold text-center">
               &copy; {new Date().getFullYear()} Chatly. All rights reserved.
-            </p>
-            <p className="text-[var(--accent)] text-xs font-black uppercase tracking-wider">
-              More than a chatting app
-            </p>
-            <p className="text-[var(--secondary-text)] text-xs font-semibold flex items-center gap-1.5">
-              Built with <Heart className="w-3 h-3 text-[var(--accent)] fill-[var(--accent)]" /> Team Chatly
             </p>
           </div>
         </div>
