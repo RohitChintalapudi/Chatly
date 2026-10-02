@@ -9,6 +9,7 @@ import {
   ArrowRight,
   Heart,
   Send,
+  Mail,
   Star,
   Quote,
   Globe,
@@ -771,99 +772,148 @@ const LandingPage = () => {
 
       <SectionDivider />
 
-      {/* Contact Us Section */}
-      <section id="contact" className="relative z-10 py-20 px-6">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[250px] bg-[var(--accent)] rounded-full filter blur-[100px] opacity-10 pointer-events-none" />
+      {/* Contact Us Section - Redesigned & Compact */}
+      <section id="contact" className="relative z-10 py-12 sm:py-16 px-4 sm:px-6">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[200px] bg-[var(--accent)] rounded-full filter blur-[90px] opacity-10 pointer-events-none" />
+        
         <div className="max-w-4xl mx-auto relative">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl lg:text-4xl font-extrabold text-[var(--primary-text)] mb-4">
+          {/* Section Heading */}
+          <div className="text-center mb-8 sm:mb-10 space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent)]/15 border border-[var(--line)]/20 text-xs font-mono font-bold text-[var(--primary-text)] shadow-sm">
+              <Mail className="size-3.5 text-[var(--accent)]" />
+              <span>Direct Support & Community</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[var(--primary-text)]">
               Get in{" "}
               <span className="relative inline-block">
                 <span className="relative z-10">touch</span>
                 <span className="absolute bottom-1 left-0 w-full h-3 bg-[var(--accent)] -z-0 rounded-sm" />
               </span>
             </h2>
-            <p className="text-[var(--secondary-text)] text-lg max-w-2xl mx-auto font-medium">
-              Have questions, feedback, or just want to say hello? We&apos;d love to hear from you.
+            <p className="text-[var(--secondary-text)] text-xs sm:text-sm max-w-lg mx-auto font-medium">
+              Have questions, feedback, or ideas? Send us a quick note and our team will get right back to you.
             </p>
           </div>
 
-          <div className="form-glow bg-[var(--surface)] rounded-3xl border-2 border-[var(--line)] p-8 md:p-12 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-shadow duration-300">
-            <form className="space-y-6" onSubmit={handleContactSubmit}>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-extrabold text-[var(--primary-text)]">Your Name</label>
-                  <input
-                    type="text"
-                    placeholder="John Doe"
-                    value={contactForm.name}
-                    onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                    className="w-full px-5 py-3.5 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-medium placeholder:text-[var(--secondary-text)] focus:outline-none focus:ring-0 focus:border-[var(--accent)] transition-colors"
-                  />
+          {/* Main Card: Compact Split Design */}
+          <div className="bg-[var(--surface)] rounded-3xl border-2 border-[var(--line)] shadow-[6px_6px_0px_0px_var(--line)] overflow-hidden transition-all duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-5">
+              
+              {/* Left Column: Direct Info & Response Time (2 cols) */}
+              <div className="md:col-span-2 p-6 sm:p-7 bg-[var(--surface-muted)] border-b-2 md:border-b-0 md:border-r-2 border-[var(--line)] flex flex-col justify-between space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2.5">
+                    <img src="/chatly-logo.png" alt="Chatly" className="size-8 object-contain" />
+                    <span className="font-mono font-black text-base text-[var(--primary-text)]">Chatly Support</span>
+                  </div>
+
+                  <p className="text-xs text-[var(--secondary-text)] font-medium leading-relaxed">
+                    We&apos;re building Chatly openly with the community. Every bug report, feature request, and feedback directly shapes the roadmap.
+                  </p>
+
+                  <div className="space-y-2.5 pt-1">
+                    <div className="flex items-center gap-3 p-2.5 rounded-xl bg-[var(--surface)] border border-[var(--line)]/20 shadow-sm">
+                      <div className="size-8 rounded-lg bg-[var(--accent)] border border-[var(--line)] flex items-center justify-center shrink-0 shadow-[1px_1px_0px_0px_var(--line)]">
+                        <Mail className="size-4 text-[var(--primary-text)]" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-[10px] uppercase font-bold text-[var(--secondary-text)]">Email Us</div>
+                        <div className="text-xs font-bold text-[var(--primary-text)] truncate font-mono">support@chatly.app</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 p-2.5 rounded-xl bg-[var(--surface)] border border-[var(--line)]/20 shadow-sm">
+                      <div className="size-8 rounded-lg bg-[var(--accent)] border border-[var(--line)] flex items-center justify-center shrink-0 shadow-[1px_1px_0px_0px_var(--line)]">
+                        <Zap className="size-4 text-[var(--primary-text)]" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-[10px] uppercase font-bold text-[var(--secondary-text)]">Avg. Response</div>
+                        <div className="text-xs font-bold text-[var(--primary-text)]">Under 2 hours</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-extrabold text-[var(--primary-text)]">Your Email</label>
-                  <input
-                    type="email"
-                    placeholder="john@example.com"
-                    value={contactForm.email}
-                    onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                    className="w-full px-5 py-3.5 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-medium placeholder:text-[var(--secondary-text)] focus:outline-none focus:ring-0 focus:border-[var(--accent)] transition-colors"
-                  />
+
+                <div className="pt-2 text-[11px] font-mono text-[var(--secondary-text)] flex items-center gap-1.5 border-t border-dashed border-[var(--line)]/20">
+                  <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Dev & support team active</span>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-extrabold text-[var(--primary-text)]">Subject</label>
-                <input
-                  type="text"
-                  placeholder="How can we help?"
-                  value={contactForm.subject}
-                  onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
-                  className="w-full px-5 py-3.5 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-medium placeholder:text-[var(--secondary-text)] focus:outline-none focus:ring-0 focus:border-[var(--accent)] transition-colors"
-                />
+              {/* Right Column: Clean & Compact Form (3 cols) */}
+              <div className="md:col-span-3 p-6 sm:p-7 flex flex-col justify-center">
+                <form className="space-y-3" onSubmit={handleContactSubmit}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-[var(--primary-text)]">Your Name</label>
+                      <input
+                        type="text"
+                        placeholder="John Doe"
+                        value={contactForm.name}
+                        onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                        className="w-full px-3 py-2 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] text-xs font-medium placeholder:text-[var(--secondary-text)]/50 focus:outline-none focus:border-[var(--accent)] transition-colors"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold text-[var(--primary-text)]">Your Email</label>
+                      <input
+                        type="email"
+                        placeholder="john@example.com"
+                        value={contactForm.email}
+                        onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                        className="w-full px-3 py-2 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] text-xs font-medium placeholder:text-[var(--secondary-text)]/50 focus:outline-none focus:border-[var(--accent)] transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-[var(--primary-text)]">Subject</label>
+                    <input
+                      type="text"
+                      placeholder="How can we help? (e.g. Feedback, Question)"
+                      value={contactForm.subject}
+                      onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] text-xs font-medium placeholder:text-[var(--secondary-text)]/50 focus:outline-none focus:border-[var(--accent)] transition-colors"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-[var(--primary-text)]">Message / Feedback</label>
+                    <textarea
+                      rows={3}
+                      placeholder="Tell us what's on your mind or share your suggestions..."
+                      value={contactForm.message}
+                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                      className="w-full px-3 py-2 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] text-xs font-medium placeholder:text-[var(--secondary-text)]/50 focus:outline-none focus:border-[var(--accent)] transition-colors resize-none"
+                    />
+                  </div>
+
+                  <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="inline-flex items-center justify-center gap-2 bg-[var(--accent)] text-[var(--primary-text)] px-5 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm border-2 border-[var(--line)] shadow-[3px_3px_0px_0px_var(--line)] hover:shadow-[1px_1px_0px_0px_var(--line)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-none transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="size-4 animate-spin" />
+                          <span>Sending...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send className="size-4" />
+                          <span>Send Message</span>
+                        </>
+                      )}
+                    </button>
+                    <span className="text-[10px] text-[var(--secondary-text)] font-medium text-center sm:text-right">
+                      🔒 Encrypted & confidential
+                    </span>
+                  </div>
+                </form>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-extrabold text-[var(--primary-text)]">Message</label>
-                <textarea
-                  rows={4}
-                  placeholder="Tell us what's on your mind..."
-                  value={contactForm.message}
-                  onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                  className="w-full px-5 py-3.5 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-medium placeholder:text-[var(--secondary-text)] focus:outline-none focus:ring-0 focus:border-[var(--accent)] transition-colors resize-none"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-extrabold text-[var(--primary-text)]">Feedback</label>
-                <textarea
-                  rows={3}
-                  placeholder="How would you rate your experience? Any suggestions?"
-                  value={contactForm.feedback}
-                  onChange={(e) => setContactForm({ ...contactForm, feedback: e.target.value })}
-                  className="w-full px-5 py-3.5 rounded-xl border-2 border-[var(--line)] bg-[var(--surface)] text-[var(--primary-text)] font-medium placeholder:text-[var(--secondary-text)] focus:outline-none focus:ring-0 focus:border-[var(--accent)] transition-colors resize-none"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="group inline-flex items-center gap-2 bg-[var(--accent)] text-[var(--primary-text)] px-8 py-4 rounded-2xl font-extrabold text-lg border-2 border-[var(--line)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-[var(--accent-hover)] cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5" />
-                    Send Message
-                  </>
-                )}
-              </button>
-            </form>
+            </div>
           </div>
         </div>
       </section>
