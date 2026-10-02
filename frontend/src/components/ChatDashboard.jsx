@@ -20,6 +20,7 @@ import { useGamesStore } from "../store/useGamesStore";
 import { useNavigate } from "react-router-dom";
 import { SwipeToDelete } from "./spectrumui/swipe-to-delete";
 import { Button } from "./motion";
+import { cn } from "../lib/utils";
 import toast from "react-hot-toast";
 
 const INITIAL_REPOSITORIES = [
