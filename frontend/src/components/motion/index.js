@@ -7,3 +7,4 @@ export {
   ToastCard,
   PillButton,
 } from "./animated-toast-stack.jsx";
+export { SwipeToDelete } from "./swipe-to-delete.jsx";
