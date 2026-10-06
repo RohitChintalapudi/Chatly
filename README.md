@@ -1,6 +1,6 @@
 <div align="center">
 
-# Chatly — More than a chatting app
+# Chatly — More than a chatting application
 
 **A state-of-the-art, full-stack real-time messaging platform, retro arcade suite, P2P file sharing utility, and live drop-in audio lounge built with React, Node.js, Socket.IO, and P2P WebRTC.**
 
