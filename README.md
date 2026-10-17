@@ -12,6 +12,8 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
 </div>
+<img width="1917" height="903" alt="image" src="https://github.com/user-attachments/assets/0af62f47-50c8-4586-a299-99929e0f07c6" />
+
 
 ---
 
