@@ -144,8 +144,8 @@ export const updateProfile = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       updateData,
-      { new: true }
-    );
+      { new: true, runValidators: true }
+    ).select("-password");
 
     res.status(200).json(updatedUser);
   } catch (error) {
