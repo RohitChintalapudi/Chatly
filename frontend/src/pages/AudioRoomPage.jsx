@@ -225,6 +225,10 @@ const AudioRoomPage = () => {
           leaveRoom();
         });
 
+        socket.on("host-action-denied", ({ message }) => {
+          toast.error(message || "Only the room host can perform this action");
+        });
+
         // 3. Receive list of existing peers in room
         socket.on("room-users", async ({ title, hostId, isLocked: roomIsLocked, users }) => {
           if (title) setRoomTitle(title);

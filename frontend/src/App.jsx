@@ -13,6 +13,7 @@ import P2PTestPage from "./pages/P2PTestPage";
 import GamesPage from "./pages/GamesPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import FeedbackWidget from "./components/FeedbackWidget";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "./store/useAuthStore";
@@ -47,20 +48,22 @@ const App = () => {
       style={{ "--accent": accent.accent, "--accent-hover": accent.hover }}
     >
       <div className="bg-[var(--surface)] min-h-screen transition-colors duration-300">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={authUser ? <HomePage /> : <LandingPage />} />
-          <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
-          <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
-          <Route path="/audio-rooms" element={authUser ? <AudioRoomsDashboardPage /> : <Navigate to="/login" />} />
-          <Route path="/room/:roomId" element={<AudioRoomPage />} />
-          <Route path="/test-p2p" element={<P2PTestPage />} />
-          <Route path="/games" element={authUser ? <GamesPage /> : <Navigate to="/login" />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-        {authUser && <FeedbackWidget />}
+        <ErrorBoundary>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={authUser ? <HomePage /> : <LandingPage />} />
+            <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
+            <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
+            <Route path="/audio-rooms" element={authUser ? <AudioRoomsDashboardPage /> : <Navigate to="/login" />} />
+            <Route path="/room/:roomId" element={<AudioRoomPage />} />
+            <Route path="/test-p2p" element={<P2PTestPage />} />
+            <Route path="/games" element={authUser ? <GamesPage /> : <Navigate to="/login" />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+          {authUser && <FeedbackWidget />}
+        </ErrorBoundary>
         <AnimatedToaster position="top-center" />
       </div>
     </div>

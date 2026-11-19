@@ -16,18 +16,27 @@ export const generateUniqueChatCode = async () => {
   return code;
 };
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
   try {
-    if (!fullName || !email || !password) {
+    const trimmedName = typeof fullName === "string" ? fullName.trim() : "";
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+
+    if (!trimmedName || !normalizedEmail || !password) {
       return res.status(400).json({ message: "All fields are required" });
+    }
+
+    if (!EMAIL_REGEX.test(normalizedEmail)) {
+      return res.status(400).json({ message: "Please provide a valid email address" });
     }
 
     if (password.length < 6) {
       return res.status(400).json({ message: "Password must be at least 6 characters" });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: normalizedEmail });
 
     if (user) return res.status(400).json({ message: "Email already exists" });
 
@@ -37,31 +46,27 @@ export const signup = async (req, res) => {
     const chatCode = await generateUniqueChatCode();
 
     const newUser = new User({
-      fullName,
-      email,
+      fullName: trimmedName,
+      email: normalizedEmail,
       password: hashedPassword,
       chatCode,
       contacts: [],
     });
 
-    if (newUser) {
-      // generate jwt token here
-      generateToken(newUser._id, req, res);
-      await newUser.save();
+    await newUser.save();
+    // Only set the auth cookie once the account is actually persisted.
+    generateToken(newUser._id, req, res);
 
-      res.status(201).json({
-        _id: newUser._id,
-        fullName: newUser.fullName,
-        email: newUser.email,
-        profilePic: newUser.profilePic,
-        chatCode: newUser.chatCode,
-        createdAt: newUser.createdAt,
-      });
-    } else {
-      res.status(400).json({ message: "Invalid user data" });
-    }
+    res.status(201).json({
+      _id: newUser._id,
+      fullName: newUser.fullName,
+      email: newUser.email,
+      profilePic: newUser.profilePic,
+      chatCode: newUser.chatCode,
+      createdAt: newUser.createdAt,
+    });
   } catch (error) {
-    console.log("Error in signup controller", error.message);
+    console.error("Error in signup controller:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -69,7 +74,13 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email });
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+
+    if (!normalizedEmail || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    const user = await User.findOne({ email: normalizedEmail });
 
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
@@ -144,8 +155,8 @@ export const updateProfile = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       updateData,
-      { new: true }
-    );
+      { new: true, runValidators: true }
+    ).select("-password");
 
     res.status(200).json(updatedUser);
   } catch (error) {
