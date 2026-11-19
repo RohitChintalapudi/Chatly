@@ -231,7 +231,7 @@ cd backend
 npm install
 ```
 
-Create a `.env` file inside the `backend` directory:
+Copy `backend/.env.example` to `backend/.env` and fill in your own values:
 ```env
 PORT=5001
 MONGODB_URI=your_mongodb_connection_string
@@ -243,10 +243,14 @@ CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 ```
 
+`MONGODB_URI` and `JWT_SECRET` are required. The server validates them on startup and exits with a clear message if either is missing. `PORT` defaults to `5001`.
+
 Start the backend server in development mode:
 ```bash
 npm run dev
 ```
+
+Verify the API is up with `curl http://localhost:5001/health` (expect `{"status":"ok"}`).
 
 ### 3. Frontend Setup
 Open a new terminal window:
@@ -256,7 +260,15 @@ npm install
 npm run dev
 ```
 
+To point the client at a non-default API host, copy `frontend/.env.example` to `frontend/.env` and set `VITE_API_URL`. Leave it unset in production so requests use the app's own origin.
+
 Open **[http://localhost:5173](http://localhost:5173)** in your browser!
+
+### Troubleshooting
+* **"Missing required environment variable(s)" on startup** — add the listed keys to `backend/.env` and restart.
+* **"MongoDB connection error" on startup** — verify `MONGODB_URI` is reachable; the server now waits for a successful connection before accepting traffic.
+* **Sudden logout / "Token has expired"** — auth cookies last 7 days; simply sign in again. Expired tokens now return `401` instead of `500`, so the client can clear stale state cleanly.
+* **JSON 404 on an API path** — check the route spelling. Unknown `/api/*` paths return JSON instead of the SPA fallback.
 
 ---
 
