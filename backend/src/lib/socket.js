@@ -23,10 +23,13 @@ export function getReceiverSocketId(userId) {
 
 // used to store online users
 const userSocketMap = {}; // {userId: socketId}
+const socketUserMap = {}; // {socketId: userId} - needed for multi-tab presence bookkeeping
 // used to store active live audio rooms
 const roomsMap = {}; // { roomId: { roomId, title, hostId, createdAt, participants: { [socketId]: { socketId, userId, name, avatar, isMuted } } } }
 // used to store active P2P share codes
 const shareCodesMap = {}; // { code: { senderId, socketId, transferId, metadata } }
+
+const isRoomHost = (room, socket) => !!room && room.hostSocketId === socket.id;
 
 function getActiveRoomsList() {
   return Object.values(roomsMap).map((room) => ({
@@ -43,7 +46,10 @@ io.on("connection", (socket) => {
   console.log("A user connected", socket.id);
 
   const userId = socket.handshake.query.userId;
-  if (userId && userId !== "undefined") userSocketMap[userId] = socket.id;
+  if (userId && userId !== "undefined") {
+    userSocketMap[userId] = socket.id;
+    socketUserMap[socket.id] = userId;
+  }
 
   // Send online users
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
@@ -58,6 +64,7 @@ io.on("connection", (socket) => {
         roomId,
         title: title || "Live Audio Room",
         hostId: user?._id || socket.id,
+        hostSocketId: socket.id,
         isLocked: false,
         createdAt: new Date(),
         participants: {},
@@ -91,10 +98,14 @@ io.on("connection", (socket) => {
         roomId,
         title: "Live Audio Room",
         hostId: user?._id || socket.id,
+        hostSocketId: socket.id,
         isLocked: false,
         createdAt: new Date(),
         participants: {},
       };
+    } else if (user?._id && roomsMap[roomId].hostId === user._id) {
+      // The host may rejoin from a different tab/device after creating the room.
+      roomsMap[roomId].hostSocketId = socket.id;
     }
 
     const participantInfo = {
@@ -172,6 +183,10 @@ io.on("connection", (socket) => {
   // Host: Mute all non-host participants
   socket.on("host-mute-all", ({ roomId }) => {
     if (roomId && roomsMap[roomId]) {
+      if (!isRoomHost(roomsMap[roomId], socket)) {
+        socket.emit("host-action-denied", { message: "Only the room host can mute all participants." });
+        return;
+      }
       Object.keys(roomsMap[roomId].participants).forEach((peerSocketId) => {
         if (peerSocketId !== socket.id) {
           roomsMap[roomId].participants[peerSocketId].isMuted = true;
@@ -185,6 +200,10 @@ io.on("connection", (socket) => {
   // Host: Toggle Lock Room
   socket.on("host-toggle-lock", ({ roomId, isLocked }) => {
     if (roomId && roomsMap[roomId]) {
+      if (!isRoomHost(roomsMap[roomId], socket)) {
+        socket.emit("host-action-denied", { message: "Only the room host can lock the room." });
+        return;
+      }
       roomsMap[roomId].isLocked = isLocked;
       io.to(roomId).emit("room-lock-toggled", { isLocked });
       io.emit("active-rooms-list", getActiveRoomsList());
@@ -193,7 +212,11 @@ io.on("connection", (socket) => {
 
   // Host: Rename Room Title
   socket.on("host-rename-room", ({ roomId, newTitle }) => {
-    if (roomId && roomsMap[roomId] && newTitle.trim()) {
+    if (roomId && roomsMap[roomId] && typeof newTitle === "string" && newTitle.trim()) {
+      if (!isRoomHost(roomsMap[roomId], socket)) {
+        socket.emit("host-action-denied", { message: "Only the room host can rename the room." });
+        return;
+      }
       roomsMap[roomId].title = newTitle.trim();
       io.to(roomId).emit("room-title-updated", { title: newTitle.trim() });
       io.emit("active-rooms-list", getActiveRoomsList());
@@ -203,6 +226,10 @@ io.on("connection", (socket) => {
   // Host: End Room Session for everyone
   socket.on("host-end-room", ({ roomId }) => {
     if (roomId && roomsMap[roomId]) {
+      if (!isRoomHost(roomsMap[roomId], socket)) {
+        socket.emit("host-action-denied", { message: "Only the room host can end the room." });
+        return;
+      }
       io.to(roomId).emit("room-ended", { message: "The host has ended the audio room." });
       delete roomsMap[roomId];
       io.emit("active-rooms-list", getActiveRoomsList());
@@ -237,7 +264,7 @@ io.on("connection", (socket) => {
 
   // Share Code Handshake Registry
   socket.on("register-share-code", ({ code, transferId, metadata, senderName, senderAvatar }) => {
-    if (code && transferId && metadata) {
+    if (/^\d{6}$/.test(code) && transferId && metadata) {
       shareCodesMap[code] = {
         senderId: userId,
         socketId: socket.id,
@@ -251,6 +278,11 @@ io.on("connection", (socket) => {
   });
 
   socket.on("resolve-share-code", ({ code, receiverName, receiverAvatar }) => {
+    if (!/^\d{6}$/.test(code)) {
+      socket.emit("share-code-error", { message: "Share code is invalid or has expired." });
+      return;
+    }
+
     const entry = shareCodesMap[code];
     if (!entry) {
       socket.emit("share-code-error", { message: "Share code is invalid or has expired." });
@@ -283,7 +315,14 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);
-    delete userSocketMap[userId];
+    delete socketUserMap[socket.id];
+
+    // Closing one tab must not mark the user offline while another tab/session is alive.
+    if (userId && userSocketMap[userId] === socket.id) {
+      delete userSocketMap[userId];
+      const fallbackSocketId = Object.entries(socketUserMap).find(([, id]) => id === userId)?.[0];
+      if (fallbackSocketId) userSocketMap[userId] = fallbackSocketId;
+    }
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
     // Clean up active share codes associated with this socket
